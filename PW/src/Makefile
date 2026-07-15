@@ -55,6 +55,7 @@ compute_qdipol_so.o \
 compute_ux.o \
 coset.o \
 Coul_cut_2D.o \
+caimd_module.o \
 d_matrix.o \
 data_structure.o \
 divide_class.o \

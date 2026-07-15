@@ -600,6 +600,10 @@ MODULE read_namelists_module
        cell_nstepe = 1
        cell_damping = 0.1_DP
        press_conv_thr = 0.5_DP
+       caimd = .FALSE.
+       caimd_stride = 1
+       caimd_step_strain = 0.0_DP
+       caimd_mask = .FALSE.
        treinit_gvecs = .FALSE.
        !
        RETURN
@@ -1309,6 +1313,10 @@ MODULE read_namelists_module
        CALL mp_bcast( cell_nstepe,      ionode_id, intra_image_comm )
        CALL mp_bcast( cell_damping,     ionode_id, intra_image_comm )
        CALL mp_bcast( press_conv_thr,   ionode_id, intra_image_comm )
+       CALL mp_bcast( caimd,            ionode_id, intra_image_comm )
+       CALL mp_bcast( caimd_stride,     ionode_id, intra_image_comm )
+       CALL mp_bcast( caimd_step_strain,ionode_id, intra_image_comm )
+       CALL mp_bcast( caimd_mask,       ionode_id, intra_image_comm )
        CALL mp_bcast( treinit_gvecs,    ionode_id, intra_image_comm )
        !
        RETURN
@@ -1910,6 +1918,7 @@ MODULE read_namelists_module
        CHARACTER(LEN=20) :: sub_name = ' cell_checkin '
        INTEGER           :: i
        LOGICAL           :: allowed = .FALSE.
+       REAL(DP)           :: event_increment
        !
        !
        DO i = 1, SIZE(cell_dynamics_allowed)
@@ -1927,6 +1936,20 @@ MODULE read_namelists_module
        END IF
        IF( cell_nstepe <= 0 ) &
           CALL errore( sub_name,' cell_nstepe out of range ',1)
+       IF( caimd_stride <= 0 ) &
+          CALL errore( sub_name,' caimd_stride out of range ',1)
+       DO i = 1, 6
+          IF( caimd_step_strain(i) /= caimd_step_strain(i) .OR. &
+              ABS( caimd_step_strain(i) ) >= HUGE( caimd_step_strain(i) ) * 0.1_DP ) &
+             CALL errore( sub_name,' caimd_step_strain contains a non-finite value ', i )
+          event_increment = REAL( caimd_stride, DP ) * caimd_step_strain(i)
+          IF( event_increment /= event_increment .OR. &
+              ABS( event_increment ) >= HUGE( event_increment ) * 0.1_DP ) &
+             CALL errore( sub_name,' caimd event increment is non-finite ', i )
+          IF( ABS( event_increment ) > 1.0D-2 ) &
+             CALL errore( sub_name, &
+                          ' abs(caimd_stride*caimd_step_strain) exceeds 1.0d-2 ', i )
+       END DO
        !
        RETURN
        !

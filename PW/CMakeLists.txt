@@ -44,6 +44,7 @@ set(src_pw
    src/compute_ux.f90 
    src/coset.f90 
    src/Coul_cut_2D.f90 
+   src/caimd_module.f90
    src/d_matrix.f90 
    src/data_structure.f90 
    src/divide_class.f90 

@@ -49,6 +49,7 @@ SUBROUTINE vcsmd( conv_ions )
   USE parameters,          ONLY : ntypx
   USE ener,                ONLY : etot
   USE io_files,            ONLY : prefix, delete_if_present, seqopn
+  USE caimd_module,        ONLY : caimd_enabled, caimd_note_temperature_from_ekint
   !
   USE constraints_module,  ONLY : remove_constr_force, check_constraint
   !
@@ -140,6 +141,8 @@ SUBROUTINE vcsmd( conv_ions )
   ! ... open MD history file (if not present this is a new run!)
   !
   CALL seqopn( 4, 'md', 'FORMATTED', exst )
+  IF ( caimd_enabled() .AND. exst .AND. istep == 0 ) &
+     CALL errore( 'vcsmd', 'CAIMD version 1 does not support existing MD history', 1 )
   !
   IF ( .NOT. exst ) THEN
      !
@@ -303,6 +306,7 @@ SUBROUTINE vcsmd( conv_ions )
                 avmod, theta, amass_,cmass, press, p, dt, aveci, avecd, avec2d,&
                 avec2di, sigmamet, sig0, avec0, v0, rati, ratd, rat2d, rat2di, &
                 enew, uta, eka, eta, ekla, utl, etl, ut, ekint, edyn, iforceh )
+     CALL caimd_note_temperature_from_ekint( calc, nat, ekint )
      !
   ELSE
      !
@@ -318,6 +322,7 @@ SUBROUTINE vcsmd( conv_ions )
                 edyn, temperature, tolp, ntcheck, ntimes, istep, tnew, nzero,  &
                 nat, acu, ack, acp, acpv, avu, avk, avp, avpv, iforceh, tnosep,&
                 vnhp, ekin2nhp, atm2nhp, nhpdim, nhpcl, tnoseh, vnhh, temphh) 
+     CALL caimd_note_temperature_from_ekint( calc, nat, ekint )
      !
      IF (tnosep) THEN
       DO  

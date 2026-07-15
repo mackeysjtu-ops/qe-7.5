@@ -41,7 +41,7 @@ SUBROUTINE run_pwscf( exit_status )
   USE io_global,            ONLY : stdout, ionode, ionode_id
   USE parameters,           ONLY : ntypx, npk
   USE upf_params,           ONLY : lmaxx
-  USE cell_base,            ONLY : fix_volume, fix_area
+  USE cell_base,            ONLY : fix_volume, fix_area, alat, at, omega
   USE control_flags,        ONLY : conv_elec, gamma_only, ethr, lscf, treinit_gvecs
   USE control_flags,        ONLY : conv_ions, istep, nstep, restart, lmd, lbfgs,&
                                    lensemb, lforce=>tprnfor, tstress
@@ -63,6 +63,8 @@ SUBROUTINE run_pwscf( exit_status )
   USE add_dmft_occ,         ONLY : dmft
   USE extffield,            ONLY : init_extffield, close_extffield
   USE input_parameters,     ONLY : nextffield
+  USE dynamics_module,      ONLY : dt, temperature
+  USE caimd_module,         ONLY : caimd_write_premove
   !
   USE device_fbuff_m,             ONLY : dev_buf
   !
@@ -235,6 +237,9 @@ SUBROUTINE run_pwscf( exit_status )
      IF ( tstress ) CALL stress( sigma )
      !
      IF ( lmd .OR. lbfgs ) THEN
+        !
+        IF ( lmd ) CALL caimd_write_premove( istep + 1, dt, alat * at, &
+                                             omega, sigma, temperature )
         !
         ! ... add information on this ionic step to xml file
         !

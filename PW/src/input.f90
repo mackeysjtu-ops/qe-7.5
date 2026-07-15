@@ -103,9 +103,10 @@ SUBROUTINE tmpdir_iosys()
                                pseudo_dir_cur, restart_dir
   !
   USE control_flags,    ONLY : restart, lbands, lscf
+  USE caimd_module,     ONLY : caimd_enabled
   IMPLICIT NONE
   !
-  LOGICAL :: exst, parallelfs
+  LOGICAL :: exst, parallelfs, caimd_md_exst
   CHARACTER(LEN=256), EXTERNAL :: trimcheck
   !
   !
@@ -129,6 +130,12 @@ SUBROUTINE tmpdir_iosys()
      CALL errore('iosys', 'bands or non-scf calculation not possible: ' // &
                           'needed files are missing', 1)
   ELSE IF ( exst .AND. .NOT.restart ) THEN
+     IF ( caimd_enabled() ) THEN
+        INQUIRE( FILE = TRIM( tmp_dir ) // TRIM( prefix ) // '.md', &
+                 EXIST = caimd_md_exst )
+        IF ( caimd_md_exst ) CALL errore( 'iosys', &
+             'CAIMD version 1 does not support existing MD history', 1 )
+     END IF
      CALL clean_tempdir ( tmp_dir )
   END IF
   IF ( TRIM(wfc_dir) /= TRIM(tmp_dir) ) &
@@ -190,7 +197,7 @@ SUBROUTINE control_iosys()
   !
   USE kinds,         ONLY : DP
   !  
-  USE control_flags, ONLY : adapt_thr, tr2_init, tr2_multi  
+  USE control_flags, ONLY : adapt_thr, tr2_init, tr2_multi, restart
   !
   USE constants,     ONLY : pi, ry_kbar, eps8
   !
@@ -210,7 +217,7 @@ SUBROUTINE control_iosys()
                             efield_cart_ => efield_cart, &
                             phase_control
   !
-  USE cell_base,     ONLY : init_dofree, &
+  USE cell_base,     ONLY : init_dofree, fix_volume, fix_area, &
                             press_       => press, &
                             wmass_       => wmass
   !
@@ -224,6 +231,7 @@ SUBROUTINE control_iosys()
   !
   USE cellmd,        ONLY : ntcheck, calc, lmovecell, &
                             cell_factor_ => cell_factor
+  USE caimd_module,  ONLY : caimd_configure
   !
   USE dynamics_module, ONLY : control_temp, temperature, thermostat, &
                               dt_         => dt, &
@@ -424,7 +432,8 @@ SUBROUTINE control_iosys()
   !
   USE input_parameters, ONLY : cell_parameters, cell_dynamics, press, wmass,  &
                                cell_temperature, cell_factor, press_conv_thr, &
-                               cell_dofree, treinit_gvecs 
+                               cell_dofree, treinit_gvecs, caimd,             &
+                               caimd_stride, caimd_step_strain, caimd_mask
   !
   ! ... CELL NOSE HOOVER THERMOSTAT
   ! 
@@ -1295,6 +1304,9 @@ SUBROUTINE control_iosys()
   ! CONSTRAINTS
   !
   CALL init_dofree ( cell_dofree )
+  CALL caimd_configure( caimd, caimd_stride, caimd_step_strain, caimd_mask, &
+                        calculation, calc, cell_dofree, restart,           &
+                        fix_volume, fix_area )
   lconstrain = ( nconstr_inp > 0 )
   IF ( lconstrain .AND. ( lbfgs .OR. lmovecell ) ) &
      CALL errore( 'iosys', 'constraints only with fixed-cell dynamics', 1 )

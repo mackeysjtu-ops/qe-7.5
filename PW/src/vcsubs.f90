@@ -33,6 +33,9 @@ SUBROUTINE vcinit( mxdtyp, mxdatm, ntype, natot, rat, ityp, avec, vcell, force, 
   ! avmod(3) 
   !
   USE kinds
+  USE control_flags, ONLY : istep
+  USE caimd_module,  ONLY : caimd_controls_cell, caimd_project_tangent, &
+                            caimd_apply_final_projection
   !
   IMPLICIT NONE
   !
@@ -139,6 +142,7 @@ SUBROUTINE vcinit( mxdtyp, mxdatm, ntype, natot, rat, ityp, avec, vcell, force, 
               pim(3,3), piml(3,3)
   !
   REAL(DP) :: d2(3,3)
+  REAL(DP) :: avec_old(3,3)
   
   INTEGER :: na, nt, i, j, l, k, m
   !
@@ -321,6 +325,11 @@ SUBROUTINE vcinit( mxdtyp, mxdatm, ntype, natot, rat, ityp, avec, vcell, force, 
            enddo
         enddo
      endif
+     !
+     IF ( caimd_controls_cell() ) THEN
+        CALL caimd_project_tangent( avec, avec2d, 'vcinit avec2d' )
+        CALL caimd_project_tangent( avec, avec2di, 'vcinit avec2di' )
+     END IF
   else
      do i = 1, 3
         do j = 1, 3
@@ -424,6 +433,7 @@ SUBROUTINE vcinit( mxdtyp, mxdatm, ntype, natot, rat, ityp, avec, vcell, force, 
   ! update lattice vectors if cell dynamics
   !
   if (calc (1:1) .ne.'m') then
+     IF ( caimd_controls_cell() ) avec_old = avec
      do j = 1, 3
         do i = 1, 3
            aveci (i, j) = avec (i, j)
@@ -432,6 +442,11 @@ SUBROUTINE vcinit( mxdtyp, mxdatm, ntype, natot, rat, ityp, avec, vcell, force, 
            avec2di (i, j) = avec2d (i, j)*iforceh(i,j)
         enddo
      enddo
+     IF ( caimd_controls_cell() ) THEN
+        CALL caimd_apply_final_projection( istep, natot, avec_old, avec, &
+             ratd(:,1:natot), rat2d(:,1:natot), rat2di(:,1:natot),       &
+             avecd, avec2d, avec2di )
+     END IF
      !
      ! update cell quantities just in case forclj need them
      !
@@ -475,6 +490,8 @@ SUBROUTINE vcmove( mxdtyp, mxdatm, ntype, ityp, rat, avec, vcell, force, if_pos,
   USE constants,     ONLY : pi, eps16, k_boltzmann_ry
   USE io_global,     ONLY : stdout
   USE dynamics_module, ONLY: HaddT_to_RyddT, Ha_to_Ry 
+  USE caimd_module,  ONLY : caimd_controls_cell, caimd_project_tangent, &
+                            caimd_apply_final_projection
   !
   IMPLICIT NONE
   !
@@ -592,6 +609,7 @@ SUBROUTINE vcmove( mxdtyp, mxdatm, ntype, ityp, rat, avec, vcell, force, if_pos,
   !
   LOGICAL :: symmetrize_stress
   REAL(DP) :: d2(3,3)
+  REAL(DP) :: avec_old(3,3)
   !
   REAL(DP), PARAMETER :: zero=0.0d0,   um=1.0d0,  dois=2.0d0, tres=3.0d0, &
                          quatro=4.0d0, seis=6.0d0
@@ -655,6 +673,10 @@ SUBROUTINE vcmove( mxdtyp, mxdatm, ntype, ityp, rat, avec, vcell, force, if_pos,
            avecd (i, j) = avecd (i, j) + dt * avec2di (i, j) * dble(iforceh(i,j))
         enddo
      enddo
+     IF ( caimd_controls_cell() ) THEN
+        CALL caimd_project_tangent( avec, avecd, 'vcmove predicted avecd' )
+        CALL caimd_project_tangent( avec, avec2di, 'vcmove predicted avec2di' )
+     END IF
      n_update = 19
   else
      n_update = 1
@@ -773,6 +795,8 @@ SUBROUTINE vcmove( mxdtyp, mxdatm, ntype, ityp, rat, avec, vcell, force, if_pos,
         enddo
 
 666     continue
+        IF ( caimd_controls_cell() ) &
+           CALL caimd_project_tangent( avec, avec2d, 'vcmove avec2d' )
         !
         ! calculate correct lattice velocities and ...
         !
@@ -783,6 +807,8 @@ SUBROUTINE vcmove( mxdtyp, mxdatm, ntype, ityp, rat, avec, vcell, force, if_pos,
            enddo
 
         enddo
+        IF ( caimd_controls_cell() ) &
+           CALL caimd_project_tangent( avec, avecd, 'vcmove corrected avecd' )
 
      endif
      !
@@ -1035,6 +1061,7 @@ SUBROUTINE vcmove( mxdtyp, mxdatm, ntype, ityp, rat, avec, vcell, force, if_pos,
   !      update lattice vectors if cell dynamics
   !
   if (calc (1:1) .ne.'m') then
+     IF ( caimd_controls_cell() ) avec_old = avec
      do j = 1, 3
         do i = 1, 3
            aveci (i, j) = avec (i, j)
@@ -1043,6 +1070,11 @@ SUBROUTINE vcmove( mxdtyp, mxdatm, ntype, ityp, rat, avec, vcell, force, if_pos,
            avec2di (i, j) = avec2d (i, j)
         enddo
      enddo
+     IF ( caimd_controls_cell() ) THEN
+        CALL caimd_apply_final_projection( nst, natot, avec_old, avec,      &
+             ratd(:,1:natot), rat2d(:,1:natot), rat2di(:,1:natot),         &
+             avecd, avec2d, avec2di )
+     END IF
   endif
   !
   ! update metric related quantities just in case are needed by forclj
@@ -1639,4 +1671,3 @@ REAL(8) FUNCTION ran3( idum )
   ran3 = mj * fac
   return
 END FUNCTION ran3
-

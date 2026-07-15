@@ -1342,6 +1342,21 @@ MODULE input_parameters
         !! in a ionic steepest descent simulation.
 
         REAL(DP) :: press_conv_thr = 0.5_DP
+
+        LOGICAL :: caimd = .FALSE.
+        !! Enable constrained AIMD small-strain driving for PW vc-md with
+        !! Parrinello-Rahman cell dynamics.
+
+        INTEGER :: caimd_stride = 1
+        !! Positive interval, in ionic MD steps, between imposed CAIMD events.
+
+        REAL(DP) :: caimd_step_strain(6) = 0.0_DP
+        !! Nominal symmetric tensor-strain increment associated with one ionic
+        !! MD step, ordered as (xx, yy, zz, yz, xz, xy).
+
+        LOGICAL :: caimd_mask(6) = .FALSE.
+        !! Selects CAIMD-controlled symmetric strain components, ordered as
+        !! (xx, yy, zz, yz, xz, xy).
         
         LOGICAL :: treinit_gvecs  = .FALSE. 
         !! if TRUE all the quantities related to fft g vectors are updated at 
@@ -1350,7 +1365,8 @@ MODULE input_parameters
         NAMELIST / cell / cell_parameters, cell_dynamics, cell_velocities, &
                           press, wmass, cell_temperature, temph, fnoseh,   &
                           cell_dofree, greash, cell_factor, cell_nstepe,   &
-                          cell_damping, press_conv_thr, treinit_gvecs 
+                          cell_damping, press_conv_thr, caimd, caimd_stride,&
+                          caimd_step_strain, caimd_mask, treinit_gvecs
 
 !
 !=----------------------------------------------------------------------------=!!
