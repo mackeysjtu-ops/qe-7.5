@@ -1,0 +1,181 @@
+*** FILE AUTOMATICALLY CREATED: DO NOT EDIT, CHANGES WILL BE LOST ***
+
+------------------------------------------------------------------------
+INPUT FILE DESCRIPTION
+
+Program: postahc.x / PHonon / Quantum ESPRESSO (version: 7.5)
+------------------------------------------------------------------------
+
+
+Purpose of postahc.x:
+
+- Read the electron-phonon quantities calculated by ph.x with the
+electron_phonon='ahc' option.
+
+- Calculate the phonon-induced electron self-energy in the full matrix form
+at a given temperature.
+
+Structure of the input data:
+========================================================================
+
+&INPUT
+   ...specs of namelist variables...
+/
+
+
+
+========================================================================
+NAMELIST: &INPUT
+
+   +--------------------------------------------------------------------
+   Variable:       prefix
+   
+   Type:           CHARACTER
+   Default:        'pwscf'
+   Description:    Prepended to input/output filenames; must be the same
+                   used in the calculation of unperturbed system.
+   +--------------------------------------------------------------------
+   
+   +--------------------------------------------------------------------
+   Variable:       outdir
+   
+   Type:           CHARACTER
+   Default:        value of the ESPRESSO_TMPDIR environment variable if set;
+                    current directory ('./') otherwise
+   Description:    Directory containing input, output, and scratch files;
+                   must be the same as specified in the calculation of
+                   the unperturbed system.
+   +--------------------------------------------------------------------
+   
+   +--------------------------------------------------------------------
+   Variable:       ahc_dir
+   
+   Type:           CHARACTER
+   Status:         REQUIRED
+   Description:    Directory where the binary files are located.
+   +--------------------------------------------------------------------
+   
+   +--------------------------------------------------------------------
+   Variable:       use_irr_q
+   
+   Type:           LOGICAL
+   Default:        .false.
+   Description:    If .true., assume that the q points are on the irreducible grid. In this case,
+                   the data in "ahc_dir" must have been actually generated from a calculation
+                   on an irreducible q grid.
+                   Off-diagonal self-energies cannot be computed if use_irr_q = .true.
+   +--------------------------------------------------------------------
+   
+   +--------------------------------------------------------------------
+   Variable:       ahc_nbnd
+   
+   Type:           INTEGER
+   Status:         REQUIRED
+   Description:    Number of bands for which the electron self-energy is to be computed. Must be
+                   identical to ahc_nbnd of the ph.x run with electron_phonon='ahc'.
+   +--------------------------------------------------------------------
+   
+   +--------------------------------------------------------------------
+   Variable:       ahc_nbndskip
+   
+   Type:           INTEGER
+   Default:        0
+   Description:    Number of bands to exclude when computing the self-energy. Must be identical to
+                   ahc_nbndskip of the ph.x run with electron_phonon='ahc'.
+   +--------------------------------------------------------------------
+   
+   +--------------------------------------------------------------------
+   Variable:       flvec
+   
+   Type:           CHARACTER
+   Status:         REQUIRED
+   Description:    File containing the normalized phonon displacements written by matdyn.x.
+   +--------------------------------------------------------------------
+   
+   +--------------------------------------------------------------------
+   Variable:       eta_eV
+   
+   Type:           REAL
+   Status:         REQUIRED
+   Description:    Magnitude of the small imaginary component included to smooth the energy
+                   denominators, in eV.
+   +--------------------------------------------------------------------
+   
+   +--------------------------------------------------------------------
+   Variable:       temp_kelvin
+   
+   Type:           REAL
+   Status:         REQUIRED
+   Description:    Temperature in Kelvins at which the electron self-energy is calculated.
+   +--------------------------------------------------------------------
+   
+   +--------------------------------------------------------------------
+   Variable:       efermi_eV
+   
+   Type:           REAL
+   Status:         REQUIRED
+   Description:    Fermi energy of the electrons in eV.
+   +--------------------------------------------------------------------
+   
+   +--------------------------------------------------------------------
+   Variable:       amass_amu(i), i=1,ntyp
+   
+   Type:           REAL
+   Status:         REQUIRED
+   Description:    Mass for each atom type in atomic mass unit.
+   +--------------------------------------------------------------------
+   
+   +--------------------------------------------------------------------
+   Variable:       ahc_win_min_eV
+   
+   Type:           REAL
+   Default:        -1.d8
+   Description:    Lower bound of active AHC window for the lower Fan term in eV.
+   +--------------------------------------------------------------------
+   
+   +--------------------------------------------------------------------
+   Variable:       ahc_win_max_eV
+   
+   Type:           REAL
+   Default:        1.d8
+   Description:    Upper bound of active AHC window for the lower Fan term in eV.
+   +--------------------------------------------------------------------
+   
+   +--------------------------------------------------------------------
+   Variable:       skip_upper
+   
+   Type:           LOGICAL
+   Default:        .false.
+   Description:    If .true., skip calculation of the upper Fan self-energy. Also, truncate the
+                   Debye-Waller self-energy to include only the low-energy band contribution.
+                   (Corresponds to the second term (lower Fan + lower DW) of Eq. (G1-revised) of
+                   J.-M. Lihm and C.-H. Park, PRX 12, 039901(E) (2022).)
+                   If .false., calculate the contribution of both the high-energy and low-energy
+                   bands. In this case, ahc_upfan_iq#.bin files must be present in "ahc_dir".
+   +--------------------------------------------------------------------
+   
+   +--------------------------------------------------------------------
+   Variable:       skip_dw
+   
+   Type:           LOGICAL
+   Default:        .false.
+   Description:    If .true., skip calculation of the Debye-Waller self-energy.
+                   If .false., ahc_dw.bin file must be present in "ahc_dir".
+   +--------------------------------------------------------------------
+   
+   +--------------------------------------------------------------------
+   Variable:       adiabatic
+   
+   Type:           LOGICAL
+   Default:        .false.
+   Description:    If .true., use the adiabatic approximation when computing the Fan self-energy
+                   by ignoring the phonon frequency in the denominator. This approximation is known
+                   to be inaccurate and even divergent in some materials (S. Poncé et al., J. Chem.
+                   Phys. 143, 102813 (2015)). Therefore, this keyword should be used only for
+                   experimental or debugging purposes.
+   +--------------------------------------------------------------------
+   
+===END OF NAMELIST======================================================
+
+
+This file has been created by helpdoc utility on Wed Sep 03 14:23:33 CEST 2025

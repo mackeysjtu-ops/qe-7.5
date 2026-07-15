@@ -1,0 +1,83 @@
+#!/bin/bash
+#
+# Copyright (C) 2001-2025 Quantum ESPRESSO group
+# 
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License. See the file `License' in the root directory
+# of the present distribution.
+#
+#
+# This script is a simple wrapper that does the following:
+# - clean old objects and executables with "make veryclean"
+# - regenerate "make.depend" dependency files used by Makefile
+# - call the true autoconf configuration script "install/configure"
+# See the "manual" below for details and options
+# 
+# Courtesy of A. Ferretti and G. Bussi
+# Modified by F. Spiga and P. Giannozzi
+#
+#================================================================
+#
+MANUAL="Usage:
+        configure [-h | --help]
+	configure [--save] [<conf_flags>]
+
+ -h, --help           print this manual    
+     --save           do not clean objects and dependencies
+ <conf_flags>         flags to be passed to the autoconf configure;
+                      the content of environment variable
+		      $ESPRESSO_CONFIG is prepended to <conf_flag>
+
+After configuration, the make.inc file will be created in the
+QE home (current) directory
+ 
+Type './install/configure --help' for options of autoconf configure
+"
+#
+#================================================================
+#
+
+# run from directory where this script is
+auxdir=`echo $0 | sed 's/\(.*\)\/.*/\1/'` # extract pathname
+if [ "$auxdir" != "configure" ] ; then cd $auxdir ; fi
+
+#
+# detect the simplest case
+#
+case $1 in 
+  ("-h" | "--help" )      echo "$MANUAL" ; exit 0 ;;
+esac
+
+# NOTE: if you run configure without cleaning everything first,
+# there are chances that something may go wrong. Forcing veryclean.
+
+depend="yes"
+if [[  ($1 =~ "--save") ]] ; then
+  depend="no"
+  shift;
+elif [[ (-e make.inc) && (-e Makefile) ]] ; then
+  make -f Makefile veryclean
+fi
+test -e ./install/make.inc       && rm ./install/make.inc
+
+if [[ ($depend == "yes") ]] ; then
+    # compute dependencies (next line avoids bogus errors)
+    touch ./include/configure.h
+    ./install/makedeps.sh
+fi
+
+# run the autoconf configure with the given conf_flags 
+echo 'Running configure as ./install/configure '$ESPRESSO_CONFIG $@
+./install/configure "$ESPRESSO_CONFIG" "$@"
+
+# copy make.inc in the home dir
+# and final clean up
+#
+test -e ./install/make.inc && mv ./install/make.inc .
+test -e config.log        && mv config.log    ./install/
+test -e config.status     && mv config.status ./install/
+test -e configure.msg     && mv configure.msg ./install/
+
+exit 0

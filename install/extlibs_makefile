@@ -1,0 +1,109 @@
+# Copyright (C) 2001-2020 Quantum ESPRESSO group
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License. See the file `License' in the root directory
+# of the present distribution.
+#
+# Makefile for fundamental math and utility libraries
+
+include ../make.inc
+include install_utils
+
+# MAIN target
+
+all: libcuda
+
+###################################
+# LAPACK (includes BLAS)
+###################################
+
+liblapack:
+	$(call update_submodule,external,lapack)
+	if test ! -e $(TOPDIR)/external/lapack/liblapack.a && test -e make_lapack.inc; then \
+	  (cp make_lapack.inc $(TOPDIR)/external/lapack/make.inc; \
+	  cd $(TOPDIR)/external/lapack; $(MAKE) blaslib lapacklib); else \
+        (echo "no configuration file found for lapack"; \
+         echo "run configure from main QE dir"; exit); fi 
+lapack_clean:
+	if test -d $(TOPDIR)/external/lapack; then cd $(TOPDIR)/external/lapack; \
+          (if test -f make.inc; then $(MAKE) clean; fi); fi
+
+###################################
+# FoX
+###################################
+
+libfox:
+	$(call update_submodule,external,fox)
+	if test ! -d ../FoX ; then \
+  cd $(TOPDIR)/external/fox; \
+    ./configure --prefix=$(TOPDIR)/FoX FC=$(F90) FCFLAGS="$(FOX_FLAGS)"; \
+    touch cp_test; \
+    if cp -p cp_test cp_test_1; then \
+        rm cp_test_1; \
+        echo "cp -p works"; \
+    else \
+        find -type f | xargs sed -i 's/cp -p/cp/g'; \
+    fi; \
+    rm cp_test; \
+    $(MAKE) install && make clean; \
+ cd -; \
+fi
+fox_clean:
+	if test -d ../FoX; then (rm -R -f ../FoX); fi
+	if test -d $(TOPDIR)/external/fox; then cd $(TOPDIR)/external/fox; \
+          (if test -f FoX-config; then $(MAKE) clean; fi); fi
+
+###################################
+# CUDA
+###################################
+
+libcuda : $(addprefix libcuda_,$(CUDA_EXTLIBS))
+
+CUDA_PATH := $(if $(GPU_ARCH),$(CUDA_PATH),no)
+libcuda_devxlib :
+#	$(call update_submodule,external,devxlib)
+	cd $(TOPDIR)/external/devxlib/src; \
+	ln -fs $(TOPDIR)/make.inc ../; \
+	$(MAKE) all; \
+	touch $(TOPDIR)/install/libcuda_devxlib # do not download and configure again
+
+libcuda_devxlib_clean:
+	if test -f libcuda_devxlib; then rm libcuda_devxlib; fi
+	if test -d ../external/devxlib; then \
+	   (cd ../external/devxlib; if test -f make.inc; then $(MAKE) clean; fi); fi
+libcuda_devxlib_veryclean:
+	if test -d ../external/devxlib; then \
+	   (cd ../external/devxlib; if test -f make.inc; then \
+	      ($(MAKE) distclean && rm -f make.inc); fi); fi
+
+###################################
+# LIBMBD
+###################################
+
+libmbd:
+#	$(call update_submodule,external,mbd)
+	if test ! -d ../MBD; then \
+        mkdir ../MBD; \
+        cd $(TOPDIR)/external/mbd/src; \
+	export FXX=$(F90); export FXXOPT="$(F90FLAGS)"; \
+	$(MAKE) -f ../../mbd.make; cp *.mod *.a $(TOPDIR)/MBD; cd ../../.. ;fi
+
+libmbd_clean:
+	if test -d ../MBD; then (rm -R -f ../MBD); fi
+	if test -d $(TOPDIR)/external/mbd/src; then cd $(TOPDIR)/external/mbd/src; \
+          $(MAKE) -f ../../mbd.make clean; fi
+
+libmbd_distclean:
+	if test -d ../MBD; then (rm -R -f ../MBD); fi
+	if test -d $(TOPDIR)/external/mbd/src; then cd $(TOPDIR)/external/mbd/src; \
+          $(MAKE) -f ../../mbd.make distclean; fi
+
+###################################
+# cleaning
+###################################
+
+clean: lapack_clean fox_clean libcuda_devxlib_clean libmbd_clean
+
+veryclean: fox_clean libcuda_devxlib_veryclean libmbd_distclean
