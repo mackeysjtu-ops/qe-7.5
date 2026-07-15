@@ -7,6 +7,68 @@ Quantum ESPRESSO 7.5 source tree. The implementation commit that contains this
 file is created after the report is staged; its hash is reported in the final
 Codex response.
 
+## macOS Validation Closure Checkpoint
+
+- Status: SUCCESS
+- Current validation phase: Complete -- macOS validation closure passed after
+  fixing a non-variable-cell CAIMD rejection gap.
+- Tests completed:
+  - Verified repository root `/Users/mengqicheng/Downloads/Learning/qe-7.5`.
+  - Verified branch `main`.
+  - Verified `HEAD=df2047eb4387a028d49b4ae419a0836c080c3f83`.
+  - Verified commit count `3`.
+  - Verified clean working tree and clean index before edits.
+  - Read `AGENTS.md`, `CAIMD_IMPLEMENTATION.md`, and this report.
+  - Verified `ATOMIC_VELOCITIES { a.u }` syntax and units from
+    `PW/Doc/INPUT_PW.txt` and `Modules/read_cards.f90`.
+  - Configured and built current serial CMake `qe_pw_exe`.
+  - Configured and built baseline serial CMake `qe_pw_exe`.
+  - Ran deterministic nonzero-velocity baseline/default/false/all-false
+    regressions.
+  - Ran fully fixed zero-strain cell with nonzero thermal atomic motion.
+  - Ran stride-2 event continuity at full and half event increments.
+  - Ran rotation-suppression checks for orthogonal, non-orthogonal, and
+    anisotropic cells.
+  - Validated the `.caimd` stress-strain stream, restart/reinitialization
+    behavior, invalid-input rejections, and CAIMD determinant/inverse/condition
+    helper paths.
+- Exact latest command and result:
+  - The final inline Python validation harness completed successfully with
+    `"failures": []`.
+- Current modified files:
+  - `Modules/read_namelists.f90`
+  - `CAIMD_IMPLEMENTATION.md`
+  - `CAIMD_V1_IMPLEMENTATION_REPORT.md`
+- Defects found:
+  - Non-variable-cell inputs can currently hide `caimd=.true.` inside an ignored
+    `&CELL` namelist. A tested `calculation='scf'` input with
+    `&CELL caimd=.true.` ran to `JOB DONE` instead of failing with the CAIMD
+    `vc-md/pr` compatibility error.
+- Fixes applied:
+  - Added a guarded ignored-`&CELL` probe in `Modules/read_namelists.f90` so
+    non-variable-cell inputs containing `caimd=.true.` are rejected explicitly,
+    while ordinary `scf` inputs with no `&CELL` and ignored `&CELL
+    caimd=.false.` inputs still run.
+- Builds completed:
+  - Current CMake build succeeded:
+    `cmake -S . -B /private/tmp/qe_caimd_mac_current_build -DQE_ENABLE_MPI=OFF -DQE_ENABLE_OPENMP=OFF -DQE_ENABLE_TEST=OFF`
+    then
+    `cmake --build /private/tmp/qe_caimd_mac_current_build --target qe_pw_exe -j 4`.
+  - Baseline CMake build succeeded from
+    `a11913ac6cd37f39cf31056e8e4823ec7a5de49c`:
+    `cmake -S /private/tmp/qe_caimd_mac_baseline_src -B /private/tmp/qe_caimd_mac_baseline_build -DQE_ENABLE_MPI=OFF -DQE_ENABLE_OPENMP=OFF -DQE_ENABLE_TEST=OFF`
+    then
+    `cmake --build /private/tmp/qe_caimd_mac_baseline_build --target qe_pw_exe -j 4`.
+  - Incremental current rebuild after the rejection fix succeeded:
+    `cmake --build /private/tmp/qe_caimd_mac_current_build --target qe_pw_exe -j 4`.
+- Known blockers:
+  - None. `sysctl -n machdep.cpu.brand_string hw.model hw.optional.arm64` was
+    blocked by the sandbox, so hardware metadata will be collected with other
+    local commands where available.
+- Exact next action:
+  - Inspect the final diff, run static checks, clean temporary helper files, and
+    create commit 4 `Validate CAIMD V1 on macOS`.
+
 ## Repository And Commit Baseline
 
 - Repository root: `/Users/mengqicheng/Downloads/Learning/qe-7.5`
@@ -249,6 +311,47 @@ git diff --check
 
 Result: passed with no output.
 
+## macOS Validation Closure Evidence
+
+Closure validation used local Apple Silicon serial CMake builds only:
+
+- Current executable:
+  `/private/tmp/qe_caimd_mac_current_build/bin/pw.x`.
+- Baseline executable from `a11913ac6cd37f39cf31056e8e4823ec7a5de49c`:
+  `/private/tmp/qe_caimd_mac_baseline_build/bin/pw.x`.
+- Temporary test root:
+  `/private/tmp/qe_caimd_mac_tests`.
+
+The final inline Python harness completed with `"failures": []`. It verified:
+
+- ordinary baseline/default/explicit-false/all-false regressions with
+  deterministic nonzero `ATOMIC_VELOCITIES`;
+- fully fixed zero-strain cell: `max_cell_change=0.0`, nonzero atomic motion
+  (`max_position_displacement_scaled=0.019814352828091283`), and nonzero
+  velocity metric (`min_cart_speed_metric=0.07332121111929343`);
+- stride-2 event schedule `[T,F,T,F,T,F,T,F]` with event counts
+  `[0,1,1,2,2,3,3,4]`;
+- full and half event increments with velocity-jump diagnostics at roundoff
+  (`max_velocity_jump <= 1.5332934166833742e-19`);
+- orthogonal, non-orthogonal, and anisotropic rotation suppression with
+  `max_skew_fro <= 1.4334732947067358e-17`;
+- `.caimd` stream shape and units: 8 rows, 26 columns including the logical
+  event flag, stress agreement with stdout within `4.955300604549961e-4 GPa`,
+  and premove volume agreement within `3.519616029734607e-7 bohr^3`;
+- `.caimd` reinitialization after deleting only stale MD history: first run
+  wrote 3 rows, second run wrote 2 rows rather than appending;
+- invalid input rejections for non-`vc-md` CAIMD, non-PR cell dynamics,
+  non-`all`/shape/2Dshape `cell_dofree`, zero/negative stride, oversized event
+  increment, NaN/Infinity strain values, restart mode, and stale MD history;
+- temporary helper-driver coverage for CAIMD singular inverse and
+  ill-conditioned-cell error paths.
+
+During closure, one additional bug was found and fixed: `calculation='scf'`
+with `&CELL caimd=.true.` was previously ignored and ran as a normal `scf`.
+`Modules/read_namelists.f90` now probes ignored non-variable-cell `&CELL`
+namelists and rejects that CAIMD request explicitly while preserving ordinary
+`scf` behavior for no-`&CELL` and `caimd=.false.` cases.
+
 ## Problems Found And Fixed During Implementation
 
 - Initial MD-history rejection in `vcsmd` rejected the second step of the same
@@ -263,6 +366,10 @@ Result: passed with no output.
 - Deterministic disabled-mode regression required zero initial velocity; random
   velocity initialization produced harmless 1e-7 Bohr trajectory differences
   between independent runs.
+- macOS closure found that ignored non-variable-cell `&CELL caimd=.true.`
+  inputs were not rejected. Fixed in `Modules/read_namelists.f90` by probing
+  ignored `&CELL` namelists, rejecting active CAIMD there, and restoring the
+  input stream for ordinary non-variable-cell inputs.
 
 ## Locality And Cleanup
 
@@ -277,8 +384,17 @@ Temporary paths used for evidence capture:
 - `/private/tmp/qe_caimd_v1_tests`
 - `/private/tmp/qe_caimd_v1_make_src`
 - `/private/tmp/qe_caimd_v1_make_build`
+- `/private/tmp/qe_caimd_mac_current_build`
+- `/private/tmp/qe_caimd_mac_baseline_src`
+- `/private/tmp/qe_caimd_mac_baseline_build`
+- `/private/tmp/qe_caimd_mac_tests`
+- `/private/tmp/qe_caimd_mac_probe_vel`
+- `/private/tmp/qe_caimd_helper_driver.f90`
+- `/private/tmp/qe_caimd_helper_driver`
+- `/private/tmp/qe_caimd_condition_driver.f90`
+- `/private/tmp/qe_caimd_condition_driver`
 
-These temporary paths are removed before the final implementation commit.
+The macOS closure temporary paths were removed before commit 4.
 
 ## Remaining Risks
 

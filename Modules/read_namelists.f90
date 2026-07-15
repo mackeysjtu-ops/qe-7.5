@@ -2408,6 +2408,7 @@ MODULE read_namelists_module
        CHARACTER(LEN=2) :: prog
        INTEGER :: ios
        INTEGER :: unit_loc=5
+       LOGICAL :: read_cell_namelist
        !
        ! ... end of declarations
        !
@@ -2501,13 +2502,26 @@ MODULE read_namelists_module
        ! ... CELL namelist
        !
        ios = 0
+       read_cell_namelist = TRIM( calculation ) == 'vc-relax' .OR. &
+                             TRIM( calculation ) == 'vc-cp'    .OR. &
+                             TRIM( calculation ) == 'vc-md'    .OR. &
+                             TRIM( calculation ) == 'vc-cp-wf'
        IF( ionode ) THEN
-          IF( TRIM( calculation ) == 'vc-relax' .OR. &
-              TRIM( calculation ) == 'vc-cp'    .OR. &
-              TRIM( calculation ) == 'vc-md'    .OR. &
-              TRIM( calculation ) == 'vc-md'    .OR. & 
-              TRIM( calculation ) == 'vc-cp-wf') THEN
+          IF( read_cell_namelist ) THEN
              READ( unit_loc, cell, iostat = ios )
+          ELSE
+             ! Non-variable-cell runs normally ignore &CELL; probe only to
+             ! reject CAIMD requests that would otherwise be silently discarded.
+             READ( unit_loc, cell, iostat = ios )
+             IF ( ios == 0 ) THEN
+                IF ( caimd ) CALL errore( ' read_namelists ', &
+                    ' caimd=.true. in &CELL requires calculation=''vc-md'' ', 1 )
+                CALL cell_defaults( prog )
+             ELSE
+                CALL cell_defaults( prog )
+                CALL restore_after_ignored_cell_probe( unit_loc, prog_ )
+                ios = 0
+             END IF
           END IF
        END IF
        CALL check_namelist_read(ios, unit_loc, "cell")
@@ -2586,6 +2600,51 @@ MODULE read_namelists_module
        RETURN
        !
      END SUBROUTINE read_namelists
+     !
+     SUBROUTINE restore_after_ignored_cell_probe( unit_loc, prog_ )
+       USE io_global, ONLY : ionode
+       !
+       IMPLICIT NONE
+       INTEGER, INTENT(IN) :: unit_loc
+       CHARACTER(LEN=*), INTENT(IN) :: prog_
+       INTEGER :: ios
+       CHARACTER(LEN=20) :: sub_name = ' read_namelists '
+       !
+       IF ( .NOT. ionode ) RETURN
+       !
+       REWIND( unit_loc )
+       READ( unit_loc, control, iostat = ios )
+       IF ( ios /= 0 ) CALL errore( sub_name, &
+            ' internal error restoring input after ignored &CELL probe ', 1 )
+       READ( unit_loc, system, iostat = ios )
+       IF ( ios /= 0 ) CALL errore( sub_name, &
+            ' internal error restoring input after ignored &CELL probe ', 1 )
+       READ( unit_loc, electrons, iostat = ios )
+       IF ( ios /= 0 ) CALL errore( sub_name, &
+            ' internal error restoring input after ignored &CELL probe ', 1 )
+       !
+       IF ( ( TRIM( calculation ) /= 'nscf'  .AND. &
+              TRIM( calculation ) /= 'bands' ) .OR. &
+            ( TRIM( prog_ ) == 'PW+iPi' ) ) THEN
+          READ( unit_loc, ions, iostat = ios )
+          IF ( ( ios /= 0 ) .AND. TRIM( calculation ) == 'scf' ) THEN
+             REWIND( unit_loc )
+             READ( unit_loc, control, iostat = ios )
+             IF ( ios /= 0 ) CALL errore( sub_name, &
+                  ' internal error restoring input after ignored &CELL probe ', 1 )
+             READ( unit_loc, system, iostat = ios )
+             IF ( ios /= 0 ) CALL errore( sub_name, &
+                  ' internal error restoring input after ignored &CELL probe ', 1 )
+             READ( unit_loc, electrons, iostat = ios )
+             IF ( ios /= 0 ) CALL errore( sub_name, &
+                  ' internal error restoring input after ignored &CELL probe ', 1 )
+          ELSE IF ( ios /= 0 ) THEN
+             CALL errore( sub_name, &
+                  ' internal error restoring input after ignored &CELL probe ', 1 )
+          END IF
+       END IF
+       !
+     END SUBROUTINE restore_after_ignored_cell_probe
      !
      SUBROUTINE check_namelist_read(ios, unit_loc, nl_name)
        USE io_global, ONLY : ionode, ionode_id

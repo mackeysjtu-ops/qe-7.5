@@ -31,6 +31,10 @@ The first implementation is present with these limits:
   Beeman state is committed.
 - Stress-strain output is written as a pre-move text stream
   `tmp_dir/prefix.caimd`; XML schema changes are intentionally avoided in V1.
+- macOS validation closure found and fixed one rejection gap: if a
+  non-variable-cell calculation contains an otherwise ignored `&CELL` namelist
+  with `caimd=.true.`, the input is now rejected explicitly instead of running
+  as an ordinary non-CAIMD calculation.
 
 ## Purpose And Physical Principle
 
@@ -519,6 +523,11 @@ Also reject first-version CAIMD with:
 - `fix_volume` or `fix_area`;
 - `cell_dynamics` other than `pr`;
 - `calculation` other than PW `vc-md`.
+
+The `calculation` rejection is enforced both on the normal variable-cell input
+path and on ignored non-variable-cell `&CELL` namelists, so
+`calculation='scf'` with `&CELL caimd=.true.` fails instead of silently
+discarding the CAIMD request.
 
 ## Numerical Validity Checks
 
