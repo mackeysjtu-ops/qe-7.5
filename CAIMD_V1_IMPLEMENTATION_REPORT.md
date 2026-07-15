@@ -396,6 +396,43 @@ Temporary paths used for evidence capture:
 
 The macOS closure temporary paths were removed before commit 4.
 
+## Deferred Post-Cluster Review Issues
+
+The following source-scan concerns are intentionally deferred. They are recorded
+before the initial Leonardo GPU/MPI build and smoke-validation task so that
+cluster evidence can be collected without silently redesigning CAIMD V1. Success
+of the Leonardo task does not close these issues; they remain open for a later
+dedicated resolution pass.
+
+1. The ignored-`&CELL` probe in `Modules/read_namelists.f90` may have
+   regression risks for nonstandard namelist/card ordering in ordinary QE
+   inputs.
+2. CP variable-cell calculations may parse `caimd=.true.` but silently ignore
+   it because CAIMD is only integrated into PW.
+3. Only the per-event strain increment is bounded. There is no runtime warning
+   or limit for cumulative strain, although V1 uses a small-strain convention.
+4. The validation harness was temporary and is not committed, so the current
+   regression suite is not directly reproducible from the repository.
+5. `velocity_jump_max` and `velocity_jump_rms` mainly quantify floating-point
+   residual of the enforced velocity transformation and should eventually be
+   renamed or documented more precisely.
+6. The precise definition of the temperature column in `prefix.caimd` needs
+   clearer documentation, especially its relation to ionic and cell kinetic
+   contributions and QE stdout temperature reporting.
+7. Some public CAIMD getters and stored last-event state appear unused.
+8. Active CAIMD interaction with fixed atomic coordinates `if_pos` has not been
+   fully defined or validated.
+9. Active CAIMD interaction with ionic and cell thermostats, especially cell
+   Nose dynamics with reduced effective cell degrees of freedom, has not been
+   fully defined or validated.
+10. MPI has not yet been executed.
+11. The ordinary QE test suite has not yet been used to test the broad input
+    parsing effects of the ignored-`&CELL` probe.
+
+These issues must not be broadly fixed during the initial Leonardo build and
+smoke validation. Cluster observations from that task should be recorded and
+used to scope the later dedicated fixes or documentation updates.
+
 ## Remaining Risks
 
 - Makefile/configure could not be fully validated on this macOS environment
