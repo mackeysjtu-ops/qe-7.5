@@ -6,6 +6,100 @@ This file is the persistent local checkpoint and final report for compiling and
 validating the QE 7.5 CAIMD V1 implementation as an MPI-enabled NVIDIA GPU build
 on the Leonardo Booster partition.
 
+## Post-validation Hardening Checkpoint
+
+- Status: IN_PROGRESS.
+- Checkpoint time: 2026-07-16 local session, before any post-hardening Leonardo
+  deployment.
+- Repository root: `/Users/mengqicheng/Downloads/Learning/qe-7.5`.
+- Branch: `main`.
+- Starting hardening HEAD:
+  `d6dc6aab82e0c3ed1ba36ecf1612bae6163b4863`.
+- Current phase: local source/documentation/harness hardening after the
+  successful macOS and Leonardo GPU/MPI validation.
+- Remote deployment status: not yet redeployed for this hardening pass.
+- Remote root retained for the next phase:
+  `/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-v1-7aa61919`.
+- Local files modified or added in this phase so far:
+  - `AGENTS.md`
+  - `CAIMD_IMPLEMENTATION.md`
+  - `CAIMD_V1_IMPLEMENTATION_REPORT.md`
+  - `CAIMD_LEONARDO_GPU_VALIDATION_REPORT.md`
+  - `LEONARDO_BUILD.md`
+  - `Modules/read_namelists.f90`
+  - `PW/src/input.f90`
+  - `PW/src/caimd_module.f90`
+  - `test-suite/caimd/caimd_validation.py`
+- Boundary hardening in progress:
+  - ignored non-variable-cell `&CELL` probing now inspects only the next
+    significant record rather than scanning card data;
+  - CP-visible `caimd=.true.` is rejected explicitly;
+  - active masked CAIMD rejects fixed atomic coordinates;
+  - active masked CAIMD rejects ionic thermostat/rescaling and cell thermostat
+    input;
+  - active masked CAIMD emits a one-time cumulative nominal strain warning
+    after the masked cumulative strain first exceeds `1.0d-2`.
+- Documentation hardening in progress:
+  - `AGENTS.md` reduced to stable project guidance and document routing;
+  - `CAIMD_IMPLEMENTATION.md` converted to a stable algorithm/source-boundary
+    specification;
+  - `LEONARDO_BUILD.md` added as the repeatable remote build/deploy/validation
+    manual.
+- Harness hardening in progress:
+  - added `test-suite/caimd/caimd_validation.py`;
+  - syntax/help/list checks have passed locally;
+  - local harness validation has passed.
+- Local build evidence in this phase:
+  - configured serial CMake build in `/private/tmp/qe_caimd_harden_build`;
+  - built `qe_pw_exe` successfully;
+  - attempted non-existent target `qe_cp_exe`, then verified the actual CMake
+    CP target is `qe_cpv_exe`;
+  - built `qe_cpv_exe` successfully.
+- Local validation evidence in this phase:
+  - final local harness run:
+    `/private/tmp/qe_caimd_harden_validation/local-all/analysis/summary.json`;
+  - summary SHA256:
+    `0f521061febf748d97570d365b1f8cbd0273dbfe60408875e930e1dee6768b45`;
+  - cases: 29 total, zero unexpected failures;
+  - skipped: `baseline_vcmd_default` because no local baseline executable was
+    supplied for this hardening run;
+  - groups covered: `A_startup_gpu`, `B_noop`, `C_ordinary`, `D_parser`,
+    `E_cp`, `F_active`, `G_policies`, `H_caimd_output`, `I_rejections`, and
+    `J_rotation`;
+  - `current_default_vs_allfalse` `.avec` max abs difference:
+    `1.4287e-101`;
+  - `current_default_vs_false` `.avec` max abs difference:
+    `4.8000004e-317`;
+  - `.caimd` schema check: 26 columns, finite temperature and velocity
+    residual diagnostics;
+  - cumulative warning check passed;
+  - CP ordinary smoke passed and CP `caimd=.true.` rejection passed.
+- Local executable and harness checksums:
+  - `/private/tmp/qe_caimd_harden_build/bin/pw.x`:
+    `d8b2c72242b1d68eaacff071fd40e5b5f028ffa4b4c76c7d8bb7193fe4e7b32f`;
+  - `/private/tmp/qe_caimd_harden_build/bin/cp.x`:
+    `ed22fdcf5274207e507db9e368536506e1e25298413dd68bf29c51d5e76ae3ec`;
+  - `test-suite/caimd/caimd_validation.py`:
+    `bd32e8cfc8f2bf8b524da9688f50a4367afa631956fd30afb621e36db2c95e38`.
+- Latest successful local commands:
+  - `git diff --check`
+  - `python3 -m py_compile test-suite/caimd/caimd_validation.py`
+  - `python3 test-suite/caimd/caimd_validation.py --help`
+  - `python3 test-suite/caimd/caimd_validation.py --list-cases`
+  - `cmake -S . -B /private/tmp/qe_caimd_harden_build -DQE_ENABLE_MPI=OFF -DQE_ENABLE_OPENMP=OFF -DQE_ENABLE_TEST=OFF`
+  - `cmake --build /private/tmp/qe_caimd_harden_build --target qe_pw_exe -j 4`
+  - `cmake --build /private/tmp/qe_caimd_harden_build --target qe_cpv_exe -j 4`
+  - `python3 test-suite/caimd/caimd_validation.py --current-exe /private/tmp/qe_caimd_harden_build/bin/pw.x --cp-exe /private/tmp/qe_caimd_harden_build/bin/cp.x --work-root /private/tmp/qe_caimd_harden_validation --run-id local-all --timeout 180`
+- Latest failed command:
+  - `cmake --build /private/tmp/qe_caimd_harden_build --target qe_cp_exe -j 4`
+    failed because the CMake CP target is named `qe_cpv_exe`;
+  - non-material exploratory glob listing of absent `/private/tmp/qe_caimd_*`
+    build directories failed under zsh `nomatch`.
+- Next action:
+  - create local commits, then deploy exact commits to Leonardo by Git bundle.
+- Remote checkpoint target for the next remote phase:
+  `$ROOT/evidence/REMOTE_CHECKPOINT.md`.
+
 ## Final Summary
 
 - Status: SUCCESS.

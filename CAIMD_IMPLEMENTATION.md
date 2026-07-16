@@ -1,711 +1,293 @@
-# CAIMD Implementation Notes
+# CAIMD V1 Implementation Notes
 
-This file records the source audit and the first implemented design for
-constrained ab initio molecular dynamics (CAIMD) in this Quantum ESPRESSO 7.5
-tree. It separates verified source facts from design decisions. Line numbers
-refer to the current checkout and may move after implementation edits.
+This document is the stable software and algorithm specification for the
+Quantum ESPRESSO 7.5 constrained ab initio molecular dynamics (CAIMD) V1
+implementation in this repository.
 
-CAIMD V1 is implemented as a PW-local strain-and-hold mode. The durable
-implementation and validation report is `CAIMD_V1_IMPLEMENTATION_REPORT.md`.
+CAIMD V1 is a driven small-strain variable-cell AIMD protocol implemented only
+for PW `vc-md` with Parrinello-Rahman cell dynamics. It constrains selected
+nominal strain components to a prescribed schedule while leaving ordinary QE
+electronic minimization, atomic force computation, stress computation, and
+unmasked PR cell response unchanged.
 
-## Current Status
+## User Interface
 
-The first implementation is present with these limits:
+The CAIMD input names live in the PW/CP shared `&CELL` namelist:
 
-- Supported scope: PW `calculation='vc-md'` with `cell_dynamics='pr'` only.
-- Implemented input variables: `caimd`, `caimd_stride`,
-  `caimd_step_strain(6)`, and `caimd_mask(6)` in `&CELL`.
-- Unsupported first-version combinations: restart, existing MD history,
-  non-`all` `cell_dofree`,
-  fixed-volume/fixed-area constraints, finite-strain schedules, rotating load
-  frames, and externally specified rotation schedules.
-- Strain convention: small laboratory-frame symmetric tensor strain.
-- Shear convention: tensor shear. Engineering shear is twice the off-diagonal
-  tensor component.
-- Internal cell rotation: when `caimd=.TRUE.` and at least one mask component is
-  true, suppress the antisymmetric incremental cell motion. When all mask values
-  are false, CAIMD must be an exact no-op.
-- The ordinary PR cell candidate is used as an unconstrained proposal, but
-  projecting only `avec` after `vcinit`/`vcmove` returns is not sufficient.
-  Atomic and cell history are projected inside `vcsubs.f90` before the final
-  Beeman state is committed.
-- Stress-strain output is written as a pre-move text stream
-  `tmp_dir/prefix.caimd`; XML schema changes are intentionally avoided in V1.
-- macOS validation closure found and fixed one rejection gap: if a
-  non-variable-cell calculation contains an otherwise ignored `&CELL` namelist
-  with `caimd=.true.`, the input is now rejected explicitly instead of running
-  as an ordinary non-CAIMD calculation.
-- Leonardo GPU/MPI validation passed on 2026-07-16. The validated remote build
-  used NVHPC 24.5, HPCX MPI 2.19, CMake 3.27.9, and an NVIDIA A100-SXM-64GB on
-  the Leonardo Booster partition. Both the current CAIMD CMake GPU/MPI `pw.x`
-  and the untouched QE 7.5 baseline CMake GPU/MPI `pw.x` built and linked. The
-  current installed executable SHA256 was
-  `4b316dad82d2cb18155fa62ed4957aef041355955b4a7a5687f15fe7fbcd0b35`; the
-  baseline executable SHA256 was
-  `7804c655a1ea6c157e09f402ef4064940edea08558317d1b529623fe8825d67f`.
-- The Leonardo build required a numerical-library compatibility workaround for
-  the system linker and module libraries: static OpenBLAS for BLAS/LAPACK,
-  deployment-local stripped ScaLAPACK and FFTW shared libraries, FFTW SONAME
-  symlinks, a local stripped `libopenblas.so.0`, and RPATH/loader paths pointed
-  at the deployment-local library directory. Runtime linkage inspection showed
-  no missing libraries.
-- Leonardo runtime validation covered valid current/baseline startup, actual
-  A100 activity, one-rank and two-rank MPI execution, baseline/default/
-  explicit-false/all-false no-op comparisons, ordinary non-CAIMD QE inputs,
-  active CAIMD fixed/stride/shear/non-orthogonal/anisotropic cases, `.caimd`
-  output and MPI single-writer behavior, representative MPI rejection cases,
-  and an isolated traditional `configure && make pw` observation. The final
-  34-case runtime harness reported zero failures. Full evidence and remaining
-  caveats are recorded in `CAIMD_LEONARDO_GPU_VALIDATION_REPORT.md`.
+```fortran
+caimd                  ! logical, default .false.
+caimd_stride           ! integer, default 1
+caimd_step_strain(6)   ! real, default 0.0
+caimd_mask(6)          ! logical, default .false.
+```
 
-## Purpose And Physical Principle
-
-CAIMD is a driven variable-cell AIMD mode. It lets selected symmetric strain
-components follow an externally prescribed strain-and-hold schedule while the
-remaining symmetric components continue ordinary Parrinello-Rahman (PR) NpT
-relaxation.
-
-This is not a new force field and not a replacement for DFT stress. DFT forces
-and stress are still computed on the current electronic/ionic configuration.
-The constraint acts on cell degrees of freedom so that selected strain
-components do not relax away under internal stress, external pressure, PR cell
-velocity, or PR cell acceleration.
-
-## Atomic Force Motion Versus Cell Stress Motion
-
-Verified source facts:
-
-- Atomic forces are computed by `PW/src/forces.f90`.
-- Total stress is computed by `PW/src/stress.f90`.
-- Both are stored in `PW/src/pwcom.f90` module `force_mod`, where
-  `force(:,:)` stores atomic forces and `sigma(3,3)` stores stress.
-- `PW/src/run_pwscf.f90:229-235` calls `forces()` and `stress(sigma)` before
-  the ionic/cell move.
-- `PW/src/vcsubs.f90:265-285` and `PW/src/vcsubs.f90:711-732` turn stress,
-  kinetic virial, external pressure, and cell mass into cell acceleration
-  `avec2d`.
-
-Atomic forces do not come from the stress tensor. Stress and pressure drive the
-cell variables. Atomic Cartesian positions then change affinely when fractional
-coordinates are interpreted in the updated cell, plus the ordinary atomic
-thermal motion generated by the Beeman integrator.
-
-## Implemented Input Semantics
-
-PW input variables:
-
-- `caimd`: logical switch. Default `.FALSE.`.
-- `caimd_stride`: positive integer number of ionic MD steps between imposed
-  deformation events.
-- `caimd_step_strain(6)`: nominal symmetric tensor-strain increment associated
-  with one MD step. Dimensionless.
-- `caimd_mask(6)`: logical mask selecting the strain components controlled by
-  CAIMD.
-
-Component order:
+The six-component order is:
 
 ```text
 (xx, yy, zz, yz, xz, xy)
 ```
 
-At a deformation event:
+Off-diagonal values are tensor shear components. Engineering shear is twice the
+reported tensor shear.
+
+An imposed event increment is:
 
 ```text
-event_increment(:) = caimd_stride * caimd_step_strain(:)
+event_increment(i) = caimd_stride * caimd_step_strain(i)
 ```
 
-Between events:
-
-- `caimd_mask(i)=.TRUE.` and `caimd_step_strain(i)=0`: component `i` is fixed.
-- `caimd_mask(i)=.TRUE.` and `caimd_step_strain(i)/=0`: component `i` changes
-  only at events and is fixed between events.
-- `caimd_mask(i)=.FALSE.`: component `i` follows ordinary PR/NpT relaxation.
-- All mask values false: exact no-op; original PR behavior must be reproduced.
-
-The long-time nominal rate is `caimd_step_strain / dt`. The actual protocol is
-discrete strain-and-hold, not smooth continuous strain-rate dynamics. If
-`caimd_stride > 1`, the event jump is larger and the system is held between
-jumps.
-
-First-event indexing decision for implementation:
-
-- Apply the first CAIMD event on the first ionic MD move for which
-  `MOD(istep-1, caimd_stride) == 0`.
-- Thus `caimd_stride=1` applies an imposed increment every ionic move.
-- This convention matches QE's `vcsmd` internal `istep`, which is incremented
-  before `vcinit`/`vcmove` in `PW/src/vcsmd.f90:184`.
-
-## Cell Representation And Deformation Convention
-
-Verified source facts:
-
-- `PW/src/vcsmd.f90:67-69` documents `at(icar,ivec)` as direct lattice vectors.
-- `PW/src/vcsmd.f90:281` forms `avec = alat * at`.
-- `Modules/printout_base.f90:120-145` writes `h(i,j)`, so rows are Cartesian
-  components and columns are lattice vectors.
-
-Use the column-vector cell matrix:
+Each event component must satisfy:
 
 ```text
-H = avec
-r_i = H * s_i
+abs(event_increment(i)) <= 1.0d-2
 ```
 
-Here `s_i` is the fractional/lattice coordinate stored as `rat(:,i)` inside
-`vcsmd`.
+This is a per-event hard limit. CAIMD V1 also emits a one-time warning on the
+I/O rank when the maximum absolute cumulative nominal masked strain first
+exceeds `1.0d-2`. The cumulative warning is diagnostic only; it does not alter
+the trajectory.
 
-For a laboratory-frame deformation gradient, use left multiplication:
+## Supported Boundary
+
+CAIMD V1 is supported only when all of the following hold:
+
+- PW executable, not CP;
+- `calculation='vc-md'`;
+- `cell_dynamics='pr'`;
+- `cell_dofree='all'`;
+- `restart_mode='from_scratch'`;
+- no fixed-volume or fixed-area cell modes;
+- no existing/stale MD history file;
+- no fixed atomic coordinate component when `caimd=.true.` and any
+  `caimd_mask` component is true;
+- `ion_temperature='not_controlled'` when `caimd=.true.` and any mask component
+  is true;
+- `cell_temperature='not_controlled'` when `caimd=.true.` and any mask
+  component is true.
+
+When `caimd=.false.` or all `caimd_mask` values are false, CAIMD must be an
+exact no-op. In particular, inactive/all-false CAIMD must not reject ordinary
+fixed atomic coordinates or thermostats beyond baseline QE behavior.
+
+CP does not implement CAIMD. Because CP can parse the shared `&CELL` variables,
+`caimd=.true.` in CP input must fail explicitly instead of being silently
+ignored.
+
+## Ignored `&CELL` Policy
+
+Non-variable-cell PW runs normally ignore `&CELL`. CAIMD is an exception only to
+prevent silent loss of a user request:
+
+- no `&CELL`: ordinary non-variable-cell input is unchanged;
+- an immediate valid ignored `&CELL` with `caimd=.false.`: accepted and ignored;
+- an immediate ignored `&CELL` with `caimd=.true.`: explicit error requiring
+  PW `calculation='vc-md'`;
+- an immediate malformed ignored `&CELL`: normal namelist error;
+- a `&CELL` placed after card data: not scanned by the ignored-`&CELL` probe,
+  so card parsing owns the outcome.
+
+The probe must inspect only the next significant record after the prior
+namelist. It must not search through `ATOMIC_SPECIES`, `CELL_PARAMETERS`,
+`ATOMIC_POSITIONS`, `K_POINTS`, or later card data.
+
+## Physical Convention
+
+QE stores the cell matrix as columns of lattice vectors. CAIMD uses the total
+deformation gradient
 
 ```text
-H_new = F * H_old
-F = H_new * inverse(H_old)
-L = F - I
-E = 0.5 * (L + transpose(L))
-W = 0.5 * (L - transpose(L))
+F = H * inverse(H_ref)
 ```
 
-`E` is the small symmetric strain increment and `W` is the small antisymmetric
-rotation/spin increment. The first CAIMD implementation operates on `E`.
-
-Mapping between six components and `E`:
+and the small symmetric strain
 
 ```text
-E(1,1) = xx
-E(2,2) = yy
-E(3,3) = zz
-E(2,3) = E(3,2) = yz
-E(1,3) = E(3,1) = xz
-E(1,2) = E(2,1) = xy
+E = sym(F - I)
 ```
 
-The off-diagonal inputs are tensor shear components. Engineering shear would be
-`gamma_ij = 2 * E(i,j)`.
+where `H_ref` is the CAIMD reference cell recorded at the start of the run.
+At each imposed event, masked components of the target nominal strain are
+advanced by `caimd_stride * caimd_step_strain`. Unmasked components come from
+the ordinary PR candidate cell.
 
-## Strain-And-Hold Rule
-
-Let `Href` be the CAIMD reference cell captured from the first pre-move cell,
-and let `Hpr` be the unconstrained PR candidate for the next cell. The
-first-version constrained cell is:
-
-1. Compute `Fpr = Hpr * inverse(Href)`, `Lpr = Fpr - I`, `Epr = sym(Lpr)`.
-2. If `caimd=.FALSE.` or all mask values are false, return `Hpr` and all PR
-   histories unchanged.
-3. If CAIMD is active with any true mask:
-   - use `Epr` for unmasked components;
-   - add `caimd_stride * caimd_step_strain(i)` to the cumulative nominal target
-     for masked component `i` on event steps;
-   - keep the previous cumulative target for masked component `i` on hold
-     steps;
-   - replace masked actual-strain components by those cumulative targets;
-   - set the final antisymmetric cell increment `W` to zero.
-4. Build `Fnew = I + Enew` and `Hnew = Fnew * Href`.
-5. Stop if `det(Hnew) <= 0` or if configured small-strain bounds are exceeded.
-
-This rule deliberately discards internal PR rigid-cell rotation whenever CAIMD
-actively controls at least one component. It does not alter the all-false-mask
-case.
-
-The choice to target cumulative strain against `Href`, rather than repeatedly
-left-multiplying `I + delta_E` onto the current cell, avoids finite-product
-drift between the reported nominal strain and the measured small strain in the
-V1 output. For example, repeated `xx` increments remain exactly additive in the
-reported `actual_xx` column to roundoff.
-
-## Atomic Integration Audit
-
-### Verified Variables
-
-From `PW/src/vcsmd.f90` and `PW/src/vcsubs.f90`:
-
-- `rat`: atomic positions in lattice/fractional coordinates.
-- `rati`: previous atomic positions in lattice coordinates.
-- `ratd`: atomic velocities in lattice coordinates.
-- `rat2d`: current atomic accelerations in lattice coordinates.
-- `rat2di`: previous atomic accelerations in lattice coordinates.
-- `avec`: cell matrix in bohr, equal to `alat * at`.
-- `aveci`: previous cell matrix.
-- `avecd`: first derivative of `avec`.
-- `avec2d`: current second derivative of `avec`.
-- `avec2di`: previous second derivative of `avec`.
-- `sigma` inside `vcsubs`: cell cofactor matrix, documented as
-  `avec^-1 * vcell`, not the DFT stress.
-- `frr`: DFT stress scaled by volume before entry to `vcsubs`.
-
-Source locations:
-
-- `PW/src/vcsmd.f90:129-138` allocates atomic history arrays.
-- `PW/src/vcsmd.f90:171-175` reads `rati`, `ratd`, `rat2d`, `rat2di`,
-  `aveci`, `avecd`, `avec2d`, and `avec2di` from the MD history file.
-- `PW/src/vcsmd.f90:474-478` writes the same history back.
-- `PW/src/vcsmd.f90:277-287` converts global Cartesian `tau` and `force` to
-  lattice coordinates before calling `vcsubs`.
-- `PW/src/vcsmd.f90:432-438` converts updated `tau` and `force` back to
-  Cartesian coordinates in `alat` units.
-- `Modules/cryst_to_car.f90:10-65` defines the crystallographic/Cartesian
-  transform.
-
-The MD history file is therefore part of the state that must stay CAIMD
-consistent. It is not enough to change only the printed or global `at` matrix.
-
-### `vcinit` Order
-
-`vcinit` is called on the first MD step:
-
-- `PW/src/vcsubs.f90:151-167`: computes the metric and sets `avecd`,
-  `avec2d`, and `avec2di` to zero.
-- `PW/src/vcsubs.f90:181-200`: generates Cartesian random velocities, stores
-  them temporarily in `rat2di`, and converts them to lattice velocities
-  `ratd = inverse(H) * u`.
-- `PW/src/vcsubs.f90:213-219`: sets atomic acceleration from force/mass and
-  zeros `rat2di`.
-- `PW/src/vcsubs.f90:223-287`: builds kinetic virial, adds scaled DFT stress
-  `frr`, subtracts external pressure, and forms cell acceleration `avec2d`.
-- `PW/src/vcsubs.f90:297-323`: when all nine `iforceh` entries are one,
-  symmetrizes the acceleration in a reference-cell strain-like space.
-- `PW/src/vcsubs.f90:415-420`: updates fractional atomic positions with Beeman.
-- `PW/src/vcsubs.f90:426-432`: updates `avec` and sets `avec2di=avec2d`.
-
-On the first step, `avecd=0` before the atomic acceleration is formed, so there
-is no pre-existing cell-velocity metric coupling in the atomic update. CAIMD
-still must project `avec2d` before the cell update and history write. If an
-event changes `H`, `ratd`, `rat2d`, and `rat2di` must be transformed so the
-stored peculiar Cartesian atomic velocity/acceleration is consistent with the
-new cell.
-
-### `vcmove` Order
-
-`vcmove` is called on later MD steps:
-
-- `PW/src/vcsubs.f90:625-638`: computes force/mass atomic acceleration and
-  optional Nose friction.
-- `PW/src/vcsubs.f90:647-657`: predicts atomic and cell velocities by adding
-  previous accelerations.
-- `PW/src/vcsubs.f90:663-668`: starts the iterative correction loop and calls
-  `updg(avec, avecd, ...)`.
-- `PW/src/vcsubs.f90:680-686`: recomputes atomic acceleration as
-  `force/mass - gmgd * ratd`. This explicitly depends on current cell velocity
-  through `gd` and `gmgd`.
-- `PW/src/vcsubs.f90:711-732`: computes cell acceleration from virial stress,
-  DFT stress, pressure, cell mass, and optional cell Nose friction.
-- `PW/src/vcsubs.f90:742-769`: symmetrizes cell acceleration for all-free
-  `iforceh`.
-- `PW/src/vcsubs.f90:779-783`: corrects cell velocity `avecd`.
-- `PW/src/vcsubs.f90:791-794`: corrects atomic velocity `ratd`.
-- `PW/src/vcsubs.f90:1026-1031`: commits the next fractional atomic position
-  and stores current acceleration in `rat2di`.
-- `PW/src/vcsubs.f90:1037-1043`: commits the next cell and stores current cell
-  acceleration in `avec2di`.
-- `PW/src/vcsubs.f90:1051`: calls `updg` again so the returned cofactor matrix
-  and volume match the final cell state.
-
-Therefore the cell history affects atomic motion before `vcmove` returns.
-Discarded masked PR cell velocity or acceleration can enter `rat2d`, `ratd`,
-and finally `rat` through `gmgd` and the Beeman correction. Projecting only the
-returned `avec` would leave that discarded cell motion embedded in atomic
-position and velocity history.
-
-## Selected Atomic Position And Velocity Rule
-
-Physical identity:
+The projected cell is reconstructed as:
 
 ```text
-r_i = H * s_i
-v_i = H * sdot_i + Hdot * s_i
+H_projected = (I + E_projected) * H_ref
 ```
 
-QE's PR atomic kinetic energy is represented through the scaled velocity
-`ratd = sdot` and the metric `g = transpose(H) * H`; the code also includes
-metric-time-derivative coupling through `gmgd`. For CAIMD, the useful thermal
-quantity is the peculiar Cartesian atomic velocity:
+This is a first-version small-strain protocol, not a finite-strain constitutive
+framework.
+
+## PR Coupling And History Projection
+
+The validated insertion point is inside the PR Beeman path in
+`PW/src/vcsubs.f90`, with state bridging in `PW/src/vcsmd.f90`.
+
+Projection of only the returned cell matrix is insufficient. The PR path also
+uses cell velocity and acceleration histories in the metric coupling that
+updates atomic acceleration, velocity, and position. Therefore CAIMD V1:
+
+- projects tangent cell histories for masked symmetric strain components;
+- suppresses antisymmetric internal cell increments while active;
+- projects `avecd`, `avec2d`, and `avec2di`;
+- transforms atomic velocity and acceleration histories consistently.
+
+At a projection event, CAIMD preserves fractional atomic positions and
+preserves peculiar Cartesian atomic velocities. The fractional velocity-like
+history arrays are transformed as:
 
 ```text
-u_i = H * ratd_i
+ratd_projected  = inverse(H_projected) * H_candidate * ratd_candidate
+rat2d_projected = inverse(H_projected) * H_candidate * rat2d_candidate
+rat2di_projected = inverse(H_projected) * H_candidate * rat2di_candidate
 ```
 
-Selected first-version event rule:
+The same transformation principle applies to the stored acceleration histories.
+Atomic thermal motion is not zeroed.
 
-- Preserve fractional positions: `rat_i^+ = rat_i^-`.
-- Preserve peculiar Cartesian velocity: `u_i^+ = u_i^-`.
-- Do not preserve discarded cell-streaming velocity `Hdot * s_i` for masked
-  components.
-- Do not merely preserve fractional velocity, because that would affinely
-  stretch thermal velocities and change temperature when the cell jumps.
-- Do not zero `ratd`, because that destroys ordinary thermal motion.
+## Stress And Atomic Forces
 
-Implementation formula after an imposed affine cell change from `Hminus` to
-`Hplus`:
+CAIMD V1 does not alter force or stress calculation.
+
+The ordinary PW path is:
+
+- `PW/src/pwscf.f90`: input and top-level run dispatch;
+- `PW/src/run_pwscf.f90`: electronic step, force and stress calls, step output,
+  and `move_ions`;
+- `PW/src/forces.f90`: atomic force driver and fixed-coordinate masking;
+- `PW/src/stress.f90`: stress driver and stress tensor sum;
+- `PW/src/pwcom.f90`: `force_mod` storage for force and stress;
+- `PW/src/move_ions.f90`: MD dispatch;
+- `PW/src/vcsmd.f90` and `PW/src/vcsubs.f90`: variable-cell MD state transfer
+  and PR integration.
+
+The PR cell equation still sees the ordinary stress tensor, kinetic virial,
+external pressure, cell mass, and cell constraints. CAIMD constrains selected
+resulting cell strain components after the ordinary PR candidate update rather
+than modifying the stress tensor or atomic forces.
+
+## Pressure
+
+Input `press` is read in GPa from `&CELL` and converted in `PW/src/input.f90`
+to QE internal pressure units:
+
+```fortran
+press_ = press / ry_kbar
+```
+
+The pressure term enters the variable-cell PR equations through the existing
+cell dynamics machinery in `PW/src/vcsubs.f90`. CAIMD V1 leaves this pressure
+path unchanged.
+
+## Diagnostics
+
+CAIMD writes a premove diagnostic file:
 
 ```text
-ratd_i^+   = inverse(Hplus) * Hminus * ratd_i^-
-rat2d_i^+  = inverse(Hplus) * Hminus * rat2d_i^-
-rat2di_i^+ = inverse(Hplus) * Hminus * rat2di_i^-
+tmp_dir/prefix.caimd
 ```
 
-`rat` and `rati` remain fractional coordinates and should not be affinely
-changed. The acceleration-history transform is the first-order consistent
-small-strain choice for preserving peculiar Cartesian acceleration history
-across a basis jump. The next SCF step recomputes forces on the new cell.
-
-This rule is compatible with the intended strain-and-hold protocol: atomic
-thermal motion is retained, while atomic velocity contributions from discarded
-masked PR cell motion are not retained.
-
-## Cell History Projection
-
-For active CAIMD with any true mask, project cell history in laboratory tangent
-space. For a cell history matrix `X` associated with `H`, define:
+The file has 26 columns:
 
 ```text
-K = X * inverse(H)
-Ksym = 0.5 * (K + transpose(K))
-Kskew = 0.5 * (K - transpose(K))
+ionic_step
+time_ps
+imposed_events_done
+following_move_is_event
+nominal_xx nominal_yy nominal_zz nominal_yz nominal_xz nominal_xy
+actual_xx actual_yy actual_zz actual_yz actual_xz actual_xy
+stress_xx_GPa stress_yy_GPa stress_zz_GPa stress_yz_GPa stress_xz_GPa stress_xy_GPa
+temperature_K
+volume_bohr3
+velocity_jump_max
+velocity_jump_rms
 ```
 
-Rules:
-
-- For `avecd`, set the antisymmetric part to zero and set masked symmetric
-  components to zero during hold.
-- For `avec2d` and `avec2di`, set the antisymmetric part to zero and set masked
-  symmetric components to zero unless the implementation deliberately encodes an
-  imposed event as a finite-time acceleration. The first version should apply
-  the event as an external affine update and reset masked PR acceleration
-  history afterward.
-- For unmasked symmetric components, keep the PR values.
-- Reconstruct projected histories with `X_projected = K_projected * H`.
-- Recompute the local metric/cofactor state after projection.
-
-State that must be kept consistent:
-
-- cell: `avec`, `aveci`, `avecd`, `avec2d`, `avec2di`, `sigmamet`, `vcell`;
-- atomic: `rat`, `rati`, `ratd`, `rat2d`, `rat2di`;
-- global PW state after return: `at`, `omega`, `bg`, `tau`;
-- MD history file written by `vcsmd`.
-
-`tauold` is an auxiliary position-history array stored in the MD file and used
-for constraints. Since first-version CAIMD rejects constraints and preserves
-fractional positions through the affine event, `tauold` does not need an
-independent affine modification for the first implementation.
-
-## Insertion Point Decision
-
-The validated narrow insertion point is inside the PR `vcsubs.f90` integration
-path, with reusable matrix/projection logic in a new PW-local CAIMD module.
-
-Why not just post-process after `vcinit`/`vcmove`?
-
-- `vcmove` computes atomic acceleration using `gmgd`, which depends on
-  `avecd`.
-- `vcmove` corrects `ratd` and then commits `rat` before returning.
-- By the time control returns to `vcsmd`, discarded PR cell motion may already
-  be embedded in `rat`, `ratd`, `rat2d`, and history variables.
-
-Minimum acceptable alternatives:
-
-1. Preferred: call CAIMD projection inside `vcsubs.f90` after the PR cell
-   acceleration is computed and symmetrized, before cell velocity correction and
-   before the final atomic/cell Beeman commit. In `vcmove`, the projection must
-   occur inside the iterative correction loop so the final `gmgd`, `rat2d`, and
-   `ratd` see projected cell history.
-2. More invasive at interface: `vcsmd` may call ordinary PR as a proposal only
-   if it saves all pre-call atomic/cell state and recomputes the final atomic
-   and cell Beeman state from that pre-state after projection. This avoids
-   editing `vcsubs` internals less, but duplicates integrator logic and is more
-   fragile.
-
-The first implementation should choose option 1.
-
-## Cell Rotation Audit
-
-Verified source facts:
-
-- `PW/src/vcsubs.f90:283-285` and `PW/src/vcsubs.f90:729-731` integrate all
-  nine cell acceleration components before later symmetrization.
-- `PW/src/vcsubs.f90:297-323` and `PW/src/vcsubs.f90:742-769` symmetrize
-  acceleration only when all nine `iforceh` entries are one.
-- `PW/src/vcsubs.f90:430-432` and `PW/src/vcsubs.f90:1041-1043` update all
-  nine `avec` entries using `iforceh`.
-- `Modules/cell_base.f90:710-847` maps `cell_dofree` directly to `iforceh`
-  matrix elements. It is not a physical symmetric-strain mask.
-- `Modules/deviatoric.f90:10-100` handles fixed-volume/fixed-area strain and
-  stress but does not remove general cell rotation.
-- `PW/src/symmetrize_at.f90:9-131` can symmetrize atoms/cell, but no call site
-  invokes it in the inspected `vc-md` path.
-- `PW/src/move_ions.f90:419` checks symmetry with `checkallsym`; it does not
-  canonicalize cell orientation.
-
-Conclusion:
-
-- QE does not use a triangular or explicitly symmetric cell representation in
-  the PR path.
-- Stress symmetry alone does not prove zero antisymmetric cell motion.
-- The all-free path symmetrizes a reference-cell strain-like acceleration, which
-  reduces rotational acceleration from a clean zero-velocity start, but it does
-  not erase a pre-existing rotational velocity/history component.
-- Non-orthogonal cells and numerical history can produce tiny antisymmetric
-  increments even in short baseline runs.
-
-First-version CAIMD rule:
-
-- If `caimd=.TRUE.` and any mask component is true, set the final small
-  antisymmetric increment `W` to zero.
-- Also project `avecd`, `avec2d`, and `avec2di` so antisymmetric history cannot
-  reappear on the next step.
-- If all mask values are false, skip all projection and preserve exact PR
-  behavior.
-
-## Baseline Runtime Rotation Diagnostics
-
-A temporary serial baseline `pw.x` was built out of tree under `/private/tmp`
-from commit `a11913ac6cd37f39cf31056e8e4823ec7a5de49c` using CMake, GNU
-Fortran 11.1.0, AppleClang, Accelerate BLAS/LAPACK, and FFTW3. The temporary
-build and all runtime directories were removed after analysis.
-
-The diagnostic inputs used one C atom with `C.UPF`, `ecutwfc=16 Ry`,
-`ecutrho=64 Ry`, Gaussian smearing, `nstep=6`, `dt=5`, `press=100 kbar`,
-`wmass=20`, and `cell_dynamics='pr'`. These are not production-quality physics
-inputs; they are short baseline dynamics probes for cell increment behavior.
-
-For adjacent post-move cells from `.cel`, the analysis used:
-
-```text
-F_n = H_(n+1) * inverse(H_n)
-L_n = F_n - I
-E_n = sym(L_n)
-W_n = skew(L_n)
-```
-
-Polar rotations were computed by SVD polar decomposition.
-
-Summary:
-
-```text
-case       max ||E||_F    max ||W||_F    max ||W||/||E||    max polar angle(rad)  final cumulative angle(rad)
-ortho      1.318319e-04   4.040075e-18   3.064565e-14       2.980232e-08          2.980232e-08
-nonortho   1.406488e-04   9.919955e-10   2.342537e-05       3.650024e-08          5.161914e-08
-aniso      1.955753e-04   1.062044e-10   8.393405e-07       0.000000e+00          0.000000e+00
-```
-
-Interpretation:
-
-- Orthogonal hydrostatic case: skew increment is zero to roundoff.
-- Non-orthogonal hydrostatic case: skew increment is tiny but measurable
-  relative to the small strain increment.
-- Anisotropic initial cell: skew increment is at or near numerical noise for
-  this short run.
-- Runtime evidence does not show dynamically large rotation in these tiny
-  tests, but source evidence shows rotation is not an explicit invariant. CAIMD
-  should still suppress `W` when active.
-
-## Stress-Strain Output Alignment
-
-Verified source facts:
-
-- `PW/src/run_pwscf.f90:229-235` computes force and stress.
-- `PW/src/run_pwscf.f90:241` calls `add_qexsd_step(idone)`.
-- `PW/src/add_qexsd_step.f90:100-103` writes `alat*tau`, `alat*at`, `force/e2`,
-  and `sigma/e2` to XML.
-- `PW/src/run_pwscf.f90:252` calls `move_ions` only after XML step output.
-- `PW/src/move_ions.f90:423-435` writes `.pos`, `.cel`, `.for`, and `.vel`
-  after movement.
-
-Implemented rules:
-
-- Pair a stress with the cell and strain on which it was calculated, not with
-  the cell produced afterward.
-- Existing XML step output is pre-move aligned.
-- Existing `.cel` trajectory output is post-move and is safe for cell-to-cell
-  increment/rotation analysis, but not for same-index stress-strain pairing.
-- `PW/src/run_pwscf.f90` calls `caimd_write_premove` after `stress(sigma)` and
-  before `move_ions`.
-- `tmp_dir/prefix.caimd` reports ionic step, time in ps, imposed event count,
-  next-move event flag, nominal strain, actual strain, stress in GPa,
-  temperature in K, volume in bohr^3, and velocity-continuity diagnostics.
-
-## Restart And Incompatible Inputs
-
-First-version CAIMD must reject restart. Reasons:
-
-- `PW/src/vcsmd.f90:171-175` reads atomic and cell history from the MD history
-  file.
-- CAIMD adds extra protocol state: event schedule, imposed cumulative strain,
-  projected history convention, and possibly output/log counters.
-- Persisting and validating that state is outside the first implementation.
-
-Implemented rejection happens when `caimd=.TRUE.` and either:
-
-- `restart_mode` is not `from_scratch`;
-- an existing `tmp_dir/prefix.md` MD history file is found before
-  `clean_tempdir` can delete it;
-- an unexpected existing MD history is found at the start of `vcsmd`;
-- later XML/input restart paths attempt to resume without CAIMD state support.
-
-Also reject first-version CAIMD with:
-
-- `cell_dofree /= 'all'`;
-- `fix_volume` or `fix_area`;
-- `cell_dynamics` other than `pr`;
-- `calculation` other than PW `vc-md`.
-
-The `calculation` rejection is enforced both on the normal variable-cell input
-path and on ignored non-variable-cell `&CELL` namelists, so
-`calculation='scf'` with `&CELL caimd=.true.` fails instead of silently
-discarding the CAIMD request.
-
-## Numerical Validity Checks
-
-Required checks:
-
-- `caimd_stride > 0`.
-- `caimd_step_strain` finite and small. A conservative first limit should be
-  documented, for example max absolute event component below a user-visible
-  threshold such as `1.0d-2` until validated otherwise.
-- `det(Hnew) > 0`.
-- `Hnew` condition number below a conservative bound.
-- No masked event should create a cell volume too small for the existing
-  cutoffs/grid assumptions.
-- Non-orthogonal cells must use `F = Hnew * inverse(Hold)`, not direct
-  replacement of `avec(i,j)`.
-- All matrix inversions must have explicit failure paths.
-
-## Verified QE Call Graph And Source Locations
-
-Input pipeline:
-
-- `Modules/input_parameters.f90:296-304`: `&CONTROL` includes `tstress`,
-  `tprnfor`, and `dt`.
-- `Modules/input_parameters.f90:1097-1103`: `ion_dynamics` allows `beeman`.
-- `Modules/input_parameters.f90:1254-1263`: `&IONS` namelist.
-- `Modules/input_parameters.f90:1278-1282`: `cell_dynamics` allows `pr`.
-- `Modules/input_parameters.f90:1289-1293`: `press` and `wmass`.
-- `Modules/input_parameters.f90:1318-1328`: `cell_dofree`.
-- `Modules/input_parameters.f90:1350-1353`: `&CELL` namelist.
-- `Modules/read_namelists.f90:66-88`: PW control defaults.
-- `Modules/read_namelists.f90:503-605`: `&IONS` and `&CELL` defaults.
-- `Modules/read_namelists.f90:1246-1312`: input broadcasts.
-- `Modules/read_namelists.f90:1861-1933`: input validation.
-- `Modules/read_namelists.f90:2293-2300`: PW `vc-md` defaults to Beeman ions.
-
-Runtime path:
-
-- `PW/src/pwscf.f90:73-85`: reads input and calls `run_pwscf`.
-- `PW/src/input.f90:612-650`: maps `vc-md` plus `cell_dynamics='pr'` to
-  `calc='cd'`.
-- `PW/src/input.f90:658-660`: moving cell forces stress calculation.
-- `PW/src/input.f90:1291-1297`: converts pressure and initializes
-  `cell_dofree`.
-- `PW/src/input.f90:2179-2215`: sets default PR cell mass.
-- `PW/src/run_pwscf.f90:177-190`: electronic step.
-- `PW/src/run_pwscf.f90:229-235`: forces and stress.
-- `PW/src/run_pwscf.f90:237-252`: XML output, stress constraints, update file,
-  and `move_ions`.
-- `PW/src/move_ions.f90:270-393`: MD dispatch to `vcsmd`.
-- `PW/src/vcsmd.f90:301-305`: first-step `vcinit`.
-- `PW/src/vcsmd.f90:314-320`: later-step `vcmove`.
-- `PW/src/vcsmd.f90:406-438`: writes new cell, volume, reciprocal lattice, and
-  positions back to PW globals.
-- `PW/src/run_pwscf.f90:308-324`: refreshes cell-dependent state after the move.
-
-Force/stress:
-
-- `PW/src/forces.f90:9-35`: force driver and storage.
-- `PW/src/forces.f90:259-357`: force sum, symmetrization, fixed-coordinate
-  masking.
-- `PW/src/stress.f90:10-46`: stress driver.
-- `PW/src/stress.f90:200-219`: stress sum and symmetrization.
-- `PW/src/pwcom.f90:361-374`: `force_mod` storage.
-
-## Implemented QE Source Modifications
-
-Changed:
-
-- `Modules/input_parameters.f90`: declares `caimd`, `caimd_stride`,
-  `caimd_step_strain(6)`, and `caimd_mask(6)` and add them to `&CELL`.
-- `Modules/read_namelists.f90`: implements defaults, broadcast, finite-value
-  validation, positive stride validation, and event-increment bound.
-- `PW/src/input.f90`: transfers validated CAIMD inputs into runtime state after
-  QE has resolved `calculation`, `cell_dynamics`, pressure, `wmass`, and
-  `cell_dofree`; also rejects stale MD history before from-scratch cleanup.
-- `PW/src/caimd_module.f90`: stores runtime state and implements six-component
-  mapping, event schedule, strain projection,
-  rotation suppression, history projection, atomic velocity/history transform,
-  determinant/conditioning checks, and no-op handling.
-- `PW/src/vcsubs.f90`: calls CAIMD projection at the PR cell acceleration and
-  velocity correction points before final atomic/cell Beeman commit.
-- `PW/src/vcsmd.f90`: rejects unsupported start-of-run MD history and records
-  CAIMD ionic temperature diagnostics.
-- `PW/src/run_pwscf.f90`: writes the pre-move CAIMD stress-strain log.
-- `PW/src/Makefile`: adds the new PW-local module object to `PWLIBS`.
-- `PW/CMakeLists.txt`: adds the new PW-local module source to `src_pw`.
-
-Not changed in V1:
-
-- `PW/src/add_qexsd_step.f90` and QEXSD-related modules.
-- `PW/Doc/INPUT_PW.*` or generated input documentation.
-
-Inspected but not expected to change for first implementation:
-
-- `PW/src/forces.f90`
-- `PW/src/stress.f90`
-- `PW/src/pwcom.f90`
-- `PW/src/move_ions.f90`
-- `Modules/cell_base.f90`
-- `Modules/deviatoric.f90`
-- `Modules/cryst_to_car.f90`
-- `Modules/printout_base.f90`
-
-## QE Components Intentionally Left Unchanged
-
-The first implementation should not alter:
-
-- DFT electronic minimization and SCF convergence machinery.
-- Atomic force computation.
-- Stress computation.
-- Ionic thermostats except for using the already projected atomic state.
-- Ordinary atomic Beeman thermal motion for unconstrained dynamics.
-- Plane-wave/FFT/cell-dependent refresh after `move_ions`.
-- Existing PR behavior when `caimd=.FALSE.` or all `caimd_mask` values are
-  false.
-
-## Staged Implementation Plan
-
-1. Add inputs and strict validation.
-2. Add a PW-local CAIMD module with pure matrix helpers and no side effects.
-3. Add unit-like driver checks for six-component mapping, tensor shear, left
-   multiplication, determinant checks, and all-false no-op.
-4. Integrate CAIMD projection into `vcsubs.f90` first for `vcinit`, then for
-   the `vcmove` iterative correction loop.
-5. Add `vcsmd` runtime state wiring and restart rejection.
-6. Add optional pre-move CAIMD logging only after the state update is correct.
-7. Build with both Makefile and CMake paths.
-8. Run focused regression tests, then small physical diagnostics.
-
-## Staged Validation Plan
-
-1. Build-only validation with CAIMD inputs disabled.
-2. `caimd=.FALSE.` reproduces baseline `vc-md`.
-3. `caimd=.TRUE.` with all mask values false reproduces baseline `vc-md`.
-4. Single masked zero-increment component remains fixed.
-5. Fully masked zero-increment cell behaves as fixed-cell AIMD for the cell
-   while retaining atomic thermal motion.
-6. Uniaxial imposed strain with transverse PR relaxation.
-7. Isolated tensor shear test and engineering-shear factor check.
-8. Non-orthogonal-cell left-multiplication and transpose checks.
-9. Internal rotation suppression check using `W = skew(Hnew*inverse(Hold)-I)`.
-10. Restart rejection test.
-11. Incompatible `cell_dofree`, fixed-volume, and fixed-area rejection tests.
-12. Stress/strain output alignment test.
-
-## Unresolved Questions
-
-No unresolved architectural blocker remains for a first implementation.
-
-Scientific choices intentionally fixed for version 1:
-
-- small-strain tensor convention;
-- preserve peculiar Cartesian atomic velocity, not fractional velocity;
-- suppress internal PR rotation only when CAIMD actively controls at least one
-  strain component;
-- reject restart and incompatible cell constraints.
-
-Later versions may revisit finite-strain definitions, energy/work accounting of
-the external drive, restart persistence, and rotating load frames.
+Important semantics:
+
+- `stress_*_GPa` is the stress computed for the pre-move cell of that ionic
+  step.
+- `actual_*` is the small strain of that same pre-move cell relative to the
+  CAIMD reference cell.
+- `following_move_is_event` tells whether the move after the logged stress is
+  scheduled to apply an imposed strain event.
+- `temperature_K` is a CAIMD diagnostic derived from the ionic kinetic-energy
+  quantity passed through the existing `vcsmd` path when available; otherwise it
+  falls back to the current input/target temperature value available to the
+  premove writer. It is not a new thermostat variable and does not include a
+  redesigned CAIMD temperature definition.
+- `velocity_jump_max` and `velocity_jump_rms` are residual diagnostics of the
+  enforced velocity-history transformation. At a correctly transformed event
+  they should be at roundoff scale; they are not physical velocity jumps to be
+  interpreted as a thermostat or impulse.
+
+Because QE XML step output occurs before `move_ions` and `.cel` trajectory
+output occurs after the move, stress-strain analysis should pair `.caimd`
+stress/strain rows with the premove cell, not blindly with the following `.cel`
+row.
+
+## Restart Policy
+
+Restart is intentionally unsupported in V1. A valid restart would require
+persisting and validating extra CAIMD protocol state:
+
+- event count and stride phase;
+- cumulative imposed strain;
+- reference cell;
+- history projection convention;
+- output/log append state.
+
+The implementation rejects restart mode, stale MD history before cleanup, and
+unexpected MD history at the start of `vcsmd`.
+
+## Numerical Checks
+
+CAIMD V1 requires:
+
+- positive `caimd_stride`;
+- finite `caimd_step_strain` values;
+- finite event increments;
+- per-event increment bound `abs(stride * step_strain) <= 1.0d-2`;
+- positive projected-cell determinant above the CAIMD determinant floor;
+- projected-cell condition number below the CAIMD condition bound;
+- explicit error paths for singular or ill-conditioned 3x3 inversions.
+
+## Implementation Files
+
+Changed source files for CAIMD V1 are:
+
+- `Modules/input_parameters.f90`
+- `Modules/read_namelists.f90`
+- `PW/src/input.f90`
+- `PW/src/caimd_module.f90`
+- `PW/src/run_pwscf.f90`
+- `PW/src/vcsmd.f90`
+- `PW/src/vcsubs.f90`
+- `PW/src/Makefile`
+- `PW/CMakeLists.txt`
+
+Validation support is in:
+
+- `test-suite/caimd/caimd_validation.py`
+
+## Validation Expectations
+
+Focused validation should include:
+
+- ordinary PW no-CAIMD behavior;
+- `caimd=.false.` and all-false mask no-op regressions;
+- active zero-increment constraints;
+- stride scheduling;
+- tensor shear convention;
+- non-orthogonal-cell left-multiplication behavior;
+- antisymmetric/rotation suppression diagnostics;
+- `.caimd` 26-column schema and finite diagnostic columns;
+- explicit rejections for unsupported calculation, non-PR cell dynamics,
+  non-`all` `cell_dofree`, restart/stale history, invalid stride, oversized
+  event increment, fixed atomic coordinates, thermostats/rescaling, and CP
+  `caimd=.true.`;
+- parser behavior for ignored non-variable-cell `&CELL` without card scanning.
+
+Leonardo-specific build and validation instructions are intentionally kept in
+`LEONARDO_BUILD.md`, not in this algorithm document.

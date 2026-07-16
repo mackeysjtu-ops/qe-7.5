@@ -7,6 +7,19 @@ Quantum ESPRESSO 7.5 source tree. The implementation commit that contains this
 file is created after the report is staged; its hash is reported in the final
 Codex response.
 
+## Current Documentation Structure
+
+This file is a historical implementation report. For current project guidance
+use:
+
+- `AGENTS.md` for stable repository rules and document routing;
+- `CAIMD_IMPLEMENTATION.md` for the active CAIMD V1 algorithm and source
+  boundary specification;
+- `LEONARDO_BUILD.md` for repeatable Leonardo build, deployment, validation,
+  and recovery steps;
+- `CAIMD_LEONARDO_GPU_VALIDATION_REPORT.md` for Leonardo historical evidence
+  and hardening checkpoints.
+
 ## macOS Validation Closure Checkpoint
 
 - Status: SUCCESS
