@@ -35,6 +35,28 @@ The first implementation is present with these limits:
   non-variable-cell calculation contains an otherwise ignored `&CELL` namelist
   with `caimd=.true.`, the input is now rejected explicitly instead of running
   as an ordinary non-CAIMD calculation.
+- Leonardo GPU/MPI validation passed on 2026-07-16. The validated remote build
+  used NVHPC 24.5, HPCX MPI 2.19, CMake 3.27.9, and an NVIDIA A100-SXM-64GB on
+  the Leonardo Booster partition. Both the current CAIMD CMake GPU/MPI `pw.x`
+  and the untouched QE 7.5 baseline CMake GPU/MPI `pw.x` built and linked. The
+  current installed executable SHA256 was
+  `4b316dad82d2cb18155fa62ed4957aef041355955b4a7a5687f15fe7fbcd0b35`; the
+  baseline executable SHA256 was
+  `7804c655a1ea6c157e09f402ef4064940edea08558317d1b529623fe8825d67f`.
+- The Leonardo build required a numerical-library compatibility workaround for
+  the system linker and module libraries: static OpenBLAS for BLAS/LAPACK,
+  deployment-local stripped ScaLAPACK and FFTW shared libraries, FFTW SONAME
+  symlinks, a local stripped `libopenblas.so.0`, and RPATH/loader paths pointed
+  at the deployment-local library directory. Runtime linkage inspection showed
+  no missing libraries.
+- Leonardo runtime validation covered valid current/baseline startup, actual
+  A100 activity, one-rank and two-rank MPI execution, baseline/default/
+  explicit-false/all-false no-op comparisons, ordinary non-CAIMD QE inputs,
+  active CAIMD fixed/stride/shear/non-orthogonal/anisotropic cases, `.caimd`
+  output and MPI single-writer behavior, representative MPI rejection cases,
+  and an isolated traditional `configure && make pw` observation. The final
+  34-case runtime harness reported zero failures. Full evidence and remaining
+  caveats are recorded in `CAIMD_LEONARDO_GPU_VALIDATION_REPORT.md`.
 
 ## Purpose And Physical Principle
 
