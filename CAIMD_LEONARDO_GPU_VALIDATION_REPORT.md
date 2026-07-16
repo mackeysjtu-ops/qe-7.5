@@ -6,21 +6,27 @@ This file is the persistent local checkpoint and final report for compiling and
 validating the QE 7.5 CAIMD V1 implementation as an MPI-enabled NVIDIA GPU build
 on the Leonardo Booster partition.
 
-## Post-validation Hardening Checkpoint
+## Post-validation Hardening And Revalidation
 
-- Status: IN_PROGRESS.
-- Checkpoint time: 2026-07-16 local session, before any post-hardening Leonardo
-  deployment.
+- Status: SUCCESS.
+- Checkpoint time: 2026-07-16 after local and Leonardo hardening
+  revalidation.
 - Repository root: `/Users/mengqicheng/Downloads/Learning/qe-7.5`.
 - Branch: `main`.
 - Starting hardening HEAD:
   `d6dc6aab82e0c3ed1ba36ecf1612bae6163b4863`.
-- Current phase: local source/documentation/harness hardening after the
-  successful macOS and Leonardo GPU/MPI validation.
-- Remote deployment status: not yet redeployed for this hardening pass.
-- Remote root retained for the next phase:
+- Source-under-test after hardening commits:
+  `09bffd3f23fe4c7121006a57081d0246bc90dd0e`.
+- Current phase: local source/documentation/harness hardening completed,
+  exact source deployed to Leonardo by Git bundle, current GPU/MPI `pw.x` and
+  `cp.x` rebuilt, and the tracked harness completed.
+- Remote root:
   `/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-v1-7aa61919`.
-- Local files modified or added in this phase so far:
+- Local commits in this hardening phase:
+  - `77455a7` (`Harden CAIMD V1 boundary handling`);
+  - `6226488` (`Add persistent CAIMD software validation harness`);
+  - `09bffd3` (`Document repeatable CAIMD Leonardo workflow`).
+- Local files modified or added in this phase:
   - `AGENTS.md`
   - `CAIMD_IMPLEMENTATION.md`
   - `CAIMD_V1_IMPLEMENTATION_REPORT.md`
@@ -30,7 +36,7 @@ on the Leonardo Booster partition.
   - `PW/src/input.f90`
   - `PW/src/caimd_module.f90`
   - `test-suite/caimd/caimd_validation.py`
-- Boundary hardening in progress:
+- Boundary hardening completed:
   - ignored non-variable-cell `&CELL` probing now inspects only the next
     significant record rather than scanning card data;
   - CP-visible `caimd=.true.` is rejected explicitly;
@@ -39,13 +45,13 @@ on the Leonardo Booster partition.
     input;
   - active masked CAIMD emits a one-time cumulative nominal strain warning
     after the masked cumulative strain first exceeds `1.0d-2`.
-- Documentation hardening in progress:
+- Documentation hardening completed:
   - `AGENTS.md` reduced to stable project guidance and document routing;
   - `CAIMD_IMPLEMENTATION.md` converted to a stable algorithm/source-boundary
     specification;
   - `LEONARDO_BUILD.md` added as the repeatable remote build/deploy/validation
     manual.
-- Harness hardening in progress:
+- Harness hardening completed:
   - added `test-suite/caimd/caimd_validation.py`;
   - syntax/help/list checks have passed locally;
   - local harness validation has passed.
@@ -81,6 +87,62 @@ on the Leonardo Booster partition.
     `ed22fdcf5274207e507db9e368536506e1e25298413dd68bf29c51d5e76ae3ec`;
   - `test-suite/caimd/caimd_validation.py`:
     `bd32e8cfc8f2bf8b524da9688f50a4367afa631956fd30afb621e36db2c95e38`.
+- Leonardo deployment evidence for source-under-test
+  `09bffd3f23fe4c7121006a57081d0246bc90dd0e`:
+  - remote branch: `caimd-harden-09bffd3`;
+  - remote source status: clean;
+  - bundle:
+    `$ROOT/evidence/state/qe-caimd-harden-09bffd3.bundle`;
+  - bundle SHA256:
+    `97c86fe0491ec9b9a15c663c19218d2db8705f460f6eb060b910658a87fc01e7`;
+  - remote checkpoint: `$ROOT/evidence/REMOTE_CHECKPOINT.md`, status
+    `COMPLETE`.
+- Leonardo GPU/MPI rebuild evidence:
+  - build job `49542425` ran on `lrdn0036`;
+  - job `49542425` rebuilt and installed current `pw.x` and `cp.x`, then
+    failed only when the harness used Leonardo's default Python, which was too
+    old for `from __future__ import annotations`;
+  - `sacct` for job `49542425`: `FAILED`, exit `1:0`, elapsed `00:01:13`;
+  - current installed/build `pw.x` SHA256:
+    `c9588df640013f098a33e33e1eec6e1f0820ed53f7488efffb0a83ec7ed25b48`;
+  - current installed/build `cp.x` SHA256:
+    `2723af23df8306b5c4a52e380bd6a618606077198592fa1b6d03f8e287ba5882`;
+  - untouched baseline GPU/MPI `pw.x` SHA256:
+    `7804c655a1ea6c157e09f402ef4064940edea08558317d1b529623fe8825d67f`;
+  - old installed `pw.x` was archived under
+    `$ROOT/evidence/builds/archived-binaries/` before replacement.
+- Leonardo tracked harness evidence:
+  - harness job `49543531` ran on `lrdn0942`;
+  - `sacct` for job `49543531`: `COMPLETED`, exit `0:0`, elapsed `00:02:00`;
+  - Python environment:
+    `/leonardo/home/userexternal/mcheng00/venvs/mace_py311/bin/python`,
+    Python `3.11.7`;
+  - command log:
+    `$ROOT/evidence/tests/hardening_harness_py311_49543531.command.txt`;
+  - run root:
+    `$ROOT/validation/hardening-py311-49543531`;
+  - final summary:
+    `$ROOT/validation/hardening-py311-49543531/analysis/summary.json`;
+  - summary SHA256:
+    `fff545a5f7f65267c488e6b6c13f72a84088d6dcc2d7d246513bb200cfd9d38a`;
+  - cases: 29 total, zero failures, zero skipped.
+- Representative hardening harness checks:
+  - `startup_scf` observed A100 activity: 15 monitor samples, 1184 MiB peak
+    memory, 7% peak GPU utilization, and 78.08 W peak power;
+  - `baseline_vcmd_default`, `current_vcmd_default`,
+    `current_vcmd_false`, and `current_vcmd_allfalse` all completed;
+  - `current_vcmd_allfalse` wrote `.caimd` rows with 26 columns, all event
+    flags false, finite temperature, and finite velocity residuals;
+  - `active_shear_xy` wrote four event rows, final nominal `xy` tensor shear
+    `3.0e-4`, 26 columns, finite temperature, and finite velocity residuals;
+  - `active_stride2_xx` wrote six rows with event flags
+    `T,F,T,F,T,F` and final nominal `xx` strain `6.0e-4`;
+  - `caimd_output_schema` verified the 26-column `.caimd` schema;
+  - `policy_cumulative_warning` reached final nominal `xx` strain `1.8e-2`;
+  - `cp_ordinary` completed with zero status;
+  - `cp_active_reject` completed as an expected rejection with return code `1`;
+  - all parser, policy, rejection, active, output-schema, and rotation cases
+    in the tracked matrix succeeded under their expected outcomes.
 - Latest successful local commands:
   - `git diff --check`
   - `python3 -m py_compile test-suite/caimd/caimd_validation.py`
@@ -94,11 +156,16 @@ on the Leonardo Booster partition.
   - `cmake --build /private/tmp/qe_caimd_harden_build --target qe_cp_exe -j 4`
     failed because the CMake CP target is named `qe_cpv_exe`;
   - non-material exploratory glob listing of absent `/private/tmp/qe_caimd_*`
-    build directories failed under zsh `nomatch`.
-- Next action:
-  - create local commits, then deploy exact commits to Leonardo by Git bundle.
-- Remote checkpoint target for the next remote phase:
-  `$ROOT/evidence/REMOTE_CHECKPOINT.md`.
+    build directories failed under zsh `nomatch`;
+  - remote job `49542425` harness launch failed because the default Leonardo
+    Python was too old; the follow-up Python 3.11 harness job passed.
+- Final local action:
+  - this section is the docs-only revalidation record to be committed locally.
+    No push is authorized or required.
+
+The historical final summary below is retained as evidence for the earlier
+pre-hardening Leonardo validation pass. The post-hardening source-under-test is
+the `09bffd3f23fe4c7121006a57081d0246bc90dd0e` deployment described above.
 
 ## Final Summary
 

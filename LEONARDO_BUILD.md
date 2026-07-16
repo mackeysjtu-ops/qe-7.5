@@ -70,6 +70,15 @@ export OMP_NUM_THREADS="${OMP_NUM_THREADS:-1}"
 export OMPI_MCA_coll_hcoll_enable=0
 ```
 
+Run the Python validation harness with the Leonardo Python 3.11 environment:
+
+```bash
+source "$HOME/venvs/mace_py311/bin/activate"
+python --version
+```
+
+The system/default `python3` can be too old for the tracked harness.
+
 ## Checkpoints
 
 Before any operation expected to run longer than about five minutes, update:
@@ -213,7 +222,7 @@ practical:
 
 ```bash
 source "$ROOT/scripts/load_build_environment.sh"
-cmake --build "$ROOT/build-current-gpu" --target qe_cp_exe -j8
+cmake --build "$ROOT/build-current-gpu" --target qe_cpv_exe -j8
 ```
 
 Record whether `cp.x` was built, skipped, or unavailable. CAIMD remains PW-only;
@@ -247,12 +256,14 @@ Leonardo run from the deployed source:
 
 ```bash
 cd "$ROOT/src-current"
-python3 test-suite/caimd/caimd_validation.py \
+source "$ROOT/scripts/load_build_environment.sh"
+source "$HOME/venvs/mace_py311/bin/activate"
+python test-suite/caimd/caimd_validation.py \
   --mode leonardo \
   --allocation "$SLURM_JOB_ID" \
   --current-exe "$ROOT/install-current-gpu/bin/pw.x" \
   --baseline-exe "$ROOT/build-baseline-gpu/bin/pw.x" \
-  --cp-exe "$ROOT/build-current-gpu/bin/cp.x" \
+  --cp-exe "$ROOT/install-current-gpu/bin/cp.x" \
   --pseudo "$ROOT/src-current/pseudo/C.UPF" \
   --work-root "$ROOT/validation"
 ```
