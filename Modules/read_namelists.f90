@@ -1921,6 +1921,9 @@ MODULE read_namelists_module
        REAL(DP)           :: event_increment
        !
        !
+       IF( prog == 'CP' .AND. caimd ) &
+          CALL errore( sub_name, &
+                       ' caimd is PW-only and is not supported by CP ',1)
        DO i = 1, SIZE(cell_dynamics_allowed)
           IF( TRIM(cell_dynamics) == &
               cell_dynamics_allowed(i) ) allowed = .TRUE.
@@ -2510,16 +2513,17 @@ MODULE read_namelists_module
           IF( read_cell_namelist ) THEN
              READ( unit_loc, cell, iostat = ios )
           ELSE
-             ! Non-variable-cell runs normally ignore &CELL; probe only to
-             ! reject CAIMD requests that would otherwise be silently discarded.
-             READ( unit_loc, cell, iostat = ios )
-             IF ( ios == 0 ) THEN
-                IF ( caimd ) CALL errore( ' read_namelists ', &
-                    ' caimd=.true. in &CELL requires calculation=''vc-md'' ', 1 )
-                CALL cell_defaults( prog )
+             ! Non-variable-cell runs normally ignore &CELL.  Look only at the
+             ! next significant input record so card data are not scanned while
+             ! probing for an ignored CAIMD request.
+             IF ( ignored_cell_namelist_present( unit_loc, prog_ ) ) THEN
+                READ( unit_loc, cell, iostat = ios )
+                IF ( ios == 0 ) THEN
+                   IF ( caimd ) CALL errore( ' read_namelists ', &
+                       ' caimd=.true. in &CELL requires calculation=''vc-md'' ', 1 )
+                   CALL cell_defaults( prog )
+                END IF
              ELSE
-                CALL cell_defaults( prog )
-                CALL restore_after_ignored_cell_probe( unit_loc, prog_ )
                 ios = 0
              END IF
           END IF
@@ -2645,6 +2649,41 @@ MODULE read_namelists_module
        END IF
        !
      END SUBROUTINE restore_after_ignored_cell_probe
+     !
+     LOGICAL FUNCTION ignored_cell_namelist_present( unit_loc, prog_ )
+       USE io_global, ONLY : ionode
+       !
+       IMPLICIT NONE
+       INTEGER, INTENT(IN) :: unit_loc
+       CHARACTER(LEN=*), INTENT(IN) :: prog_
+       INTEGER :: ios, i
+       CHARACTER(LEN=512) :: input_line, significant
+       CHARACTER(LEN=5) :: header
+       CHARACTER(LEN=1), EXTERNAL :: capital
+       !
+       ignored_cell_namelist_present = .FALSE.
+       IF ( .NOT. ionode ) RETURN
+       !
+       DO
+          READ( unit_loc, '(A)', iostat = ios ) input_line
+          IF ( ios /= 0 ) EXIT
+          significant = ADJUSTL( input_line )
+          IF ( LEN_TRIM( significant ) == 0 ) CYCLE
+          IF ( significant(1:1) == '!' ) CYCLE
+          IF ( LEN_TRIM( significant ) >= 5 ) THEN
+             header = significant(1:5)
+             DO i = 1, 5
+                header(i:i) = capital( header(i:i) )
+             END DO
+             ignored_cell_namelist_present = header == '&CELL' .OR. &
+                                             header == '$CELL'
+          END IF
+          EXIT
+       END DO
+       !
+       CALL restore_after_ignored_cell_probe( unit_loc, prog_ )
+       !
+     END FUNCTION ignored_cell_namelist_present
      !
      SUBROUTINE check_namelist_read(ios, unit_loc, nl_name)
        USE io_global, ONLY : ionode, ionode_id

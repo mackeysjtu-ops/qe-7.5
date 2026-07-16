@@ -1709,6 +1709,8 @@ SUBROUTINE iosys_end ( )
   !! control variables, cell and atomic structure have been read and set
   !
   USE input_parameters,      ONLY : trism, lfcp, lgcscf
+  USE input_parameters,      ONLY : caimd, caimd_mask, ion_temperature, &
+                                    cell_temperature
   USE input_parameters,      ONLY : k_points, xk, wk, nk1, nk2, nk3,  &
                                     k1, k2, k3, nkstot
   USE input_parameters,      ONLY : ibrav, ecutwfc, ecutrho
@@ -1716,7 +1718,7 @@ SUBROUTINE iosys_end ( )
   USE control_flags,         ONLY : lconstrain, lxdm, llondon, ldftd3, &
                                     do_makov_payne
   USE cell_base,             ONLY : alat, at
-  USE ions_base,             ONLY : nat, ityp, tau
+  USE ions_base,             ONLY : nat, ityp, tau, if_pos
   USE constraints_module,    ONLY : init_constraint
   USE start_k,               ONLY : init_start_k
   USE extfield,              ONLY : tefield, forcefield, gate, forcegate
@@ -1733,6 +1735,25 @@ SUBROUTINE iosys_end ( )
   ! ... set up k-points (may require reciprocal lattice vectors bg)
   !
   CALL init_start_k ( nk1, nk2, nk3, k1, k2, k3, k_points, nkstot, xk, wk )
+  !
+  IF ( caimd .AND. ANY( caimd_mask ) ) THEN
+     IF ( ANY( if_pos(:,1:nat) /= 1 ) ) CALL errore( 'iosys', &
+          'active CAIMD does not support fixed atomic coordinates', 1 )
+     SELECT CASE ( TRIM( ion_temperature ) )
+     CASE ( 'not_controlled', 'not-controlled', 'not controlled' )
+        CONTINUE
+     CASE DEFAULT
+        CALL errore( 'iosys', &
+             'active CAIMD does not support ionic thermostats or rescaling', 1 )
+     END SELECT
+     SELECT CASE ( TRIM( cell_temperature ) )
+     CASE ( 'not_controlled', 'not-controlled', 'not controlled' )
+        CONTINUE
+     CASE DEFAULT
+        CALL errore( 'iosys', &
+             'active CAIMD does not support cell thermostats', 1 )
+     END SELECT
+  END IF
   !
   ! ... set cell mass for variable-cell MD if not set in input (requires amass)
   !

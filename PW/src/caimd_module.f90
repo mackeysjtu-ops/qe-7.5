@@ -28,6 +28,7 @@ MODULE caimd_module
   REAL(DP) :: caimd_last_increment_(6) = 0.0_DP
   LOGICAL  :: caimd_output_initialized_ = .FALSE.
   LOGICAL  :: caimd_have_temperature_ = .FALSE.
+  LOGICAL  :: caimd_cumulative_warning_emitted_ = .FALSE.
   REAL(DP) :: caimd_temperature_ = 0.0_DP
   REAL(DP) :: caimd_last_velocity_jump_max_ = 0.0_DP
   REAL(DP) :: caimd_last_velocity_jump_rms_ = 0.0_DP
@@ -68,6 +69,7 @@ CONTAINS
     caimd_last_increment_ = 0.0_DP
     caimd_output_initialized_ = .FALSE.
     caimd_have_temperature_ = .FALSE.
+    caimd_cumulative_warning_emitted_ = .FALSE.
     caimd_temperature_ = 0.0_DP
     caimd_last_velocity_jump_max_ = 0.0_DP
     caimd_last_velocity_jump_rms_ = 0.0_DP
@@ -191,6 +193,7 @@ CONTAINS
        caimd_last_increment_ = inc
        caimd_cumulative_strain_ = caimd_cumulative_strain_ + inc
        caimd_event_count_ = caimd_event_count_ + 1
+       CALL caimd_warn_large_cumulative_strain()
     END IF
     !
   END SUBROUTINE caimd_apply_final_projection
@@ -348,6 +351,29 @@ CONTAINS
     caimd_last_velocity_jump_rms_ = SQRT( jump2_sum / REAL( MAX( nat, 1 ), DP ) )
     !
   END SUBROUTINE caimd_transform_atomic_history
+  !
+  SUBROUTINE caimd_warn_large_cumulative_strain()
+    !
+    USE io_global, ONLY : ionode, stdout
+    !
+    REAL(DP) :: max_strain
+    INTEGER :: i
+    !
+    IF ( caimd_cumulative_warning_emitted_ ) RETURN
+    IF ( .NOT. caimd_controls_cell() ) RETURN
+    max_strain = 0.0_DP
+    DO i = 1, 6
+       IF ( caimd_mask_(i) ) max_strain = MAX( max_strain, &
+                                               ABS( caimd_cumulative_strain_(i) ) )
+    END DO
+    IF ( max_strain > caimd_max_event_strain ) THEN
+       IF ( ionode ) WRITE( stdout, '(/,5X,A,ES12.4,A)' ) &
+          'WARNING: CAIMD cumulative masked nominal strain is ', max_strain, &
+          '; V1 uses a small-strain convention.'
+       caimd_cumulative_warning_emitted_ = .TRUE.
+    END IF
+    !
+  END SUBROUTINE caimd_warn_large_cumulative_strain
   !
   SUBROUTINE caimd_ensure_reference( h )
     !
