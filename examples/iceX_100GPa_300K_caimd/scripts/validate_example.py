@@ -122,8 +122,11 @@ def check_qe_inputs(checks: list[dict[str, object]]) -> None:
         text = input_path.read_text(encoding="utf-8")
         rel = input_path.relative_to(EXAMPLE_ROOT)
         variable_cell = bool(re.search(r"calculation\s*=\s*'vc-(md|relax)'", text, re.IGNORECASE))
+        has_velocity_card = "ATOMIC_VELOCITIES { a.u }" in text
         if variable_cell and "press = 1000.0" not in text:
             problems.append(f"{rel}: missing press=1000.0 kbar")
+        if has_velocity_card and not re.search(r"ion_velocities\s*=\s*'from_input'", text, re.IGNORECASE):
+            problems.append(f"{rel}: explicit velocity card missing ion_velocities='from_input'")
         if active_caimd_input(input_path):
             required = [
                 r"calculation\s*=\s*'vc-md'",
@@ -138,7 +141,7 @@ def check_qe_inputs(checks: list[dict[str, object]]) -> None:
                     problems.append(f"{rel}: active CAIMD missing {pattern}")
             if re.search(r"^\s*[A-Za-z]{1,2}\s+[-+0-9.]+\s+[-+0-9.]+\s+[-+0-9.]+\s+0\s+0\s+0", text, re.MULTILINE):
                 problems.append(f"{rel}: fixed-coordinate flags found in active CAIMD")
-            if "ATOMIC_VELOCITIES { a.u }" not in text:
+            if not has_velocity_card:
                 problems.append(f"{rel}: active CAIMD missing explicit velocities")
     if problems:
         fail(checks, "qe_inputs", "; ".join(problems))

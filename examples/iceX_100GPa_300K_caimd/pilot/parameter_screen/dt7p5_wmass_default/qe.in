@@ -32,6 +32,7 @@
 &IONS
   ion_dynamics = 'beeman',
   ion_temperature = 'not_controlled',
+  ion_velocities = 'from_input',
 /
 
 &CELL

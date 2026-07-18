@@ -123,11 +123,15 @@ def cell_block(case: Case) -> str:
 
 def ions_block(case: Case) -> str:
     if case.calculation == "vc-md":
-        return """&IONS
-  ion_dynamics = 'beeman',
-  ion_temperature = 'not_controlled',
-/
-"""
+        lines = [
+            "&IONS",
+            "  ion_dynamics = 'beeman',",
+            "  ion_temperature = 'not_controlled',",
+        ]
+        if case.include_velocities:
+            lines.append("  ion_velocities = 'from_input',")
+        lines.append("/")
+        return "\n".join(lines) + "\n"
     if case.calculation == "vc-relax":
         return """&IONS
   ion_dynamics = 'bfgs',
