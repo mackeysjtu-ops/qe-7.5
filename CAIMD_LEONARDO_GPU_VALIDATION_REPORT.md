@@ -589,6 +589,70 @@ the `09bffd3f23fe4c7121006a57081d0246bc90dd0e` deployment described above.
   new checksum and dependency evidence, then run focused remote K_velocity/full
   harness validation before touching final deformation jobs.
 
+## 2026-07-18 Explicit vc-md Velocity Completion
+
+- Status: `SUCCESS`
+- Final local HEAD:
+  `24bdc0eac874d699a74dbcb42cdee2f717e4a55e`
+  (`Use supported velocity input path in Ice X decks`)
+- Source-bearing fix commit:
+  `1f1f16d0bf1c7bc71aba2d015fe817e319e2b588`
+  (`Support explicit velocities in PW vc-md`)
+- Harness parser compatibility commit:
+  `c647143070b0dbdf4d45c59dac750e642c656fe8`
+  (`Parse wrapped PR md histories in CAIMD harness`)
+- Ice X supported-input commit:
+  `24bdc0eac874d699a74dbcb42cdee2f717e4a55e`
+  (`Use supported velocity input path in Ice X decks`)
+- Remote `src-current` branch:
+  `caimd-velocity-24bdc0e`
+- Remote `src-current` HEAD:
+  `24bdc0eac874d699a74dbcb42cdee2f717e4a55e`
+- Current GPU/MPI `pw.x` SHA256:
+  `7cacabbef8d32aa83fa561cd124e319ced62714e0a66e2a85f2b1d99def4a6e8`
+- Current `cp.x` SHA256:
+  `2723af23df8306b5c4a52e380bd6a618606077198592fa1b6d03f8e287ba5882`
+- Baseline GPU/MPI `pw.x` SHA256:
+  `7804c655a1ea6c157e09f402ef4064940edea08558317d1b529623fe8825d67f`
+- Successful software validation job:
+  `49723755`, COMPLETED `0:0`, node `lrdn0022`, elapsed `00:04:01`.
+- K_velocity summary:
+  `/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-v1-7aa61919/validation/velocity-k-49723755/analysis/summary.json`
+- K_velocity summary SHA256:
+  `963169d4e551c433b19b7a22aad80193747eaafa0df4c40dabb7c5d829684d36`
+- K_velocity outcome:
+  11 cases, failures `[]`, skipped `[]`; untouched baseline explicit
+  `vc-md` PR `ratd=0`, repaired current explicit `vc-md`
+  `ratd_max_abs=2.9673590504451037e-05`, input/init mismatch
+  `2.710505431213761e-20`.
+- Full tracked harness summary:
+  `/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-v1-7aa61919/validation/velocity-full-49723755/analysis/summary.json`
+- Full tracked harness summary SHA256:
+  `053fa00f08406ea342f5cfa66521d5743b0bb7a023ed521be01d65e27550ede1`
+- Full tracked harness outcome:
+  40 cases, failures `[]`, skipped `[]`.
+- Successful Ice X initialization smoke job:
+  `49725763`, COMPLETED `0:0`, node `lrdn0441`, elapsed `00:02:34`.
+- Ice X smoke summary:
+  `/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-v1-7aa61919/evidence/tests/iceX_velocity_49725763.json`
+- Ice X smoke outcome:
+  temporary nstep=1 `vcmd_false`, all-false CAIMD, and active zero-strain
+  CAIMD all completed with `JOB DONE`; `.tv` ionic temperature was `295.86 K`
+  in all three cases, matching the deterministic 300 K velocity card under the
+  PR `3*(nat+1)` denominator.
+- Important diagnosis:
+  Ice X decks require both `ATOMIC_VELOCITIES { a.u }` and
+  `ion_velocities='from_input'`. The source fix makes PW `vc-md`/PR honor the
+  parsed velocity state; the deck fix puts the Ice X example on the supported
+  QE input path.
+- Failed attempts resolved:
+  `49723125` compute-node `/tmp` full, `49723301` harness `.md` wrapping parser,
+  `49724256` missing Python venv in smoke script, `49724464` old Ice X template
+  missing `ion_velocities='from_input'`, and `49725315` post-QE `.caimd`
+  boolean parser issue. None remain outstanding.
+- Final deformation jobs:
+  not submitted.
+
 ## Local Environment
 
 - Checkpoint initialized: `2026-07-15T18:19:25Z`

@@ -4,13 +4,10 @@ Status: PARTIAL
 
 The example package, bounded Leonardo convergence tests, short pilot jobs,
 analysis scripts, and final manual-submit deformation templates are prepared.
-The remaining limitation is deployment/runtime validation: historical Leonardo
-pilots were collected with an earlier CAIMD executable whose PW
-`vc-md`/Parrinello-Rahman initialization path ignored explicit
-`ATOMIC_VELOCITIES` for variable-cell MD. This source tree now contains a local
-source-level fix and baseline/current validation for explicit PR velocity
-initialization; the rebuilt Leonardo executable and short Ice X runtime
-validation are still pending.
+The explicit 300 K velocity initialization path is now fixed and validated
+locally and on Leonardo. The remaining limitation is scientific scope: the final
+tension, compression, and shear deformation jobs remain manually submittable but
+were intentionally not submitted by this workflow.
 
 ## Local Preflight
 
@@ -68,14 +65,14 @@ CAIMD required `ion_temperature='not_controlled'`.
 
 ## 300 K vc-md velocity initialization checkpoint
 
-- Status: `LOCAL FIX VALIDATED; LEONARDO VALIDATION PENDING`
+- Status: `LEONARDO VALIDATED`
 - Starting HEAD:
   `20a9f2f55f9164cdcc5777f43f02891baaa8bfee`
 - Current HEAD:
-  `20a9f2f55f9164cdcc5777f43f02891baaa8bfee`
-- Current phase: local clean current/baseline builds and baseline/current
-  comparisons completed; Leonardo deployment and short Ice X validation are
-  next.
+  `24bdc0eac874d699a74dbcb42cdee2f717e4a55e`
+- Current phase: source fix, supported Ice X input path, local validation,
+  Leonardo GPU/MPI rebuild, focused/full harness validation, and short Ice X
+  300 K smoke validation completed.
 - Root-cause classification: `D`, an untouched QE 7.5 PW
   `vc-md`/Parrinello-Rahman initialization omission. The velocity card is
   parsed and fixed-cell MD consumes it, but `vcsmd -> vcinit` does not receive
@@ -88,6 +85,8 @@ CAIMD required `ion_temperature='not_controlled'`.
   `/private/tmp/qe_velocity_baseline_build/bin/pw.x`
 - Baseline executable SHA256:
   `c5df6bee268f8b43549e9d16ffae264d45474668aece91739fea1f0565506952`
+- Leonardo GPU/MPI `pw.x` SHA256:
+  `7cacabbef8d32aa83fa561cd124e319ced62714e0a66e2a85f2b1d99def4a6e8`
 - Tests completed:
   local tiny fixed-cell MD explicit velocities, ordinary `vc-md` explicit
   velocities, `caimd=.false.`, all-false CAIMD, active zero-strain CAIMD,
@@ -103,7 +102,10 @@ CAIMD required `ion_temperature='not_controlled'`.
   `/private/tmp/qe_velocity_harness_post/k-velocity-3/analysis/summary.json`,
   `/private/tmp/qe_velocity_harness_post/full-current/analysis/summary.json`,
   `/private/tmp/qe_velocity_clean_validation/k-velocity-with-baseline/analysis/summary.json`,
-  and `/private/tmp/qe_velocity_clean_validation/full-with-baseline/analysis/summary.json`.
+  `/private/tmp/qe_velocity_clean_validation/full-with-baseline/analysis/summary.json`,
+  `/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-v1-7aa61919/validation/velocity-k-49723755/analysis/summary.json`,
+  `/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-v1-7aa61919/validation/velocity-full-49723755/analysis/summary.json`,
+  and `/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-v1-7aa61919/evidence/tests/iceX_velocity_49725763.json`.
 - Key evidence: untouched QE 7.5 baseline `vc-md` with a nonzero explicit
   velocity card saves zero first-step PR `ratd` and zero temperature, while
   baseline fixed-cell MD consumes the same card with input/file velocity mismatch
@@ -113,22 +115,25 @@ CAIMD required `ion_temperature='not_controlled'`.
   remain zero. The Ice X card independently reconstructs to
   `299.999999999994 K` with `3N-3` degrees of freedom and
   `295.862068965511 K` under the PR `3*(nat+1)` temperature denominator used by
-  `.tv`/`.caimd`.
+  `.tv`. The Ice X temporary nstep=1 Leonardo smoke cases `vcmd_false`,
+  all-false CAIMD, and active zero-strain CAIMD all completed with `JOB DONE`
+  and `.tv` ionic temperature `295.86 K`.
 - Files modified: `PW/src/vcsmd.f90`, `PW/src/vcsubs.f90`,
-  `test-suite/caimd/caimd_validation.py`, and this report.
+  `test-suite/caimd/caimd_validation.py`, Ice X input decks/scripts, and this
+  report.
 - Latest successful command:
   `python3 test-suite/caimd/caimd_validation.py --current-exe /private/tmp/qe_velocity_current_build/bin/pw.x --baseline-exe /private/tmp/qe_velocity_baseline_build/bin/pw.x --pseudo pseudo/C.UPF --work-root /private/tmp/qe_velocity_clean_validation --run-id full-with-baseline --timeout 180`
 - Latest failed command: an initial parallel `shasum` raced ahead of
   `/private/tmp/iceX_velocities_300K_regen.{inc,json}` creation; rerun
   succeeded and both regenerated files matched the tracked files.
-- Active or latest Slurm job: none for this checkpoint.
-- Exact next action: commit the local source/test/doc checkpoint, deploy the
-  exact source state to Leonardo, rebuild GPU/MPI `pw.x`, update Slurm checksum
-  guards, and run short remote validation before any final deformation job.
+- Active or latest Slurm job: `49725763`, COMPLETED `0:0`.
+- Exact next action: review the final deformation templates and submit them
+  manually only when ready; this workflow did not submit final deformation jobs.
 
 ## Remote Deployment And Provenance
 
-- Remote host: `login02.leonardo.local`
+- Remote host: `login05.leonardo.local` for deployment checks; validation ran on
+  allocated compute nodes.
 - Remote user: `mcheng00`
 - Remote root:
   `/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-v1-7aa61919`
@@ -137,7 +142,7 @@ CAIMD required `ion_temperature='not_controlled'`.
 - `pw.x`:
   `/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-v1-7aa61919/install-current-gpu/bin/pw.x`
 - `pw.x` SHA256:
-  `c9588df640013f098a33e33e1eec6e1f0820ed53f7488efffb0a83ec7ed25b48`
+  `7cacabbef8d32aa83fa561cd124e319ced62714e0a66e2a85f2b1d99def4a6e8`
 - `cp.x` SHA256:
   `2723af23df8306b5c4a52e380bd6a618606077198592fa1b6d03f8e287ba5882`
 - `ldd` inspection found no reported `not found` entries in the inspected
@@ -155,6 +160,11 @@ CAIMD required `ion_temperature='not_controlled'`.
 - Bounded zero-strain and dt/wmass pilots: completed.
 - Bounded active tension/compression/shear pilots: completed.
 - `.caimd` analysis: 4 active pilot files parsed, 20 rows each, no parser flags.
+- Explicit velocity software validation: Leonardo K_velocity 11 cases, failures
+  `[]`, skipped `[]`; full tracked harness 40 cases, failures `[]`, skipped
+  `[]`.
+- Short Ice X 300 K initialization smoke: 3 temporary nstep=1 cases completed
+  with `.tv` ionic temperature `295.86 K`.
 - Final deformation jobs: not submitted.
 
 ## Key Numerical Findings
@@ -178,6 +188,8 @@ CAIMD required `ion_temperature='not_controlled'`.
 | 49700996 | remaining convergence matrix | COMPLETED 0:0 | lrdn0452 | 00:04:31 |
 | 49701674 | zero-strain plus dt/wmass matrix | COMPLETED 0:0 | lrdn0026 | 00:26:40 |
 | 49701713 | active strain pilot matrix | COMPLETED 0:0 | lrdn0062 | 00:19:24 |
+| 49723755 | velocity fix GPU/MPI rebuild plus K_velocity/full harness | COMPLETED 0:0 | lrdn0022 | 00:04:01 |
+| 49725763 | short Ice X 300 K velocity initialization smoke | COMPLETED 0:0 | lrdn0441 | 00:02:34 |
 
 Peak GPU monitor values:
 
@@ -224,9 +236,16 @@ sbatch run.slurm
 - `evidence/matrix-49701674.tsv`
 - `evidence/matrix-49701713.tsv`
 - `evidence/LEONARDO_JOB_SUMMARY.md`
+- `evidence/velocity_initialization_validation.json`
+- Remote K_velocity summary:
+  `/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-v1-7aa61919/validation/velocity-k-49723755/analysis/summary.json`
+- Remote full harness summary:
+  `/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-v1-7aa61919/validation/velocity-full-49723755/analysis/summary.json`
+- Remote Ice X velocity smoke summary:
+  `/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-v1-7aa61919/evidence/tests/iceX_velocity_49725763.json`
 
 ## Next Action
 
-Before submitting final deformation jobs, deploy and validate a rebuilt CAIMD
-`pw.x` that includes the PW `vc-md`/PR explicit-velocity initialization fix, and
-update each Slurm checksum guard to that executable.
+Final deformation jobs remain unsubmitted. Submit them manually only after
+reviewing the updated 300 K initialization evidence and the checksum-guarded
+Slurm scripts.

@@ -14,7 +14,7 @@ set -euo pipefail
 
 ROOT="/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-v1-7aa61919"
 PW="$ROOT/install-current-gpu/bin/pw.x"
-EXPECTED_PW_SHA256="c9588df640013f098a33e33e1eec6e1f0820ed53f7488efffb0a83ec7ed25b48"
+EXPECTED_PW_SHA256="7cacabbef8d32aa83fa561cd124e319ced62714e0a66e2a85f2b1d99def4a6e8"
 
 if [[ ! -x "$PW" ]]; then
   echo "ERROR: pw.x not executable at $PW" >&2

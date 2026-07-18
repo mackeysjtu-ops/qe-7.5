@@ -27,12 +27,14 @@ tests localized the issue to the `vcsmd -> vcinit` initialization path:
 - untouched `vcinit` therefore called `ranv(temp=0, ...)` and initialized PR
   atomic velocities to zero.
 
-This source tree now contains the PW `vc-md`/PR initialization fix and local
+This source tree now contains the PW `vc-md`/PR initialization fix and
 baseline/current validation that explicit input velocities are consumed while
-no-card and explicit-zero cases remain zero. The completed Leonardo pilot
-outputs were collected before that fix and remain near-0 K software stability
-evidence. The final deformation templates should be submitted only with a
-rebuilt CAIMD `pw.x` whose checksum is recorded in the Slurm scripts.
+no-card and explicit-zero cases remain zero. The Ice X MD inputs also use the
+supported QE path `ion_velocities='from_input'`. Leonardo GPU/MPI validation of
+the rebuilt `pw.x` passed the focused K_velocity group and full tracked harness,
+and three temporary nstep=1 Ice X smoke cases initialized at `295.86 K` under
+the PR `3*(nat+1)` temperature denominator. Historical pilot outputs collected
+before this fix remain near-0 K software stability evidence.
 
 ## Layout
 

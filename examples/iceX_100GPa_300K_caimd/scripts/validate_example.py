@@ -241,7 +241,7 @@ def check_slurm(checks: list[dict[str, object]]) -> None:
             "#SBATCH --time=24:00:00",
             "srun --mpi=pmix_v3 \"$PW\" -in qe.in",
             "nvidia-smi --query-gpu",
-            "EXPECTED_PW_SHA256=\"c9588df640013f098a33e33e1eec6e1f0820ed53f7488efffb0a83ec7ed25b48\"",
+            "EXPECTED_PW_SHA256=\"7cacabbef8d32aa83fa561cd124e319ced62714e0a66e2a85f2b1d99def4a6e8\"",
         ):
             if snippet not in text:
                 problems.append(f"{rel}: missing {snippet}")

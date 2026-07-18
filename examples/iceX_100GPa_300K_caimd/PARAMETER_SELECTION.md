@@ -127,9 +127,10 @@ Selected bounded-pilot values:
 - `wmass = 65.7122994644 amu`
 
 These are conservative short-run software settings. The explicit-velocity
-initialization issue has local source-level validation in this tree; the Ice X
-settings still require short Leonardo reruns with the rebuilt executable before
-they should be treated as 300 K sensitivity evidence.
+initialization issue now has local source-level validation, Leonardo GPU/MPI
+harness validation, and a short Ice X nstep=1 smoke showing `295.86 K`
+initialization. The historical pilot matrix itself remains near-0 K evidence and
+should not be reinterpreted as 300 K MD sensitivity data.
 
 ## CAIMD Strain Schedule
 
@@ -184,8 +185,8 @@ Final tension, compression, and shear jobs were not submitted.
 | `ecutrho` | `520 Ry` | paired with 65 Ry at ratio 8 |
 | k-grid | `2 2 2 0 0 0` | bounded-pilot setting |
 | structure | original converted Ice X | validated; no relaxation used |
-| initial velocity card | deterministic 300 K | generated/validated; local source-level `vc-md`/PR initialization fix validated, Leonardo Ice X rerun pending |
-| `dt` | `5.0` | conservative pilot setting; 300 K rerun pending |
-| `wmass` | `65.7122994644 amu` | QE default formula; 300 K rerun pending |
+| initial velocity card | deterministic 300 K | generated/validated; supported input path and Leonardo Ice X nstep=1 initialization validated at 295.86 K |
+| `dt` | `5.0` | conservative pilot setting; final 300 K deformation runs not submitted |
+| `wmass` | `65.7122994644 amu` | QE default formula; final 300 K deformation runs not submitted |
 | `caimd_stride` | `5` | pilot setting |
 | strain increment | `+/-5.0d-5` tensor component per MD step | pilot setting |

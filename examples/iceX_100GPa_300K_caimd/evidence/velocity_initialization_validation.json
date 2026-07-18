@@ -36,5 +36,39 @@
     "max_abs_com_velocity": 7.820678527744262e-19,
     "temperature_3N_minus_3_K": 299.999999999994,
     "temperature_PR_nat_plus_1_K": 295.862068965511
+  },
+  "iceX_runtime_cases": [
+    {
+      "initialized_temperature_K": 295.86,
+      "job_done": true,
+      "name": "vcmd_false",
+      "run_dir": "/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-v1-7aa61919/validation/iceX-velocity-49725763/vcmd_false",
+      "slurm_job_id": "49725763",
+      "target_temperature_K": 300.0
+    },
+    {
+      "initialized_temperature_K": 295.86,
+      "job_done": true,
+      "name": "vcmd_allfalse",
+      "run_dir": "/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-v1-7aa61919/validation/iceX-velocity-49725763/vcmd_allfalse",
+      "slurm_job_id": "49725763",
+      "target_temperature_K": 300.0
+    },
+    {
+      "initialized_temperature_K": 295.86,
+      "job_done": true,
+      "name": "active_zero",
+      "run_dir": "/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-v1-7aa61919/validation/iceX-velocity-49725763/active_zero",
+      "slurm_job_id": "49725763",
+      "target_temperature_K": 300.0
+    }
+  ],
+  "leonardo": {
+    "current_pw_x_sha256": "7cacabbef8d32aa83fa561cd124e319ced62714e0a66e2a85f2b1d99def4a6e8",
+    "full_harness_summary": "/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-v1-7aa61919/validation/velocity-full-49723755/analysis/summary.json",
+    "full_harness_summary_sha256": "053fa00f08406ea342f5cfa66521d5743b0bb7a023ed521be01d65e27550ede1",
+    "iceX_smoke_summary": "/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-v1-7aa61919/evidence/tests/iceX_velocity_49725763.json",
+    "k_velocity_summary": "/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-v1-7aa61919/validation/velocity-k-49723755/analysis/summary.json",
+    "k_velocity_summary_sha256": "963169d4e551c433b19b7a22aad80193747eaafa0df4c40dabb7c5d829684d36"
   }
 }
