@@ -496,14 +496,14 @@ def velocity_temperature_metrics(
 def first_pr_md_state(path: Path, nat: int) -> dict[str, Any] | None:
     if not path.exists() or nat <= 0:
         return None
-    lines = [line for line in path.read_text(errors="ignore").splitlines() if line.strip()]
-    if not lines:
+    values: list[float] = []
+    for line in path.read_text(errors="ignore").splitlines():
+        if line.strip():
+            values.extend(extract_floats(line))
+    if len(values) < 6 * nat:
         return None
-    first = extract_floats(lines[0])
-    if len(first) < 6 * nat:
-        return None
-    rati_flat = first[: 3 * nat]
-    ratd_flat = first[3 * nat : 6 * nat]
+    rati_flat = values[: 3 * nat]
+    ratd_flat = values[3 * nat : 6 * nat]
     ratd = [ratd_flat[3 * i : 3 * i + 3] for i in range(nat)]
     return {
         "rati_first_entries": rati_flat[: min(6, len(rati_flat))],
