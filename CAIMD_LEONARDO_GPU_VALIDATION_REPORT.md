@@ -531,6 +531,64 @@ the `09bffd3f23fe4c7121006a57081d0246bc90dd0e` deployment described above.
   - Current configure log:
     `/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-v1-7aa61919/evidence/builds/current_configure.log`
 
+## 2026-07-18 Explicit vc-md Velocity Deployment Checkpoint
+
+- Status: `IN PROGRESS`
+- Checkpoint time: `2026-07-18T14:31:09Z`
+- Local repository root: `/Users/mengqicheng/Downloads/Learning/qe-7.5`
+- Local branch: `main`
+- Local HEAD prepared for deployment:
+  `1f1f16d0bf1c7bc71aba2d015fe817e319e2b588`
+  (`Support explicit velocities in PW vc-md`)
+- Local working tree at checkpoint: clean.
+- Starting HEAD for this velocity task:
+  `20a9f2f55f9164cdcc5777f43f02891baaa8bfee`
+- Root cause: untouched QE 7.5 PW `vc-md`/Parrinello-Rahman initialization
+  parsed `ATOMIC_VELOCITIES` for fixed-cell MD but did not pass the parsed
+  `tv0rd`/velocity state through `vcsmd -> vcinit`. With active CAIMD requiring
+  `ion_temperature='not_controlled'`, the old PR path initialized through
+  `ranv(temp=0, ...)`, producing zero initial PR atomic velocities.
+- Source/test changes in deployed commit:
+  - `PW/src/vcsmd.f90`
+  - `PW/src/vcsubs.f90`
+  - `test-suite/caimd/caimd_validation.py`
+  - `CAIMD_IMPLEMENTATION.md`
+  - Ice X example docs, validator, and local velocity-initialization evidence.
+- Local current executable:
+  `/private/tmp/qe_velocity_current_build/bin/pw.x`
+- Local current executable SHA256:
+  `aa988325721d7438abe38fe84d27d648957c4fc17711e185689ca6f7d7ebdb20`
+- Local untouched baseline executable:
+  `/private/tmp/qe_velocity_baseline_build/bin/pw.x`
+- Local untouched baseline executable SHA256:
+  `c5df6bee268f8b43549e9d16ffae264d45474668aece91739fea1f0565506952`
+- Latest successful local validation:
+  `python3 test-suite/caimd/caimd_validation.py --current-exe /private/tmp/qe_velocity_current_build/bin/pw.x --baseline-exe /private/tmp/qe_velocity_baseline_build/bin/pw.x --pseudo pseudo/C.UPF --work-root /private/tmp/qe_velocity_clean_validation --run-id full-precommit --timeout 180`
+- Latest local validation summary:
+  `/private/tmp/qe_velocity_clean_validation/full-precommit/analysis/summary.json`
+  with failures `[]`.
+- Focused velocity summary:
+  `/private/tmp/qe_velocity_clean_validation/k-velocity-precommit/analysis/summary.json`
+  with failures `[]`.
+- Static validation:
+  `python3 -m py_compile test-suite/caimd/caimd_validation.py examples/iceX_100GPa_300K_caimd/scripts/validate_example.py examples/iceX_100GPa_300K_caimd/scripts/prepare_example_inputs.py`
+  passed; `python3 examples/iceX_100GPa_300K_caimd/scripts/validate_example.py`
+  passed with `ok=true`.
+- Remote root:
+  `/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-v1-7aa61919`
+- Remote source/build phase: not yet started for commit
+  `1f1f16d0bf1c7bc71aba2d015fe817e319e2b588`.
+- Active or latest Slurm allocation/job for this checkpoint: none.
+- Latest failed command:
+  local unprivileged `git add` was blocked by sandbox access to `.git/index.lock`;
+  the same stage operation succeeded with approved escalation.
+- Exact next action:
+  create and transfer a Git bundle for commit
+  `1f1f16d0bf1c7bc71aba2d015fe817e319e2b588`, update the remote checkpoint,
+  deploy into `$ROOT/src-current`, rebuild/install GPU/MPI `pw.x`, record the
+  new checksum and dependency evidence, then run focused remote K_velocity/full
+  harness validation before touching final deformation jobs.
+
 ## Local Environment
 
 - Checkpoint initialized: `2026-07-15T18:19:25Z`
