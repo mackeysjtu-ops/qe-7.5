@@ -160,11 +160,14 @@ def check_slurm(checks: list[dict[str, object]]) -> None:
 
 
 def check_pseudo(checks: list[dict[str, object]]) -> None:
-    local_upfs = sorted(path.name for path in (EXAMPLE_ROOT / "pseudo").glob("*.upf"))
-    if local_upfs:
-        fail(checks, "pseudo", f"local pseudopotential binaries should not be in Git example: {local_upfs}")
+    regular_upfs = sorted(
+        path.name for path in (EXAMPLE_ROOT / "pseudo").glob("*.upf") if path.exists() and not path.is_symlink()
+    )
+    symlink_upfs = sorted(path.name for path in (EXAMPLE_ROOT / "pseudo").glob("*.upf") if path.is_symlink())
+    if regular_upfs:
+        fail(checks, "pseudo", f"regular pseudopotential binaries should not be in Git example: {regular_upfs}")
     else:
-        ok(checks, "pseudo", "no local UPF binaries present; remote symlinks documented")
+        ok(checks, "pseudo", f"no regular UPF binaries present; symlinks allowed/documented: {symlink_upfs}")
 
 
 def write_report(checks: list[dict[str, object]]) -> int:

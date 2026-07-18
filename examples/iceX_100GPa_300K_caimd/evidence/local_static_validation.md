@@ -7,4 +7,4 @@ Overall: PASS
 - PASS `velocities`: deterministic 300 K velocities, ndof=429, COM removed
 - PASS `qe_inputs`: all QE inputs pass static CAIMD boundary and pressure checks
 - PASS `slurm`: manual deformation Slurm scripts have required Leonardo resources and checks
-- PASS `pseudo`: no local UPF binaries present; remote symlinks documented
+- PASS `pseudo`: no regular UPF binaries present; symlinks allowed/documented: []
