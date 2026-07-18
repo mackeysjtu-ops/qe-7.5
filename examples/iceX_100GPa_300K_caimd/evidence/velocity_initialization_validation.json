@@ -1,0 +1,40 @@
+{
+  "description": "Focused local evidence for explicit ATOMIC_VELOCITIES initialization in PW vc-md/Parrinello-Rahman dynamics.",
+  "generic_current_harness": {
+    "baseline_vcmd_explicit": {
+      "executable": "/private/tmp/qe_velocity_baseline_build/bin/pw.x",
+      "executable_sha256": "c5df6bee268f8b43549e9d16ffae264d45474668aece91739fea1f0565506952",
+      "input_velocity_max_abs": 0.0002,
+      "ratd_max_abs": 0.0,
+      "temperature_3N_minus_3_K": 0.0,
+      "temperature_PR_nat_plus_1_K": 0.0
+    },
+    "current_vcmd_explicit": {
+      "executable": "/private/tmp/qe_velocity_current_build/bin/pw.x",
+      "executable_sha256": "aa988325721d7438abe38fe84d27d648957c4fc17711e185689ca6f7d7ebdb20",
+      "input_to_initialized_max_abs": 2.710505431213761e-20,
+      "input_velocity_max_abs": 0.0002,
+      "ratd_max_abs": 2.9673590504451037e-05,
+      "temperature_3N_minus_3_K": 83.54179510261405,
+      "temperature_PR_nat_plus_1_K": 27.847265034204685
+    },
+    "current_vcmd_nocard": {
+      "executable": "/private/tmp/qe_velocity_current_build/bin/pw.x",
+      "executable_sha256": "aa988325721d7438abe38fe84d27d648957c4fc17711e185689ca6f7d7ebdb20",
+      "input_velocity_max_abs": 0.0,
+      "ratd_max_abs": 0.0,
+      "temperature_3N_minus_3_K": 0.0,
+      "temperature_PR_nat_plus_1_K": 0.0
+    },
+    "summary_json": "/private/tmp/qe_velocity_clean_validation/k-velocity-with-baseline/analysis/summary.json"
+  },
+  "iceX_velocity_card": {
+    "atoms": 144,
+    "card_sha256": "e6b8e8b498c7467844e96cfb93c173ce7004e440c3c1fa9673c0470f437f4c7f",
+    "degrees_of_freedom_3N_minus_3": 429,
+    "degrees_of_freedom_PR_3_nat_plus_1": 435,
+    "max_abs_com_velocity": 7.820678527744262e-19,
+    "temperature_3N_minus_3_K": 299.999999999994,
+    "temperature_PR_nat_plus_1_K": 295.862068965511
+  }
+}

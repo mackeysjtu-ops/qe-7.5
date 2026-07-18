@@ -124,6 +124,14 @@ framework.
 The validated insertion point is inside the PR Beeman path in
 `PW/src/vcsubs.f90`, with state bridging in `PW/src/vcsmd.f90`.
 
+When PW input requests `ion_velocities='from_input'`, the parsed
+`ATOMIC_VELOCITIES { a.u }` card is stored through the ordinary fixed-cell MD
+input path. The `vcsmd -> vcinit` bridge now passes that explicit velocity state
+into the PR initialization path so variable-cell MD starts from the supplied
+Cartesian velocities instead of falling back to `ranv(temp, ...)`. No-card and
+explicit-zero-card `vc-md` inputs remain zero when the effective temperature is
+zero.
+
 Projection of only the returned cell matrix is insufficient. The PR path also
 uses cell velocity and acceleration histories in the metric coupling that
 updates atomic acceleration, velocity, and position. Therefore CAIMD V1:
@@ -277,6 +285,9 @@ Focused validation should include:
 
 - ordinary PW no-CAIMD behavior;
 - `caimd=.false.` and all-false mask no-op regressions;
+- explicit `ATOMIC_VELOCITIES { a.u }` initialization for fixed-cell MD,
+  ordinary `vc-md`, inactive/all-false CAIMD, active zero-increment CAIMD, and
+  active event CAIMD, with no-card and explicit-zero-card `vc-md` controls;
 - active zero-increment constraints;
 - stride scheduling;
 - tensor shear convention;

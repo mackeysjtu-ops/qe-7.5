@@ -4,11 +4,13 @@ Status: PARTIAL
 
 The example package, bounded Leonardo convergence tests, short pilot jobs,
 analysis scripts, and final manual-submit deformation templates are prepared.
-The remaining limitation is scientific: with the current unmodified QE 7.5
-CAIMD source, active `vc-md`/Parrinello-Rahman trajectories initialize near 0 K
-even when the input contains a deterministic 300 K `ATOMIC_VELOCITIES` card.
-True active 300 K CAIMD therefore requires a source-level initialization change
-or another supported boundary design.
+The remaining limitation is deployment/runtime validation: historical Leonardo
+pilots were collected with an earlier CAIMD executable whose PW
+`vc-md`/Parrinello-Rahman initialization path ignored explicit
+`ATOMIC_VELOCITIES` for variable-cell MD. This source tree now contains a local
+source-level fix and baseline/current validation for explicit PR velocity
+initialization; the rebuilt Leonardo executable and short Ice X runtime
+validation are still pending.
 
 ## Local Preflight
 
@@ -58,11 +60,71 @@ Validated facts:
 - Maximum residual COM velocity after rescale:
   `1.466377223952049e-19`
 
-Limitation: Leonardo active CAIMD pilots reported max `.caimd` temperatures of
-only `0.0035-0.0093 K`. Source inspection shows that current `vc-md`/PR
-initializes via `vcinit(..., temperature, ...)` and `ranv(temp, ...)`, while
-active CAIMD requires `ion_temperature='not_controlled'`, which sets
-`temperature=0.0`.
+Historical limitation: Leonardo active CAIMD pilots reported max `.caimd`
+temperatures of only `0.0035-0.0093 K`. Source inspection and untouched QE 7.5
+baseline tests show that old `vcsmd -> vcinit` did not receive the parsed
+velocity card and instead initialized through `ranv(temp=0, ...)` when active
+CAIMD required `ion_temperature='not_controlled'`.
+
+## 300 K vc-md velocity initialization checkpoint
+
+- Status: `LOCAL FIX VALIDATED; LEONARDO VALIDATION PENDING`
+- Starting HEAD:
+  `20a9f2f55f9164cdcc5777f43f02891baaa8bfee`
+- Current HEAD:
+  `20a9f2f55f9164cdcc5777f43f02891baaa8bfee`
+- Current phase: local clean current/baseline builds and baseline/current
+  comparisons completed; Leonardo deployment and short Ice X validation are
+  next.
+- Root-cause classification: `D`, an untouched QE 7.5 PW
+  `vc-md`/Parrinello-Rahman initialization omission. The velocity card is
+  parsed and fixed-cell MD consumes it, but `vcsmd -> vcinit` does not receive
+  `tv0rd` or `dynamics_module%vel` and instead calls `ranv(temp, ...)`.
+- Current executable path:
+  `/private/tmp/qe_velocity_current_build/bin/pw.x`
+- Current executable SHA256:
+  `aa988325721d7438abe38fe84d27d648957c4fc17711e185689ca6f7d7ebdb20`
+- Baseline executable path:
+  `/private/tmp/qe_velocity_baseline_build/bin/pw.x`
+- Baseline executable SHA256:
+  `c5df6bee268f8b43549e9d16ffae264d45474668aece91739fea1f0565506952`
+- Tests completed:
+  local tiny fixed-cell MD explicit velocities, ordinary `vc-md` explicit
+  velocities, `caimd=.false.`, all-false CAIMD, active zero-strain CAIMD,
+  active one-event CAIMD, no-card `vc-md`, explicit-zero-card `vc-md`, and an
+  independent Ice X velocity-card reconstruction. After the source change, clean
+  current-only K_velocity and full harness runs passed with failures `[]`; clean
+  current plus untouched QE 7.5 baseline K_velocity and full harness runs also
+  passed with failures `[]`.
+- Evidence paths:
+  `/private/tmp/qe_vcmd_velocity_diag/current-pre/analysis/summary.json`,
+  `/private/tmp/qe_velocity_nstep1`, and
+  `/private/tmp/iceX_velocities_300K_regen.{inc,json}`,
+  `/private/tmp/qe_velocity_harness_post/k-velocity-3/analysis/summary.json`,
+  `/private/tmp/qe_velocity_harness_post/full-current/analysis/summary.json`,
+  `/private/tmp/qe_velocity_clean_validation/k-velocity-with-baseline/analysis/summary.json`,
+  and `/private/tmp/qe_velocity_clean_validation/full-with-baseline/analysis/summary.json`.
+- Key evidence: untouched QE 7.5 baseline `vc-md` with a nonzero explicit
+  velocity card saves zero first-step PR `ratd` and zero temperature, while
+  baseline fixed-cell MD consumes the same card with input/file velocity mismatch
+  `2.99781900692242e-17`. The repaired current `vc-md` explicit case initializes
+  PR `ratd_max_abs=2.9673590504451037e-05` with input-to-initialized mismatch
+  `2.710505431213761e-20`; no-card and explicit-zero-card `vc-md` controls
+  remain zero. The Ice X card independently reconstructs to
+  `299.999999999994 K` with `3N-3` degrees of freedom and
+  `295.862068965511 K` under the PR `3*(nat+1)` temperature denominator used by
+  `.tv`/`.caimd`.
+- Files modified: `PW/src/vcsmd.f90`, `PW/src/vcsubs.f90`,
+  `test-suite/caimd/caimd_validation.py`, and this report.
+- Latest successful command:
+  `python3 test-suite/caimd/caimd_validation.py --current-exe /private/tmp/qe_velocity_current_build/bin/pw.x --baseline-exe /private/tmp/qe_velocity_baseline_build/bin/pw.x --pseudo pseudo/C.UPF --work-root /private/tmp/qe_velocity_clean_validation --run-id full-with-baseline --timeout 180`
+- Latest failed command: an initial parallel `shasum` raced ahead of
+  `/private/tmp/iceX_velocities_300K_regen.{inc,json}` creation; rerun
+  succeeded and both regenerated files matched the tracked files.
+- Active or latest Slurm job: none for this checkpoint.
+- Exact next action: commit the local source/test/doc checkpoint, deploy the
+  exact source state to Leonardo, rebuild GPU/MPI `pw.x`, update Slurm checksum
+  guards, and run short remote validation before any final deformation job.
 
 ## Remote Deployment And Provenance
 
@@ -165,7 +227,6 @@ sbatch run.slurm
 
 ## Next Action
 
-Review the 300 K initialization limitation before submitting final deformation
-jobs. To obtain true active 300 K CAIMD with this boundary, update or extend the
-QE `vc-md`/PR initialization path so active CAIMD can consume explicit initial
-velocities without enabling unsupported thermostats.
+Before submitting final deformation jobs, deploy and validate a rebuilt CAIMD
+`pw.x` that includes the PW `vc-md`/PR explicit-velocity initialization fix, and
+update each Slurm checksum guard to that executable.

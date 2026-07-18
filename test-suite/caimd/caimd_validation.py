@@ -39,6 +39,12 @@ FLOAT_RE = re.compile(
     r"[-+]?(?:(?:\d+\.\d*|\.\d+)(?:[EeDd]?[-+]?\d+)?|\d+(?:[EeDd][-+]?\d+)?)"
 )
 PSEUDO_NAME = "C.UPF"
+RYDBERG_SI = 2.1798723611035e-18
+K_BOLTZMANN_SI = 1.380649e-23
+AMU_SI = 1.66053906660e-27
+ELECTRONMASS_SI = 9.1093837015e-31
+AMU_RY = (AMU_SI / ELECTRONMASS_SI) / 2.0
+RY_TO_KELVIN = RYDBERG_SI / K_BOLTZMANN_SI
 
 
 @dataclass(frozen=True)
@@ -325,6 +331,253 @@ def parse_gpu_monitor(path: Path) -> dict[str, Any]:
     }
 
 
+def artifact_path(run_dir: Path, prefix: str, ext: str) -> Path:
+    direct = run_dir / f"{prefix}.{ext}"
+    if direct.exists():
+        return direct
+    return run_dir / "tmp" / f"{prefix}.{ext}"
+
+
+def matvec(a: list[list[float]], x: list[float]) -> list[float]:
+    return [sum(a[i][j] * x[j] for j in range(3)) for i in range(3)]
+
+
+def cell_rows_to_columns(rows: list[list[float]]) -> list[list[float]]:
+    return [[rows[j][i] for j in range(3)] for i in range(3)]
+
+
+def parse_qe_input_metadata(path: Path) -> dict[str, Any]:
+    text = path.read_text(errors="ignore")
+    lines = text.splitlines()
+    nat_match = re.search(r"\bnat\s*=\s*(\d+)", text, re.IGNORECASE)
+    nat = int(nat_match.group(1)) if nat_match else 0
+    ion_velocities_from_input = bool(
+        re.search(r"\bion_velocities\s*=\s*['\"]from_input['\"]", text, re.IGNORECASE)
+    )
+    species_masses: dict[str, float] = {}
+    position_labels: list[str] = []
+    cell_rows: list[list[float]] = []
+    velocity_labels: list[str] = []
+    velocities: list[list[float]] = []
+    velocity_units: str | None = None
+    known_cards = (
+        "ATOMIC_SPECIES",
+        "ATOMIC_POSITIONS",
+        "ATOMIC_VELOCITIES",
+        "CELL_PARAMETERS",
+        "K_POINTS",
+        "OCCUPATIONS",
+        "CONSTRAINTS",
+        "ATOMIC_FORCES",
+    )
+
+    i = 0
+    while i < len(lines):
+        stripped = lines[i].strip()
+        upper = stripped.upper()
+        if upper.startswith("ATOMIC_SPECIES"):
+            i += 1
+            while i < len(lines):
+                row = lines[i].strip()
+                row_upper = row.upper()
+                if not row:
+                    i += 1
+                    continue
+                if row_upper.startswith(known_cards) or row.startswith("&") or row == "/":
+                    i -= 1
+                    break
+                fields = row.split()
+                if len(fields) >= 2:
+                    try:
+                        species_masses[fields[0]] = float(fields[1])
+                    except ValueError:
+                        pass
+                i += 1
+        elif upper.startswith("CELL_PARAMETERS"):
+            cell_rows = []
+            i += 1
+            while i < len(lines) and len(cell_rows) < 3:
+                vals = extract_floats(lines[i])
+                if len(vals) >= 3:
+                    cell_rows.append(vals[:3])
+                i += 1
+            i -= 1
+        elif upper.startswith("ATOMIC_POSITIONS"):
+            position_labels = []
+            i += 1
+            while i < len(lines) and (not nat or len(position_labels) < nat):
+                row = lines[i].strip()
+                row_upper = row.upper()
+                if not row:
+                    i += 1
+                    continue
+                if row_upper.startswith(known_cards) or row.startswith("&") or row == "/":
+                    i -= 1
+                    break
+                fields = row.split()
+                vals = extract_floats(row)
+                if fields and len(vals) >= 3:
+                    position_labels.append(fields[0])
+                i += 1
+        elif upper.startswith("ATOMIC_VELOCITIES"):
+            unit_match = re.search(r"\{([^}]+)\}", stripped)
+            velocity_units = unit_match.group(1).strip() if unit_match else None
+            velocity_labels = []
+            velocities = []
+            i += 1
+            while i < len(lines) and (not nat or len(velocities) < nat):
+                row = lines[i].strip()
+                row_upper = row.upper()
+                if not row:
+                    i += 1
+                    continue
+                if row_upper.startswith(known_cards) or row.startswith("&") or row == "/":
+                    i -= 1
+                    break
+                fields = row.split()
+                vals = extract_floats(row)
+                if fields and len(vals) >= 3:
+                    velocity_labels.append(fields[0])
+                    velocities.append(vals[:3])
+                i += 1
+        i += 1
+
+    return {
+        "nat": nat,
+        "species_masses_amu": species_masses,
+        "position_labels": position_labels,
+        "cell_rows_bohr": cell_rows,
+        "ion_velocities_from_input": ion_velocities_from_input,
+        "velocity_card_present": velocity_units is not None,
+        "velocity_units": velocity_units,
+        "velocity_labels": velocity_labels,
+        "velocities_cartesian": velocities,
+        "velocity_max_abs": max((abs(x) for row in velocities for x in row), default=0.0),
+        "velocity_all_zero": bool(velocities) and all(
+            abs(x) < 1.0e-18 for row in velocities for x in row
+        ),
+        "velocity_label_match_positions": bool(velocities) and velocity_labels == position_labels[: len(velocities)],
+    }
+
+
+def velocity_temperature_metrics(
+    velocities: list[list[float]],
+    labels: list[str],
+    species_masses_amu: dict[str, float],
+) -> dict[str, Any]:
+    if not velocities or len(velocities) != len(labels):
+        return {}
+    masses_ry: list[float] = []
+    for label in labels:
+        if label not in species_masses_amu:
+            return {}
+        masses_ry.append(species_masses_amu[label] * AMU_RY)
+    ekin = sum(
+        0.5 * mass * sum(component * component for component in velocity)
+        for mass, velocity in zip(masses_ry, velocities)
+    )
+    nat = len(velocities)
+    ndof_3n3 = max(3 * nat - 3, 1)
+    ndof_pr = 3 * (nat + 1)
+    total_mass = sum(masses_ry)
+    com = [
+        sum(mass * velocity[axis] for mass, velocity in zip(masses_ry, velocities)) / total_mass
+        for axis in range(3)
+    ]
+    return {
+        "ekin_Ry": ekin,
+        "temperature_3N_minus_3_K": 2.0 * ekin / ndof_3n3 * RY_TO_KELVIN,
+        "temperature_PR_nat_plus_1_K": 2.0 * ekin / ndof_pr * RY_TO_KELVIN,
+        "center_of_mass_velocity": com,
+        "center_of_mass_max_abs": max(abs(x) for x in com),
+    }
+
+
+def first_pr_md_state(path: Path, nat: int) -> dict[str, Any] | None:
+    if not path.exists() or nat <= 0:
+        return None
+    lines = [line for line in path.read_text(errors="ignore").splitlines() if line.strip()]
+    if not lines:
+        return None
+    first = extract_floats(lines[0])
+    if len(first) < 6 * nat:
+        return None
+    rati_flat = first[: 3 * nat]
+    ratd_flat = first[3 * nat : 6 * nat]
+    ratd = [ratd_flat[3 * i : 3 * i + 3] for i in range(nat)]
+    return {
+        "rati_first_entries": rati_flat[: min(6, len(rati_flat))],
+        "ratd": ratd,
+        "ratd_first_entries": ratd_flat[: min(6, len(ratd_flat))],
+        "ratd_max_abs": max(abs(x) for x in ratd_flat),
+    }
+
+
+def pr_velocity_metrics(input_path: Path, md_path: Path, cel_path: Path) -> dict[str, Any]:
+    meta = parse_qe_input_metadata(input_path)
+    metrics: dict[str, Any] = {"input": meta}
+    state = first_pr_md_state(md_path, meta["nat"])
+    if not state:
+        return metrics
+    metrics["md_initial"] = {k: v for k, v in state.items() if k != "ratd"}
+    labels = meta["position_labels"]
+    initial_rows = meta["cell_rows_bohr"]
+    cells: dict[str, list[list[float]]] = {}
+    if len(initial_rows) == 3:
+        cells["input_cell"] = cell_rows_to_columns(initial_rows)
+    cel_blocks = parse_cell_blocks(cel_path)
+    if cel_blocks:
+        cells["first_cel_cell"] = cell_rows_to_columns(cel_blocks[0])
+    for name, cell in cells.items():
+        cart = [matvec(cell, row) for row in state["ratd"]]
+        temp = velocity_temperature_metrics(cart, labels, meta["species_masses_amu"])
+        entry: dict[str, Any] = {
+            "cartesian_first_entries": [x for row in cart[:2] for x in row],
+            "cartesian_max_abs": max((abs(x) for row in cart for x in row), default=0.0),
+            **temp,
+        }
+        input_vel = meta["velocities_cartesian"]
+        if input_vel and len(input_vel) == len(cart):
+            diff = [cart[i][j] - input_vel[i][j] for i in range(len(cart)) for j in range(3)]
+            entry["input_to_initialized_max_abs"] = max(abs(x) for x in diff)
+            entry["input_to_initialized_rms"] = math.sqrt(sum(x * x for x in diff) / len(diff))
+        metrics[f"md_initial_{name}"] = entry
+    if meta["velocity_card_present"] and len(initial_rows) == 3 and meta["velocities_cartesian"]:
+        inv_cell = inv3(cell_rows_to_columns(initial_rows))
+        expected_ratd = [matvec(inv_cell, row) for row in meta["velocities_cartesian"]]
+        diff = [
+            state["ratd"][i][j] - expected_ratd[i][j]
+            for i in range(min(len(state["ratd"]), len(expected_ratd)))
+            for j in range(3)
+        ]
+        if diff:
+            metrics["expected_fractional_from_input_cell"] = {
+                "first_entries": [x for row in expected_ratd[:2] for x in row],
+                "ratd_error_max_abs": max(abs(x) for x in diff),
+                "ratd_error_rms": math.sqrt(sum(x * x for x in diff) / len(diff)),
+            }
+    return metrics
+
+
+def velocity_file_metrics(path: Path, input_path: Path) -> dict[str, Any]:
+    if not path.exists():
+        return {"exists": False}
+    meta = parse_qe_input_metadata(input_path)
+    rows: list[list[float]] = []
+    for line in path.read_text(errors="ignore").splitlines()[1:]:
+        vals = extract_floats(line)
+        if len(vals) >= 3:
+            rows.append(vals[:3])
+    entry: dict[str, Any] = {"exists": True, "rows": len(rows)}
+    entry.update(velocity_temperature_metrics(rows, meta["position_labels"], meta["species_masses_amu"]))
+    input_vel = meta["velocities_cartesian"]
+    if input_vel and len(input_vel) == len(rows):
+        diff = [rows[i][j] - input_vel[i][j] for i in range(len(rows)) for j in range(3)]
+        entry["input_to_velocity_file_max_abs"] = max(abs(x) for x in diff)
+        entry["input_to_velocity_file_rms"] = math.sqrt(sum(x * x for x in diff) / len(diff))
+    return entry
+
+
 def cell_text(kind: str = "orthogonal") -> str:
     if kind == "nonorthogonal":
         rows = [(6.80, 0.00, 0.00), (0.75, 6.95, 0.00), (0.30, 0.45, 7.10)]
@@ -345,8 +598,13 @@ def positions_text(nat: int = 2, fixed_flags: bool = False) -> str:
     return "\n".join(rows)
 
 
-def velocities_text(nat: int = 2) -> str:
-    base = [(0.00020, 0.00010, -0.00015), (-0.00016, 0.00013, 0.00011)]
+def velocities_text(nat: int = 2, kind: str = "default") -> str:
+    if kind == "balanced":
+        base = [(0.00020, -0.00010, 0.00015), (-0.00020, 0.00010, -0.00015)]
+    elif kind == "zero":
+        base = [(0.0, 0.0, 0.0), (0.0, 0.0, 0.0)]
+    else:
+        base = [(0.00020, 0.00010, -0.00015), (-0.00016, 0.00013, 0.00011)]
     vals = [base[i % len(base)] for i in range(nat)]
     return "\n".join(f" C {x: .8e} {y: .8e} {z: .8e}" for x, y, z in vals)
 
@@ -368,6 +626,7 @@ def qe_input(
     extra_system: str = "",
     extra_cell: str = "",
     after_cards: str = "",
+    velocity_kind: str = "default",
 ) -> str:
     ions = ""
     if calculation in {"md", "vc-md", "relax", "vc-relax"}:
@@ -412,7 +671,7 @@ ATOMIC_POSITIONS crystal
 K_POINTS gamma
 """
     if velocities:
-        cards += f"ATOMIC_VELOCITIES {{ a.u }}\n{velocities_text(nat)}\n"
+        cards += f"ATOMIC_VELOCITIES {{ a.u }}\n{velocities_text(nat, velocity_kind)}\n"
     return f"""
 &CONTROL
  calculation='{calculation}',
@@ -503,6 +762,8 @@ def input_templates(pseudo_dir: Path) -> dict[str, str]:
     shear_xy = "caimd=.true., caimd_stride=1, caimd_step_strain(6)=1.0d-4, caimd_mask(6)=.true.,"
     cumulative = "caimd=.true., caimd_stride=1, caimd_step_strain(1)=6.0d-3, caimd_mask(1)=.true.,"
     active_system = "nosym=.true., noinv=.true.,"
+    velocity_control = "iprint=1,"
+    velocity_event = "caimd=.true., caimd_stride=1, caimd_step_strain(1)=1.0d-4, caimd_mask(1)=.true.,"
     return {
         "startup_scf": qe_input("startup_scf", "scf", pseudo_dir, include_cell=False),
         "scf_ignored_cell_false": qe_input("scf_ignored_cell_false", "scf", pseudo_dir, caimd=caimd_false),
@@ -525,9 +786,98 @@ def input_templates(pseudo_dir: Path) -> dict[str, str]:
             velocities=True,
             extra_system=active_system,
         ),
-        "vcmd_default": qe_input("vcmd_default", "vc-md", pseudo_dir, velocities=True),
-        "vcmd_false": qe_input("vcmd_false", "vc-md", pseudo_dir, caimd=caimd_false, velocities=True),
-        "vcmd_allfalse": qe_input("vcmd_allfalse", "vc-md", pseudo_dir, caimd=all_false, velocities=True),
+        "vcmd_default": qe_input(
+            "vcmd_default", "vc-md", pseudo_dir, velocities=True, extra_system=active_system
+        ),
+        "vcmd_false": qe_input(
+            "vcmd_false", "vc-md", pseudo_dir, caimd=caimd_false, velocities=True, extra_system=active_system
+        ),
+        "vcmd_allfalse": qe_input(
+            "vcmd_allfalse", "vc-md", pseudo_dir, caimd=all_false, velocities=True, extra_system=active_system
+        ),
+        "velocity_md_explicit": qe_input(
+            "velocity_md_explicit",
+            "md",
+            pseudo_dir,
+            nstep=1,
+            include_cell=False,
+            velocities=True,
+            extra_control=velocity_control,
+            extra_system=active_system,
+            velocity_kind="balanced",
+        ),
+        "velocity_vcmd_explicit": qe_input(
+            "velocity_vcmd_explicit",
+            "vc-md",
+            pseudo_dir,
+            nstep=1,
+            velocities=True,
+            extra_control=velocity_control,
+            extra_system=active_system,
+            velocity_kind="balanced",
+        ),
+        "velocity_vcmd_false": qe_input(
+            "velocity_vcmd_false",
+            "vc-md",
+            pseudo_dir,
+            nstep=1,
+            caimd=caimd_false,
+            velocities=True,
+            extra_control=velocity_control,
+            extra_system=active_system,
+            velocity_kind="balanced",
+        ),
+        "velocity_vcmd_allfalse": qe_input(
+            "velocity_vcmd_allfalse",
+            "vc-md",
+            pseudo_dir,
+            nstep=1,
+            caimd=all_false,
+            velocities=True,
+            extra_control=velocity_control,
+            extra_system=active_system,
+            velocity_kind="balanced",
+        ),
+        "velocity_active_zero": qe_input(
+            "velocity_active_zero",
+            "vc-md",
+            pseudo_dir,
+            nstep=1,
+            caimd=fixed_xx_zero,
+            velocities=True,
+            extra_control=velocity_control,
+            extra_system=active_system,
+            velocity_kind="balanced",
+        ),
+        "velocity_active_event": qe_input(
+            "velocity_active_event",
+            "vc-md",
+            pseudo_dir,
+            nstep=2,
+            caimd=velocity_event,
+            velocities=True,
+            extra_control=velocity_control,
+            extra_system=active_system,
+            velocity_kind="balanced",
+        ),
+        "velocity_vcmd_nocard": qe_input(
+            "velocity_vcmd_nocard",
+            "vc-md",
+            pseudo_dir,
+            nstep=1,
+            extra_control=velocity_control,
+            extra_system=active_system,
+        ),
+        "velocity_vcmd_zero": qe_input(
+            "velocity_vcmd_zero",
+            "vc-md",
+            pseudo_dir,
+            nstep=1,
+            velocities=True,
+            extra_control=velocity_control,
+            extra_system=active_system,
+            velocity_kind="zero",
+        ),
         "active_fixed_xx_zero": qe_input(
             "active_fixed_xx_zero",
             "vc-md",
@@ -647,6 +997,35 @@ def case_specs() -> dict[str, CaseSpec]:
         CaseSpec("current_vcmd_default", "B_noop", "pw", "vcmd_default"),
         CaseSpec("current_vcmd_false", "B_noop", "pw", "vcmd_false", compare_to="current_vcmd_default"),
         CaseSpec("current_vcmd_allfalse", "B_noop", "pw", "vcmd_allfalse", compare_to="current_vcmd_default"),
+        CaseSpec(
+            "baseline_velocity_md_explicit",
+            "K_velocity",
+            "pw",
+            "velocity_md_explicit",
+            executable="baseline",
+        ),
+        CaseSpec(
+            "baseline_velocity_vcmd_explicit",
+            "K_velocity",
+            "pw",
+            "velocity_vcmd_explicit",
+            executable="baseline",
+        ),
+        CaseSpec(
+            "baseline_velocity_vcmd_nocard",
+            "K_velocity",
+            "pw",
+            "velocity_vcmd_nocard",
+            executable="baseline",
+        ),
+        CaseSpec("velocity_md_explicit", "K_velocity", "pw", "velocity_md_explicit"),
+        CaseSpec("velocity_vcmd_explicit", "K_velocity", "pw", "velocity_vcmd_explicit"),
+        CaseSpec("velocity_vcmd_false", "K_velocity", "pw", "velocity_vcmd_false"),
+        CaseSpec("velocity_vcmd_allfalse", "K_velocity", "pw", "velocity_vcmd_allfalse"),
+        CaseSpec("velocity_active_zero", "K_velocity", "pw", "velocity_active_zero"),
+        CaseSpec("velocity_active_event", "K_velocity", "pw", "velocity_active_event"),
+        CaseSpec("velocity_vcmd_nocard", "K_velocity", "pw", "velocity_vcmd_nocard"),
+        CaseSpec("velocity_vcmd_zero", "K_velocity", "pw", "velocity_vcmd_zero"),
         CaseSpec("ordinary_scf_no_cell", "C_ordinary", "pw", "startup_scf"),
         CaseSpec("ordinary_scf_ignored_cell_false", "C_ordinary", "pw", "scf_ignored_cell_false"),
         CaseSpec("ordinary_md_fixed", "C_ordinary", "pw", "md_fixed"),
@@ -910,8 +1289,9 @@ def enrich_result(result: CaseResult, spec: CaseSpec) -> None:
     result.mpi_abort = "MPI_ABORT" in text or "MPI_ABORT was invoked" in text
     result.missing_library = "not found" in text and "lib" in text
     result.metrics["energies_Ry"] = parse_energy(text)
+    result.metrics["input_velocity_card"] = parse_qe_input_metadata(Path(result.input_path))
     for ext in ("cel", "pos", "vel", "for", "ave", "avec", "e", "eal", "p", "tv"):
-        path = run_dir / f"{prefix}.{ext}"
+        path = artifact_path(run_dir, prefix, ext)
         if path.exists():
             result.metrics[f"{ext}_path"] = str(path)
             result.metrics[f"{ext}_float_count"] = len(read_float_file(path))
@@ -919,10 +1299,16 @@ def enrich_result(result: CaseResult, spec: CaseSpec) -> None:
     if md_path.exists():
         result.metrics["md_path"] = str(md_path)
         result.metrics["md_float_count"] = len(read_float_file(md_path))
+        result.metrics["pr_velocity_initialization"] = pr_velocity_metrics(
+            Path(result.input_path), md_path, artifact_path(run_dir, prefix, "cel")
+        )
+    vel_path = artifact_path(run_dir, prefix, "vel")
+    if vel_path.exists():
+        result.metrics["velocity_file"] = velocity_file_metrics(vel_path, Path(result.input_path))
     caimd_path = run_dir / "tmp" / f"{prefix}.caimd"
     if caimd_path.exists():
         result.metrics["caimd"] = parse_caimd(caimd_path)
-    cel_path = run_dir / f"{prefix}.cel"
+    cel_path = artifact_path(run_dir, prefix, "cel")
     if cel_path.exists():
         result.metrics["rotation"] = rotation_metrics(cel_path)
     if spec.monitor_gpu:
@@ -1086,7 +1472,156 @@ def add_comparisons(summary: dict[str, Any]) -> None:
         comparisons["current_default_vs_allfalse"] = compare_result_files(
             results["current_vcmd_default"], results["current_vcmd_allfalse"]
         )
+    if "baseline_velocity_vcmd_nocard" in results and "velocity_vcmd_nocard" in results:
+        comparisons["baseline_velocity_nocard_vs_current"] = compare_result_files(
+            results["baseline_velocity_vcmd_nocard"], results["velocity_vcmd_nocard"]
+        )
+    if "velocity_vcmd_explicit" in results and "velocity_vcmd_false" in results:
+        comparisons["velocity_explicit_vs_false"] = compare_result_files(
+            results["velocity_vcmd_explicit"], results["velocity_vcmd_false"]
+        )
+    if "velocity_vcmd_explicit" in results and "velocity_vcmd_allfalse" in results:
+        comparisons["velocity_explicit_vs_allfalse"] = compare_result_files(
+            results["velocity_vcmd_explicit"], results["velocity_vcmd_allfalse"]
+        )
     summary["comparisons"] = comparisons
+
+
+def add_velocity_checks(summary: dict[str, Any]) -> None:
+    results = summary["cases"]
+    failures: list[str] = summary["failures"]
+
+    def case(name: str) -> dict[str, Any] | None:
+        item = results.get(name)
+        if not item or item.get("skipped"):
+            return None
+        return item
+
+    def fail(name: str, reason: str) -> None:
+        marker = f"{name}:{reason}"
+        if marker not in failures:
+            failures.append(marker)
+
+    def input_meta(item: dict[str, Any]) -> dict[str, Any]:
+        return item.get("metrics", {}).get("input_velocity_card", {})
+
+    def pr(item: dict[str, Any]) -> dict[str, Any]:
+        return item.get("metrics", {}).get("pr_velocity_initialization", {})
+
+    def initial_cell_entry(item: dict[str, Any]) -> dict[str, Any]:
+        return pr(item).get("md_initial_input_cell", {})
+
+    def final_cell_entry(item: dict[str, Any]) -> dict[str, Any]:
+        parsed = pr(item)
+        return parsed.get("md_initial_first_cel_cell", parsed.get("md_initial_input_cell", {}))
+
+    def require_card(name: str, item: dict[str, Any], *, zero: bool = False) -> None:
+        meta = input_meta(item)
+        if not meta.get("ion_velocities_from_input"):
+            fail(name, "ion_velocities_not_from_input")
+        if not meta.get("velocity_card_present"):
+            fail(name, "velocity_card_missing")
+        if str(meta.get("velocity_units", "")).lower() != "a.u":
+            fail(name, "velocity_units_not_au")
+        if not meta.get("velocity_label_match_positions"):
+            fail(name, "velocity_label_order_mismatch")
+        if zero and not meta.get("velocity_all_zero"):
+            fail(name, "explicit_zero_card_not_zero")
+        if not zero and meta.get("velocity_all_zero"):
+            fail(name, "explicit_velocity_card_zero")
+
+    def require_no_card(name: str, item: dict[str, Any]) -> None:
+        meta = input_meta(item)
+        if meta.get("ion_velocities_from_input") or meta.get("velocity_card_present"):
+            fail(name, "unexpected_velocity_card")
+
+    def require_initialized_from_input(name: str, item: dict[str, Any], *, use_final_cell: bool = False) -> None:
+        entry = final_cell_entry(item) if use_final_cell else initial_cell_entry(item)
+        init = pr(item).get("md_initial", {})
+        if init.get("ratd_max_abs", 0.0) <= 1.0e-14:
+            fail(name, "initialized_ratd_zero")
+        if entry.get("input_to_initialized_max_abs", 1.0) > 2.0e-10:
+            fail(name, "input_velocity_mismatch")
+        if entry.get("temperature_3N_minus_3_K", 0.0) <= 1.0:
+            fail(name, "initialized_temperature_near_zero")
+        if entry.get("center_of_mass_max_abs", 1.0) > 1.0e-14:
+            fail(name, "center_of_mass_not_zero")
+
+    def require_zero_pr(name: str, item: dict[str, Any]) -> None:
+        init = pr(item).get("md_initial", {})
+        if init.get("ratd_max_abs", 1.0) > 1.0e-14:
+            fail(name, "expected_zero_ratd_nonzero")
+        entry = initial_cell_entry(item)
+        if entry.get("temperature_3N_minus_3_K", 0.0) > 1.0e-8:
+            fail(name, "expected_zero_temperature_nonzero")
+
+    for name in (
+        "velocity_md_explicit",
+        "velocity_vcmd_explicit",
+        "velocity_vcmd_false",
+        "velocity_vcmd_allfalse",
+        "velocity_active_zero",
+        "velocity_active_event",
+    ):
+        item = case(name)
+        if item:
+            require_card(name, item)
+
+    fixed = case("velocity_md_explicit")
+    if fixed:
+        vel_file = fixed.get("metrics", {}).get("velocity_file", {})
+        if not vel_file.get("exists"):
+            fail("velocity_md_explicit", "velocity_file_missing")
+        if vel_file.get("input_to_velocity_file_max_abs", 1.0) > 2.0e-10:
+            fail("velocity_md_explicit", "fixed_md_velocity_mismatch")
+        if vel_file.get("temperature_3N_minus_3_K", 0.0) <= 1.0:
+            fail("velocity_md_explicit", "fixed_md_temperature_near_zero")
+
+    for name in ("velocity_vcmd_explicit", "velocity_vcmd_false", "velocity_vcmd_allfalse"):
+        item = case(name)
+        if item:
+            require_initialized_from_input(name, item)
+
+    active_zero = case("velocity_active_zero")
+    if active_zero:
+        require_initialized_from_input("velocity_active_zero", active_zero)
+        caimd = active_zero.get("metrics", {}).get("caimd", {})
+        if caimd.get("exists") and not caimd.get("single_column_count_26"):
+            fail("velocity_active_zero", "caimd_columns")
+
+    active_event = case("velocity_active_event")
+    if active_event:
+        if pr(active_event).get("md_initial", {}).get("ratd_max_abs", 0.0) <= 1.0e-14:
+            fail("velocity_active_event", "initialized_ratd_zero")
+        caimd = active_event.get("metrics", {}).get("caimd", {})
+        if not caimd.get("single_column_count_26"):
+            fail("velocity_active_event", "caimd_columns")
+        if caimd.get("velocity_residual_max", 1.0) > 1.0e-12:
+            fail("velocity_active_event", "velocity_transform_residual")
+        if not any(caimd.get("event_flags", [])):
+            fail("velocity_active_event", "missing_event_flag")
+
+    nocard = case("velocity_vcmd_nocard")
+    if nocard:
+        require_no_card("velocity_vcmd_nocard", nocard)
+        require_zero_pr("velocity_vcmd_nocard", nocard)
+
+    zero = case("velocity_vcmd_zero")
+    if zero:
+        require_card("velocity_vcmd_zero", zero, zero=True)
+        require_zero_pr("velocity_vcmd_zero", zero)
+
+    baseline_vcmd = case("baseline_velocity_vcmd_explicit")
+    if baseline_vcmd:
+        require_card("baseline_velocity_vcmd_explicit", baseline_vcmd)
+        require_zero_pr("baseline_velocity_vcmd_explicit", baseline_vcmd)
+
+    baseline_fixed = case("baseline_velocity_md_explicit")
+    if baseline_fixed:
+        require_card("baseline_velocity_md_explicit", baseline_fixed)
+        vel_file = baseline_fixed.get("metrics", {}).get("velocity_file", {})
+        if vel_file.get("input_to_velocity_file_max_abs", 1.0) > 2.0e-10:
+            fail("baseline_velocity_md_explicit", "fixed_md_velocity_mismatch")
 
 
 def compare_result_files(a: dict[str, Any], b: dict[str, Any]) -> dict[str, Any]:
@@ -1098,7 +1633,7 @@ def compare_result_files(a: dict[str, Any], b: dict[str, Any]) -> dict[str, Any]
     bp = Path(b["input_path"]).stem
     result = {"stdout": compare_float_files(Path(a["output_path"]), Path(b["output_path"]))}
     for ext in ("cel", "pos", "vel", "for", "ave", "avec", "e", "eal", "p", "tv"):
-        result[ext] = compare_float_files(ar / f"{ap}.{ext}", br / f"{bp}.{ext}")
+        result[ext] = compare_float_files(artifact_path(ar, ap, ext), artifact_path(br, bp, ext))
     result["md"] = compare_float_files(ar / "tmp" / f"{ap}.md", br / "tmp" / f"{bp}.md")
     ea = a.get("metrics", {}).get("energies_Ry", [])
     eb = b.get("metrics", {}).get("energies_Ry", [])
@@ -1195,6 +1730,7 @@ def main() -> int:
             summary["failures"].append(spec.name)
         write_summary(paths, summary)
     add_comparisons(summary)
+    add_velocity_checks(summary)
     for name, case in summary["cases"].items():
         if name.startswith("current_vcmd_") or name.startswith("active_") or name.startswith("caimd_"):
             caimd = case.get("metrics", {}).get("caimd")

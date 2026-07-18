@@ -11,6 +11,7 @@ from pathlib import Path
 
 EXAMPLE_ROOT = Path(__file__).resolve().parents[1]
 EVIDENCE_DIR = EXAMPLE_ROOT / "evidence"
+VELOCITY_EVIDENCE = EVIDENCE_DIR / "velocity_initialization_validation.json"
 REQUIRED_FILES = [
     "README.md",
     "PARAMETER_SELECTION.md",
@@ -29,6 +30,7 @@ REQUIRED_FILES = [
     "scripts/analyze_convergence.py",
     "scripts/analyze_caimd_stress_strain.py",
     "scripts/validate_example.py",
+    "evidence/velocity_initialization_validation.json",
     "deformation/tension/qe.in",
     "deformation/tension/run.slurm",
     "deformation/tension/README.md",
@@ -144,6 +146,84 @@ def check_qe_inputs(checks: list[dict[str, object]]) -> None:
         ok(checks, "qe_inputs", "all QE inputs pass static CAIMD boundary and pressure checks")
 
 
+def number(value: object) -> float | None:
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        return None
+    return float(value)
+
+
+def require_number(
+    problems: list[str],
+    payload: dict[str, object],
+    key: str,
+    label: str,
+) -> float | None:
+    value = number(payload.get(key))
+    if value is None:
+        problems.append(f"{label}: missing numeric {key}")
+    return value
+
+
+def check_velocity_initialization_evidence(checks: list[dict[str, object]]) -> None:
+    if not VELOCITY_EVIDENCE.exists():
+        ok(checks, "velocity_initialization_evidence", "no runtime velocity-initialization evidence present")
+        return
+
+    evidence = json.loads(VELOCITY_EVIDENCE.read_text(encoding="utf-8"))
+    generic = evidence.get("generic_current_harness")
+    problems: list[str] = []
+    if not isinstance(generic, dict):
+        problems.append("missing generic_current_harness")
+    else:
+        current = generic.get("current_vcmd_explicit")
+        if not isinstance(current, dict):
+            problems.append("missing current_vcmd_explicit")
+        else:
+            input_speed = require_number(problems, current, "input_velocity_max_abs", "current_vcmd_explicit")
+            ratd = require_number(problems, current, "ratd_max_abs", "current_vcmd_explicit")
+            error = require_number(problems, current, "input_to_initialized_max_abs", "current_vcmd_explicit")
+            if input_speed is not None and input_speed <= 1.0e-12:
+                problems.append("current_vcmd_explicit: input velocity is effectively zero")
+            if ratd is not None and ratd <= 1.0e-12:
+                problems.append("current_vcmd_explicit: initialized PR ratd is near zero")
+            if error is not None and error > 1.0e-10:
+                problems.append(f"current_vcmd_explicit: input/init mismatch {error}")
+
+        nocard = generic.get("current_vcmd_nocard")
+        if not isinstance(nocard, dict):
+            problems.append("missing current_vcmd_nocard")
+        else:
+            ratd = require_number(problems, nocard, "ratd_max_abs", "current_vcmd_nocard")
+            if ratd is not None and ratd > 1.0e-15:
+                problems.append(f"current_vcmd_nocard: expected zero ratd, got {ratd}")
+
+        baseline = generic.get("baseline_vcmd_explicit")
+        if not isinstance(baseline, dict):
+            problems.append("missing baseline_vcmd_explicit")
+        else:
+            input_speed = require_number(problems, baseline, "input_velocity_max_abs", "baseline_vcmd_explicit")
+            ratd = require_number(problems, baseline, "ratd_max_abs", "baseline_vcmd_explicit")
+            if input_speed is not None and input_speed <= 1.0e-12:
+                problems.append("baseline_vcmd_explicit: input velocity is effectively zero")
+            if ratd is not None and ratd > 1.0e-15:
+                problems.append(f"baseline_vcmd_explicit: expected untouched PR ratd zero, got {ratd}")
+
+    for case in evidence.get("iceX_runtime_cases", []):
+        if not isinstance(case, dict):
+            problems.append("iceX_runtime_cases: non-object case")
+            continue
+        name = str(case.get("name", "<unnamed>"))
+        target = number(case.get("target_temperature_K")) or 300.0
+        initialized = require_number(problems, case, "initialized_temperature_K", name)
+        if initialized is not None and not (0.8 * target <= initialized <= 1.2 * target):
+            problems.append(f"{name}: initialized_temperature_K={initialized} outside 20% of {target}")
+
+    if problems:
+        fail(checks, "velocity_initialization_evidence", "; ".join(problems))
+    else:
+        ok(checks, "velocity_initialization_evidence", "runtime evidence confirms explicit PR velocity initialization")
+
+
 def check_slurm(checks: list[dict[str, object]]) -> None:
     problems: list[str] = []
     for rel in ("deformation/tension/run.slurm", "deformation/compression/run.slurm", "deformation/shear/run.slurm"):
@@ -201,6 +281,7 @@ def main() -> int:
     check_structure(checks)
     check_velocities(checks)
     check_qe_inputs(checks)
+    check_velocity_initialization_evidence(checks)
     check_slurm(checks)
     check_pseudo(checks)
     return write_report(checks)

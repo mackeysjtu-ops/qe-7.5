@@ -5,29 +5,34 @@ for the local Ice X LAMMPS structure `iceX.data`.
 
 The package contains a validated structure conversion, pseudopotential
 provenance, bounded Leonardo convergence and pilot evidence, analysis scripts,
-and three final manually submittable deformation templates. It does not modify
-QE or CAIMD source code.
+and three final manually submittable deformation templates. The example inputs
+do not modify QE or CAIMD source code.
 
-## Important Temperature Caveat
+## Temperature Initialization Status
 
 A deterministic 300 K `ATOMIC_VELOCITIES { a.u }` card is generated and included
 in all MD inputs. The velocity metadata verifies 300 K after center-of-mass
 removal and rescaling.
 
-However, the current QE 7.5 `vc-md`/Parrinello-Rahman path used by active CAIMD
-does not actually initialize the variable-cell MD trajectory from that velocity
-card when `ion_temperature='not_controlled'`. Source inspection shows:
+The original QE 7.5 `vc-md`/Parrinello-Rahman path used by active CAIMD did not
+initialize the variable-cell MD trajectory from that card when
+`ion_temperature='not_controlled'`. Source inspection and baseline/current
+tests localized the issue to the `vcsmd -> vcinit` initialization path:
 
 - active CAIMD rejects ionic thermostats/rescaling and allows only
   `ion_temperature='not_controlled'`;
-- that mode sets the internal `temperature` variable to `0.0`;
-- `vcsmd` calls `vcinit(..., temperature, ...)`;
-- `vcinit` calls `ranv(temp, ...)` to initialize variable-cell MD velocities.
+- that mode sets QE's internal random-temperature variable to `0.0`;
+- untouched `vcsmd` did not pass the parsed `ATOMIC_VELOCITIES` state to
+  `vcinit`;
+- untouched `vcinit` therefore called `ranv(temp=0, ...)` and initialized PR
+  atomic velocities to zero.
 
-The completed Leonardo pilot outputs therefore start and remain near 0 K, not
-300 K. The final templates keep the 300 K velocity card for reproducibility and
-for future source work, but with the current source they are best understood as
-nominal-300 K input decks whose active `vc-md` trajectory initializes near 0 K.
+This source tree now contains the PW `vc-md`/PR initialization fix and local
+baseline/current validation that explicit input velocities are consumed while
+no-card and explicit-zero cases remain zero. The completed Leonardo pilot
+outputs were collected before that fix and remain near-0 K software stability
+evidence. The final deformation templates should be submitted only with a
+rebuilt CAIMD `pw.x` whose checksum is recorded in the Slurm scripts.
 
 ## Layout
 
@@ -73,8 +78,8 @@ See `PARAMETER_SELECTION.md`, `ICE_X_CAIMD_EXAMPLE_REPORT.md`, and
 ## Final Deformation Templates
 
 These final jobs were intentionally not submitted by this preparation workflow.
-Submit them manually only after reviewing the evidence and the temperature
-caveat:
+Submit them manually only after reviewing the evidence and confirming the Slurm
+scripts point at the rebuilt, checksum-verified CAIMD executable:
 
 ```bash
 ROOT=/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-v1-7aa61919

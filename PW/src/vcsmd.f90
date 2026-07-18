@@ -30,7 +30,7 @@ SUBROUTINE vcsmd( conv_ions )
   !
   USE kinds,               ONLY : DP
   USE io_global,           ONLY : stdout
-  USE constants,           ONLY : e2, ry_kbar, amu_ry, au_ps
+  USE constants,           ONLY : e2, ry_kbar, amu_ry, au_ps, k_boltzmann_ry
   USE cell_base,           ONLY : wmass, omega, alat, at, bg, iforceh, &
        press, fix_volume, fix_area
   USE ions_base,           ONLY : tau, nat, ntyp => nsp, ityp, atm, if_pos
@@ -41,11 +41,12 @@ SUBROUTINE vcsmd( conv_ions )
                                   xnhh0, xnhhm, xnhhp, cell_nose_energy, temph, qnh
   USE cellmd,              ONLY : nzero, ntimes, calc, at_old, omega_old, &
                                   ntcheck, lmovecell
-  USE dynamics_module,     ONLY : dt, temperature, RyDt_to_HaDt, HaddT_to_RyddT, Ha_to_Ry 
+  USE dynamics_module,     ONLY : dt, temperature, RyDt_to_HaDt, HaddT_to_RyddT, Ha_to_Ry, &
+                                  input_vel => vel
   USE ions_base,           ONLY : amass, if_pos 
   USE relax,               ONLY : epse, epsf, epsp
   USE force_mod,           ONLY : force, sigma
-  USE control_flags,       ONLY : nstep, istep, tolp, lconstrain, tnosep, tnoseh
+  USE control_flags,       ONLY : nstep, istep, tolp, lconstrain, tnosep, tnoseh, tv0rd
   USE parameters,          ONLY : ntypx
   USE ener,                ONLY : etot
   USE io_files,            ONLY : prefix, delete_if_present, seqopn
@@ -96,6 +97,7 @@ SUBROUTINE vcsmd( conv_ions )
                    ratd(:,:),    & ! rat derivatives at current step
                    rat2d(:,:),   & ! rat 2nd derivatives at current step
                    rat2di(:,:),  & ! rat 2nd derivatives at previous step
+                   input_velocity(:,:), & ! parsed Cartesian velocities from ATOMIC_VELOCITIES
                    tauold(:,:,:)   ! additional  history variables
   REAL(DP) :: &
            avmod(3), theta(3,3), & ! used to monitor cell dynamics
@@ -136,7 +138,14 @@ SUBROUTINE vcsmd( conv_ions )
   ALLOCATE( ratd(3,nat) )
   ALLOCATE( rat2d(3,nat) )
   ALLOCATE( rat2di(3,nat) )
+  ALLOCATE( input_velocity(3,nat) )
   ALLOCATE( tauold(3,nat,3) )
+  input_velocity = 0.D0
+  IF ( tv0rd ) THEN
+     IF ( .NOT. ALLOCATED( input_vel ) ) &
+        CALL errore( 'vcsmd', 'ATOMIC_VELOCITIES flag set but velocity array is not allocated', 1 )
+     input_velocity(:,1:nat) = input_vel(:,1:nat)
+  END IF
   !
   ! ... open MD history file (if not present this is a new run!)
   !
@@ -305,7 +314,13 @@ SUBROUTINE vcsmd( conv_ions )
                 sigma, calc, temperature, vx2, vy2, vz2, rms, vmean, ekin,     &
                 avmod, theta, amass_,cmass, press, p, dt, aveci, avecd, avec2d,&
                 avec2di, sigmamet, sig0, avec0, v0, rati, ratd, rat2d, rat2di, &
-                enew, uta, eka, eta, ekla, utl, etl, ut, ekint, edyn, iforceh )
+                enew, uta, eka, eta, ekla, utl, etl, ut, ekint, edyn, iforceh, &
+                tv0rd, input_velocity )
+     IF ( calc(1:1) /= 'm' ) THEN
+        tnew = 2.D0 / 3.D0 / DBLE( nat + 1 ) * ekint / k_boltzmann_ry
+     ELSE
+        tnew = 2.D0 / 3.D0 / DBLE( MAX( nat - 1, 1 ) ) * ekint / k_boltzmann_ry
+     END IF
      CALL caimd_note_temperature_from_ekint( calc, nat, ekint )
      !
   ELSE
@@ -484,7 +499,7 @@ SUBROUTINE vcsmd( conv_ions )
   !
   CLOSE( UNIT = 4, STATUS = 'KEEP' )
   !
-  DEALLOCATE( amass_, rat, rati, ratd, rat2d, rat2di, tauold )
+  DEALLOCATE( amass_, rat, rati, ratd, rat2d, rat2di, input_velocity, tauold )
   !
   RETURN
   !

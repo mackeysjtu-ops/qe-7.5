@@ -107,9 +107,10 @@ wmass_default = 0.75 * total_atomic_mass / pi^2
 
 For this 144-atom cell, `wmass_default = 65.7122994644 amu`.
 
-The parameter screen completed six short cases. Because current active `vc-md`
-does not honor the explicit 300 K velocity card, these are near-0 K software
-stability screens, not 300 K MD sensitivity tests.
+The parameter screen completed six short cases. These historical Leonardo pilot
+runs used the earlier deployed CAIMD executable whose PW `vc-md`/PR
+initialization path did not honor the explicit 300 K velocity card. They are
+therefore near-0 K software stability screens, not 300 K MD sensitivity tests.
 
 | Case | dt | wmass amu | Status | Final pressure GPa | Max force eV/A | T range K | Wall time |
 | --- | ---: | ---: | --- | ---: | ---: | --- | --- |
@@ -125,8 +126,10 @@ Selected bounded-pilot values:
 - `dt = 5.0`
 - `wmass = 65.7122994644 amu`
 
-These are conservative short-run software settings and require later validation
-after the temperature-initialization issue is resolved.
+These are conservative short-run software settings. The explicit-velocity
+initialization issue has local source-level validation in this tree; the Ice X
+settings still require short Leonardo reruns with the rebuilt executable before
+they should be treated as 300 K sensitivity evidence.
 
 ## CAIMD Strain Schedule
 
@@ -181,8 +184,8 @@ Final tension, compression, and shear jobs were not submitted.
 | `ecutrho` | `520 Ry` | paired with 65 Ry at ratio 8 |
 | k-grid | `2 2 2 0 0 0` | bounded-pilot setting |
 | structure | original converted Ice X | validated; no relaxation used |
-| initial velocity card | deterministic 300 K | generated/validated, but not honored by current `vc-md`/PR active CAIMD |
-| `dt` | `5.0` | conservative near-0 K pilot setting |
-| `wmass` | `65.7122994644 amu` | QE default formula, conservative near-0 K pilot setting |
+| initial velocity card | deterministic 300 K | generated/validated; local source-level `vc-md`/PR initialization fix validated, Leonardo Ice X rerun pending |
+| `dt` | `5.0` | conservative pilot setting; 300 K rerun pending |
+| `wmass` | `65.7122994644 amu` | QE default formula; 300 K rerun pending |
 | `caimd_stride` | `5` | pilot setting |
 | strain increment | `+/-5.0d-5` tensor component per MD step | pilot setting |

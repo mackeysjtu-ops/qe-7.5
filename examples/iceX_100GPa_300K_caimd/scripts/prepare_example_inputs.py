@@ -410,7 +410,7 @@ Target state:
 - Pressure: 100 GPa, written as `press = 1000.0` because QE PW input uses kbar.
 - Nominal initial temperature: deterministic 300 K velocity card from `../../structure/iceX_velocities_300K.inc`.
 - Active thermostats: none. Active CAIMD uses `ion_temperature='not_controlled'` and `cell_temperature='not_controlled'`.
-- Current CAIMD V1 caveat: QE 7.5 `vc-md`/PR with `not_controlled` initializes the variable-cell MD temperature from the namelist path, not from the explicit `ATOMIC_VELOCITIES` card used here. The velocity card is retained for reproducibility and future source work, but the current Leonardo pilot evidence starts near 0 K.
+- Velocity initialization: use a CAIMD `pw.x` that includes the PW `vc-md`/PR explicit-velocity initialization fix, and keep `EXPECTED_PW_SHA256` in `run.slurm` synchronized with that rebuilt executable. Historical Leonardo pilot evidence before this fix starts near 0 K.
 
 Structure and provenance:
 

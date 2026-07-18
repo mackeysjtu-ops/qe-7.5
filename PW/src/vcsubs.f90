@@ -12,7 +12,8 @@ SUBROUTINE vcinit( mxdtyp, mxdatm, ntype, natot, rat, ityp, avec, vcell, force, 
                    if_pos, frr, calc, temp, vx2, vy2, vz2, rms, vmean, ekin, avmod,   &
                    theta, atmass, cmass, press, p, dt, aveci, avecd, avec2d, avec2di, &
                    sigma, sig0, avec0, v0, rati, ratd, rat2d, rat2di, enew, uta, eka, &
-                   eta, ekla, utl, etl, ut, ekint, etot, iforceh )
+                   eta, ekla, utl, etl, ut, ekint, etot, iforceh,                    &
+                   input_velocities_read, input_velocities )
   !-------------------------------------------------------------------------------
   !! Initialize variable-cell shape molecular dynamics.
   !
@@ -97,6 +98,10 @@ SUBROUTINE vcinit( mxdtyp, mxdatm, ntype, natot, rat, ityp, avec, vcell, force, 
   INTEGER :: iforceh(3,3)
   !! if iforceh(i,j) = 0 then simulation cell h(i,j) is not 
   !! allowed to move
+  LOGICAL :: input_velocities_read
+  !! true when ATOMIC_VELOCITIES was supplied in input
+  REAL(DP) :: input_velocities(3,mxdatm)
+  !! Cartesian velocities read from ATOMIC_VELOCITIES, in a.u.
   REAL(DP) :: vx2(mxdtyp)
   !! Root of the total sum of squared x-component of velocity per
   !! atomic type
@@ -144,7 +149,7 @@ SUBROUTINE vcinit( mxdtyp, mxdatm, ntype, natot, rat, ityp, avec, vcell, force, 
   REAL(DP) :: d2(3,3)
   REAL(DP) :: avec_old(3,3)
   
-  INTEGER :: na, nt, i, j, l, k, m
+  INTEGER :: na, nt, i, j, l, k, m, natom
   !
   REAL(DP) :: scaloff=1.0d0
   !
@@ -192,8 +197,57 @@ SUBROUTINE vcinit( mxdtyp, mxdatm, ntype, natot, rat, ityp, avec, vcell, force, 
      !
      !                   I apologize, sdg. :-)
      !
-     call ranv (ntype, natot, ityp, atmass, mxdtyp, mxdatm, temp, &
-          ekint, rat2di, vmean, rms, vx2, vy2, vz2, ekin)
+     IF ( input_velocities_read ) THEN
+        ekint = zero
+        do nt = 1, ntype
+           ekin(nt) = zero
+           vmean(nt) = zero
+           rms(nt) = zero
+           vx2(nt) = zero
+           vy2(nt) = zero
+           vz2(nt) = zero
+        enddo
+        do na = 1, natot
+           nt = ityp(na)
+           do k = 1, 3
+              rat2di(k,na) = input_velocities(k,na)
+           enddo
+           ekin(nt) = ekin(nt) + ( rat2di(1,na) * rat2di(1,na) + &
+                                   rat2di(2,na) * rat2di(2,na) + &
+                                   rat2di(3,na) * rat2di(3,na) ) / dois
+           vmean(nt) = vmean(nt) + SQRT( rat2di(1,na) * rat2di(1,na) + &
+                                         rat2di(2,na) * rat2di(2,na) + &
+                                         rat2di(3,na) * rat2di(3,na) )
+           vx2(nt) = vx2(nt) + rat2di(1,na) * rat2di(1,na)
+           vy2(nt) = vy2(nt) + rat2di(2,na) * rat2di(2,na)
+           vz2(nt) = vz2(nt) + rat2di(3,na) * rat2di(3,na)
+        enddo
+        do nt = 1, ntype
+           natom = 0
+           do na = 1, natot
+              if ( ityp(na) .eq. nt ) natom = natom + 1
+           enddo
+           if ( natom .gt. 0 ) then
+              ekin(nt) = atmass(nt) * ekin(nt)
+              ekint = ekint + ekin(nt)
+              vmean(nt) = vmean(nt) / DBLE(natom)
+              rms(nt) = SQRT( ( vx2(nt) + vy2(nt) + vz2(nt) ) / DBLE(natom) )
+              vx2(nt) = SQRT( vx2(nt) / DBLE(natom) )
+              vy2(nt) = SQRT( vy2(nt) / DBLE(natom) )
+              vz2(nt) = SQRT( vz2(nt) / DBLE(natom) )
+           else
+              ekin(nt) = zero
+              vmean(nt) = zero
+              rms(nt) = zero
+              vx2(nt) = zero
+              vy2(nt) = zero
+              vz2(nt) = zero
+           endif
+        enddo
+     ELSE
+        call ranv (ntype, natot, ityp, atmass, mxdtyp, mxdatm, temp, &
+             ekint, rat2di, vmean, rms, vx2, vy2, vz2, ekin)
+     END IF
      !
      do na = 1, natot
         do l = 1, 3

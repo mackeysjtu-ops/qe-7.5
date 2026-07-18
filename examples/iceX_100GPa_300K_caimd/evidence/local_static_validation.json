@@ -1,7 +1,7 @@
 {
   "checks": [
     {
-      "detail": "32 required files present",
+      "detail": "33 required files present",
       "name": "required_files",
       "ok": true
     },
@@ -18,6 +18,11 @@
     {
       "detail": "all QE inputs pass static CAIMD boundary and pressure checks",
       "name": "qe_inputs",
+      "ok": true
+    },
+    {
+      "detail": "runtime evidence confirms explicit PR velocity initialization",
+      "name": "velocity_initialization_evidence",
       "ok": true
     },
     {
