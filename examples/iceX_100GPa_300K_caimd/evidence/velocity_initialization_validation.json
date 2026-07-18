@@ -69,6 +69,23 @@
     "full_harness_summary_sha256": "053fa00f08406ea342f5cfa66521d5743b0bb7a023ed521be01d65e27550ede1",
     "iceX_smoke_summary": "/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-v1-7aa61919/evidence/tests/iceX_velocity_49725763.json",
     "k_velocity_summary": "/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-v1-7aa61919/validation/velocity-k-49723755/analysis/summary.json",
-    "k_velocity_summary_sha256": "963169d4e551c433b19b7a22aad80193747eaafa0df4c40dabb7c5d829684d36"
+    "k_velocity_summary_sha256": "963169d4e551c433b19b7a22aad80193747eaafa0df4c40dabb7c5d829684d36",
+    "two_rank_smoke": {
+      "active_event_caimd_columns": 26,
+      "active_event_velocity_residual_max": 3.8332335417084355e-20,
+      "cases": [
+        "velocity_vcmd_explicit",
+        "velocity_vcmd_allfalse",
+        "velocity_active_event"
+      ],
+      "failures": [],
+      "gpu_evidence": "NVIDIA A100-SXM-64GB, 0 MiB, 3 %, 87.26 W",
+      "initial_tiny_system_temperature_K": 27.847,
+      "mpi_ranks": 2,
+      "slurm_job_id": "49728066",
+      "slurm_state": "COMPLETED 0:0",
+      "summary": "/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-v1-7aa61919/evidence/tests/velocity_two_rank_smoke_49728066.json",
+      "summary_sha256": "8bd5e35981c8ae034b58df90c7b36d6fcbf45baef0819e78ebf6a378cb19174c"
+    }
   }
 }

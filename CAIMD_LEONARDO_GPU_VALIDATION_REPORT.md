@@ -631,6 +631,18 @@ the `09bffd3f23fe4c7121006a57081d0246bc90dd0e` deployment described above.
   `053fa00f08406ea342f5cfa66521d5743b0bb7a023ed521be01d65e27550ede1`
 - Full tracked harness outcome:
   40 cases, failures `[]`, skipped `[]`.
+- Successful two-rank single-GPU velocity smoke:
+  `49728066`, COMPLETED `0:0`, node `lrdn2536`, elapsed `00:00:20`.
+- Two-rank smoke summary:
+  `/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-v1-7aa61919/evidence/tests/velocity_two_rank_smoke_49728066.json`
+- Two-rank smoke summary SHA256:
+  `8bd5e35981c8ae034b58df90c7b36d6fcbf45baef0819e78ebf6a378cb19174c`
+- Two-rank smoke outcome:
+  temporary tiny `velocity_vcmd_explicit`, all-false CAIMD, and active-event
+  CAIMD cases all completed with `JOB DONE`; `.tv` temperatures were nonzero
+  (`27.847 K` initial tiny-system PR temperature), active-event `.caimd` kept
+  26 columns, and max velocity-transform residual was
+  `3.8332335417084355e-20`.
 - Successful Ice X initialization smoke job:
   `49725763`, COMPLETED `0:0`, node `lrdn0441`, elapsed `00:02:34`.
 - Ice X smoke summary:
@@ -649,7 +661,10 @@ the `09bffd3f23fe4c7121006a57081d0246bc90dd0e` deployment described above.
   `49723125` compute-node `/tmp` full, `49723301` harness `.md` wrapping parser,
   `49724256` missing Python venv in smoke script, `49724464` old Ice X template
   missing `ion_velocities='from_input'`, and `49725315` post-QE `.caimd`
-  boolean parser issue. None remain outstanding.
+  boolean parser issue. Two post-processing-only attempts for the two-rank
+  smoke (`49727555`, `49727841`) had all QE steps complete but failed strict
+  summary parsing; corrected job `49728066` completed cleanly. None remain
+  outstanding.
 - Final deformation jobs:
   not submitted.
 

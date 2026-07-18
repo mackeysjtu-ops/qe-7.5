@@ -105,6 +105,7 @@ CAIMD required `ion_temperature='not_controlled'`.
   `/private/tmp/qe_velocity_clean_validation/full-with-baseline/analysis/summary.json`,
   `/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-v1-7aa61919/validation/velocity-k-49723755/analysis/summary.json`,
   `/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-v1-7aa61919/validation/velocity-full-49723755/analysis/summary.json`,
+  `/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-v1-7aa61919/evidence/tests/velocity_two_rank_smoke_49728066.json`,
   and `/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-v1-7aa61919/evidence/tests/iceX_velocity_49725763.json`.
 - Key evidence: untouched QE 7.5 baseline `vc-md` with a nonzero explicit
   velocity card saves zero first-step PR `ratd` and zero temperature, while
@@ -117,7 +118,10 @@ CAIMD required `ion_temperature='not_controlled'`.
   `295.862068965511 K` under the PR `3*(nat+1)` temperature denominator used by
   `.tv`. The Ice X temporary nstep=1 Leonardo smoke cases `vcmd_false`,
   all-false CAIMD, and active zero-strain CAIMD all completed with `JOB DONE`
-  and `.tv` ionic temperature `295.86 K`.
+  and `.tv` ionic temperature `295.86 K`. The supplemental two-rank single-GPU
+  tiny smoke completed with `JOB DONE` for explicit `vc-md`, all-false CAIMD,
+  and active-event CAIMD; active-event `.caimd` kept 26 columns and max
+  velocity-transform residual was `3.8332335417084355e-20`.
 - Files modified: `PW/src/vcsmd.f90`, `PW/src/vcsubs.f90`,
   `test-suite/caimd/caimd_validation.py`, Ice X input decks/scripts, and this
   report.
@@ -126,7 +130,7 @@ CAIMD required `ion_temperature='not_controlled'`.
 - Latest failed command: an initial parallel `shasum` raced ahead of
   `/private/tmp/iceX_velocities_300K_regen.{inc,json}` creation; rerun
   succeeded and both regenerated files matched the tracked files.
-- Active or latest Slurm job: `49725763`, COMPLETED `0:0`.
+- Active or latest Slurm job: `49728066`, COMPLETED `0:0`.
 - Exact next action: review the final deformation templates and submit them
   manually only when ready; this workflow did not submit final deformation jobs.
 
@@ -190,6 +194,7 @@ CAIMD required `ion_temperature='not_controlled'`.
 | 49701713 | active strain pilot matrix | COMPLETED 0:0 | lrdn0062 | 00:19:24 |
 | 49723755 | velocity fix GPU/MPI rebuild plus K_velocity/full harness | COMPLETED 0:0 | lrdn0022 | 00:04:01 |
 | 49725763 | short Ice X 300 K velocity initialization smoke | COMPLETED 0:0 | lrdn0441 | 00:02:34 |
+| 49728066 | two-rank single-GPU explicit velocity smoke | COMPLETED 0:0 | lrdn2536 | 00:00:20 |
 
 Peak GPU monitor values:
 
@@ -243,6 +248,8 @@ sbatch run.slurm
   `/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-v1-7aa61919/validation/velocity-full-49723755/analysis/summary.json`
 - Remote Ice X velocity smoke summary:
   `/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-v1-7aa61919/evidence/tests/iceX_velocity_49725763.json`
+- Remote two-rank velocity smoke summary:
+  `/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-v1-7aa61919/evidence/tests/velocity_two_rank_smoke_49728066.json`
 
 ## Next Action
 
