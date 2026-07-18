@@ -81,7 +81,7 @@ while IFS= read -r case_dir; do
   echo "=== CASE START $case_dir $start ==="
   mkdir -p "$case_dir/tmp" "$case_dir/evidence"
   set +e
-  (cd "$case_dir" && srun --mpi=pmix_v3 "$PW" -in qe.in > qe.out 2>&1)
+  (cd "$case_dir" && srun --mpi=pmix_v3 "$PW" -in qe.in < /dev/null > qe.out 2>&1)
   rc=$?
   set -e
   end="$(date -Is)"
