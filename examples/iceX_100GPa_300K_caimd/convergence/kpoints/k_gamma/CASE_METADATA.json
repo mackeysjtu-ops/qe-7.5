@@ -1,0 +1,36 @@
+{
+  "caimd": false,
+  "caimd_mask_order_xx_yy_zz_yz_xz_xy": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+  ],
+  "caimd_step_strain_order_xx_yy_zz_yz_xz_xy": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "caimd_stride": 5,
+  "calculation": "scf",
+  "dt_rydberg_au": null,
+  "ecutrho_Ry": 520.0,
+  "ecutwfc_Ry": 65.0,
+  "include_300K_velocities": false,
+  "kgrid": [
+    1,
+    1,
+    1
+  ],
+  "max_seconds_hint": 7200,
+  "nstep": null,
+  "prefix": "icex_k_gamma",
+  "press_input_kbar": 1000.0,
+  "press_target_GPa": 100.0,
+  "wmass_amu": null
+}

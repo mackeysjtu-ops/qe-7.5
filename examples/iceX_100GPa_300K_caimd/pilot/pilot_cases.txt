@@ -1,0 +1,10 @@
+reference/zero_strain
+pilot/parameter_screen/dt5_wmass_default
+pilot/parameter_screen/dt7p5_wmass_default
+pilot/parameter_screen/dt10_wmass_default
+pilot/parameter_screen/dt5_wmass_half
+pilot/parameter_screen/dt5_wmass_double
+pilot/tension/xx_step1e-5_stride5
+pilot/tension/xx_step5e-5_stride5
+pilot/compression/xx_stepm5e-5_stride5
+pilot/shear/xy_step5e-5_stride5

@@ -1,0 +1,7 @@
+convergence/ecut/ecut_35Ry
+convergence/ecut/ecut_45Ry
+convergence/ecut/ecut_55Ry
+convergence/ecut/ecut_65Ry
+convergence/kpoints/k_gamma
+convergence/kpoints/k_2x2x2
+convergence/kpoints/k_3x3x3

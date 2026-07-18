@@ -1,0 +1,902 @@
+{
+  "cases": [
+    {
+      "caimd": false,
+      "caimd_mask_order_xx_yy_zz_yz_xz_xy": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "caimd_step_strain_order_xx_yy_zz_yz_xz_xy": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "caimd_stride": 5,
+      "calculation": "scf",
+      "case_dir": "convergence/ecut/ecut_35Ry",
+      "delta_to_highest_ecut_meV_per_atom": null,
+      "dt_rydberg_au": null,
+      "ecutrho_Ry": 280.0,
+      "ecutwfc_Ry": 35.0,
+      "include_300K_velocities": false,
+      "job_done": false,
+      "kgrid": [
+        1,
+        1,
+        1
+      ],
+      "max_seconds_hint": 5400,
+      "nstep": null,
+      "prefix": "icex_ecut_35Ry",
+      "press_input_kbar": 1000.0,
+      "press_target_GPa": 100.0,
+      "status": "missing",
+      "wmass_amu": null
+    },
+    {
+      "caimd": false,
+      "caimd_mask_order_xx_yy_zz_yz_xz_xy": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "caimd_step_strain_order_xx_yy_zz_yz_xz_xy": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "caimd_stride": 5,
+      "calculation": "scf",
+      "case_dir": "convergence/ecut/ecut_45Ry",
+      "delta_to_highest_ecut_meV_per_atom": null,
+      "dt_rydberg_au": null,
+      "ecutrho_Ry": 360.0,
+      "ecutwfc_Ry": 45.0,
+      "include_300K_velocities": false,
+      "job_done": false,
+      "kgrid": [
+        1,
+        1,
+        1
+      ],
+      "max_seconds_hint": 5400,
+      "nstep": null,
+      "prefix": "icex_ecut_45Ry",
+      "press_input_kbar": 1000.0,
+      "press_target_GPa": 100.0,
+      "status": "missing",
+      "wmass_amu": null
+    },
+    {
+      "caimd": false,
+      "caimd_mask_order_xx_yy_zz_yz_xz_xy": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "caimd_step_strain_order_xx_yy_zz_yz_xz_xy": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "caimd_stride": 5,
+      "calculation": "scf",
+      "case_dir": "convergence/ecut/ecut_55Ry",
+      "delta_to_highest_ecut_meV_per_atom": null,
+      "dt_rydberg_au": null,
+      "ecutrho_Ry": 440.0,
+      "ecutwfc_Ry": 55.0,
+      "include_300K_velocities": false,
+      "job_done": false,
+      "kgrid": [
+        1,
+        1,
+        1
+      ],
+      "max_seconds_hint": 5400,
+      "nstep": null,
+      "prefix": "icex_ecut_55Ry",
+      "press_input_kbar": 1000.0,
+      "press_target_GPa": 100.0,
+      "status": "missing",
+      "wmass_amu": null
+    },
+    {
+      "caimd": false,
+      "caimd_mask_order_xx_yy_zz_yz_xz_xy": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "caimd_step_strain_order_xx_yy_zz_yz_xz_xy": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "caimd_stride": 5,
+      "calculation": "scf",
+      "case_dir": "convergence/ecut/ecut_65Ry",
+      "delta_to_highest_ecut_meV_per_atom": null,
+      "dt_rydberg_au": null,
+      "ecutrho_Ry": 520.0,
+      "ecutwfc_Ry": 65.0,
+      "include_300K_velocities": false,
+      "job_done": false,
+      "kgrid": [
+        1,
+        1,
+        1
+      ],
+      "max_seconds_hint": 5400,
+      "nstep": null,
+      "prefix": "icex_ecut_65Ry",
+      "press_input_kbar": 1000.0,
+      "press_target_GPa": 100.0,
+      "status": "missing",
+      "wmass_amu": null
+    },
+    {
+      "caimd": false,
+      "caimd_mask_order_xx_yy_zz_yz_xz_xy": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "caimd_step_strain_order_xx_yy_zz_yz_xz_xy": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "caimd_stride": 5,
+      "calculation": "scf",
+      "case_dir": "convergence/kpoints/k_2x2x2",
+      "delta_to_highest_k_meV_per_atom": null,
+      "dt_rydberg_au": null,
+      "ecutrho_Ry": 520.0,
+      "ecutwfc_Ry": 65.0,
+      "include_300K_velocities": false,
+      "job_done": false,
+      "kgrid": [
+        2,
+        2,
+        2
+      ],
+      "max_seconds_hint": 7200,
+      "nstep": null,
+      "prefix": "icex_k_2x2x2",
+      "press_input_kbar": 1000.0,
+      "press_target_GPa": 100.0,
+      "status": "missing",
+      "wmass_amu": null
+    },
+    {
+      "caimd": false,
+      "caimd_mask_order_xx_yy_zz_yz_xz_xy": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "caimd_step_strain_order_xx_yy_zz_yz_xz_xy": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "caimd_stride": 5,
+      "calculation": "scf",
+      "case_dir": "convergence/kpoints/k_3x3x3",
+      "delta_to_highest_k_meV_per_atom": null,
+      "dt_rydberg_au": null,
+      "ecutrho_Ry": 520.0,
+      "ecutwfc_Ry": 65.0,
+      "include_300K_velocities": false,
+      "job_done": false,
+      "kgrid": [
+        3,
+        3,
+        3
+      ],
+      "max_seconds_hint": 7200,
+      "nstep": null,
+      "prefix": "icex_k_3x3x3",
+      "press_input_kbar": 1000.0,
+      "press_target_GPa": 100.0,
+      "status": "missing",
+      "wmass_amu": null
+    },
+    {
+      "caimd": false,
+      "caimd_mask_order_xx_yy_zz_yz_xz_xy": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "caimd_step_strain_order_xx_yy_zz_yz_xz_xy": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "caimd_stride": 5,
+      "calculation": "scf",
+      "case_dir": "convergence/kpoints/k_gamma",
+      "delta_to_highest_k_meV_per_atom": null,
+      "dt_rydberg_au": null,
+      "ecutrho_Ry": 520.0,
+      "ecutwfc_Ry": 65.0,
+      "include_300K_velocities": false,
+      "job_done": false,
+      "kgrid": [
+        1,
+        1,
+        1
+      ],
+      "max_seconds_hint": 7200,
+      "nstep": null,
+      "prefix": "icex_k_gamma",
+      "press_input_kbar": 1000.0,
+      "press_target_GPa": 100.0,
+      "status": "missing",
+      "wmass_amu": null
+    },
+    {
+      "caimd": true,
+      "caimd_mask_order_xx_yy_zz_yz_xz_xy": [
+        true,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "caimd_step_strain_order_xx_yy_zz_yz_xz_xy": [
+        -5e-05,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "caimd_stride": 5,
+      "calculation": "vc-md",
+      "case_dir": "deformation/compression",
+      "dt_rydberg_au": 5.0,
+      "ecutrho_Ry": 520.0,
+      "ecutwfc_Ry": 65.0,
+      "include_300K_velocities": true,
+      "job_done": false,
+      "kgrid": [
+        2,
+        2,
+        2
+      ],
+      "max_seconds_hint": 86400,
+      "nstep": 100,
+      "prefix": "icex_caimd_compression_xx",
+      "press_input_kbar": 1000.0,
+      "press_target_GPa": 100.0,
+      "status": "not_submitted",
+      "wmass_amu": 65.71229946444649
+    },
+    {
+      "caimd": true,
+      "caimd_mask_order_xx_yy_zz_yz_xz_xy": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        true
+      ],
+      "caimd_step_strain_order_xx_yy_zz_yz_xz_xy": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        5e-05
+      ],
+      "caimd_stride": 5,
+      "calculation": "vc-md",
+      "case_dir": "deformation/shear",
+      "dt_rydberg_au": 5.0,
+      "ecutrho_Ry": 520.0,
+      "ecutwfc_Ry": 65.0,
+      "include_300K_velocities": true,
+      "job_done": false,
+      "kgrid": [
+        2,
+        2,
+        2
+      ],
+      "max_seconds_hint": 86400,
+      "nstep": 100,
+      "prefix": "icex_caimd_shear_xy",
+      "press_input_kbar": 1000.0,
+      "press_target_GPa": 100.0,
+      "status": "not_submitted",
+      "wmass_amu": 65.71229946444649
+    },
+    {
+      "caimd": true,
+      "caimd_mask_order_xx_yy_zz_yz_xz_xy": [
+        true,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "caimd_step_strain_order_xx_yy_zz_yz_xz_xy": [
+        5e-05,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "caimd_stride": 5,
+      "calculation": "vc-md",
+      "case_dir": "deformation/tension",
+      "dt_rydberg_au": 5.0,
+      "ecutrho_Ry": 520.0,
+      "ecutwfc_Ry": 65.0,
+      "include_300K_velocities": true,
+      "job_done": false,
+      "kgrid": [
+        2,
+        2,
+        2
+      ],
+      "max_seconds_hint": 86400,
+      "nstep": 100,
+      "prefix": "icex_caimd_tension_xx",
+      "press_input_kbar": 1000.0,
+      "press_target_GPa": 100.0,
+      "status": "not_submitted",
+      "wmass_amu": 65.71229946444649
+    },
+    {
+      "caimd": true,
+      "caimd_mask_order_xx_yy_zz_yz_xz_xy": [
+        true,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "caimd_step_strain_order_xx_yy_zz_yz_xz_xy": [
+        -5e-05,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "caimd_stride": 5,
+      "calculation": "vc-md",
+      "case_dir": "pilot/compression/xx_stepm5e-5_stride5",
+      "dt_rydberg_au": 5.0,
+      "ecutrho_Ry": 520.0,
+      "ecutwfc_Ry": 65.0,
+      "include_300K_velocities": true,
+      "job_done": false,
+      "kgrid": [
+        2,
+        2,
+        2
+      ],
+      "max_seconds_hint": 7200,
+      "nstep": 20,
+      "prefix": "icex_pilot_compression_xx_m5e5",
+      "press_input_kbar": 1000.0,
+      "press_target_GPa": 100.0,
+      "status": "missing",
+      "wmass_amu": 65.71229946444649
+    },
+    {
+      "caimd": false,
+      "caimd_mask_order_xx_yy_zz_yz_xz_xy": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "caimd_step_strain_order_xx_yy_zz_yz_xz_xy": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "caimd_stride": 5,
+      "calculation": "vc-md",
+      "case_dir": "pilot/parameter_screen/dt10_wmass_default",
+      "dt_rydberg_au": 10.0,
+      "ecutrho_Ry": 520.0,
+      "ecutwfc_Ry": 65.0,
+      "include_300K_velocities": true,
+      "job_done": false,
+      "kgrid": [
+        2,
+        2,
+        2
+      ],
+      "max_seconds_hint": 7200,
+      "nstep": 20,
+      "prefix": "icex_dt10_wmass_default",
+      "press_input_kbar": 1000.0,
+      "press_target_GPa": 100.0,
+      "status": "missing",
+      "wmass_amu": 65.71229946444649
+    },
+    {
+      "caimd": false,
+      "caimd_mask_order_xx_yy_zz_yz_xz_xy": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "caimd_step_strain_order_xx_yy_zz_yz_xz_xy": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "caimd_stride": 5,
+      "calculation": "vc-md",
+      "case_dir": "pilot/parameter_screen/dt5_wmass_default",
+      "dt_rydberg_au": 5.0,
+      "ecutrho_Ry": 520.0,
+      "ecutwfc_Ry": 65.0,
+      "include_300K_velocities": true,
+      "job_done": false,
+      "kgrid": [
+        2,
+        2,
+        2
+      ],
+      "max_seconds_hint": 7200,
+      "nstep": 20,
+      "prefix": "icex_dt5_wmass_default",
+      "press_input_kbar": 1000.0,
+      "press_target_GPa": 100.0,
+      "status": "missing",
+      "wmass_amu": 65.71229946444649
+    },
+    {
+      "caimd": false,
+      "caimd_mask_order_xx_yy_zz_yz_xz_xy": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "caimd_step_strain_order_xx_yy_zz_yz_xz_xy": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "caimd_stride": 5,
+      "calculation": "vc-md",
+      "case_dir": "pilot/parameter_screen/dt5_wmass_double",
+      "dt_rydberg_au": 5.0,
+      "ecutrho_Ry": 520.0,
+      "ecutwfc_Ry": 65.0,
+      "include_300K_velocities": true,
+      "job_done": false,
+      "kgrid": [
+        2,
+        2,
+        2
+      ],
+      "max_seconds_hint": 7200,
+      "nstep": 20,
+      "prefix": "icex_dt5_wmass_double",
+      "press_input_kbar": 1000.0,
+      "press_target_GPa": 100.0,
+      "status": "missing",
+      "wmass_amu": 131.42459892889298
+    },
+    {
+      "caimd": false,
+      "caimd_mask_order_xx_yy_zz_yz_xz_xy": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "caimd_step_strain_order_xx_yy_zz_yz_xz_xy": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "caimd_stride": 5,
+      "calculation": "vc-md",
+      "case_dir": "pilot/parameter_screen/dt5_wmass_half",
+      "dt_rydberg_au": 5.0,
+      "ecutrho_Ry": 520.0,
+      "ecutwfc_Ry": 65.0,
+      "include_300K_velocities": true,
+      "job_done": false,
+      "kgrid": [
+        2,
+        2,
+        2
+      ],
+      "max_seconds_hint": 7200,
+      "nstep": 20,
+      "prefix": "icex_dt5_wmass_half",
+      "press_input_kbar": 1000.0,
+      "press_target_GPa": 100.0,
+      "status": "missing",
+      "wmass_amu": 32.856149732223244
+    },
+    {
+      "caimd": false,
+      "caimd_mask_order_xx_yy_zz_yz_xz_xy": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "caimd_step_strain_order_xx_yy_zz_yz_xz_xy": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "caimd_stride": 5,
+      "calculation": "vc-md",
+      "case_dir": "pilot/parameter_screen/dt7p5_wmass_default",
+      "dt_rydberg_au": 7.5,
+      "ecutrho_Ry": 520.0,
+      "ecutwfc_Ry": 65.0,
+      "include_300K_velocities": true,
+      "job_done": false,
+      "kgrid": [
+        2,
+        2,
+        2
+      ],
+      "max_seconds_hint": 7200,
+      "nstep": 20,
+      "prefix": "icex_dt7p5_wmass_default",
+      "press_input_kbar": 1000.0,
+      "press_target_GPa": 100.0,
+      "status": "missing",
+      "wmass_amu": 65.71229946444649
+    },
+    {
+      "caimd": true,
+      "caimd_mask_order_xx_yy_zz_yz_xz_xy": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        true
+      ],
+      "caimd_step_strain_order_xx_yy_zz_yz_xz_xy": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        5e-05
+      ],
+      "caimd_stride": 5,
+      "calculation": "vc-md",
+      "case_dir": "pilot/shear/xy_step5e-5_stride5",
+      "dt_rydberg_au": 5.0,
+      "ecutrho_Ry": 520.0,
+      "ecutwfc_Ry": 65.0,
+      "include_300K_velocities": true,
+      "job_done": false,
+      "kgrid": [
+        2,
+        2,
+        2
+      ],
+      "max_seconds_hint": 7200,
+      "nstep": 20,
+      "prefix": "icex_pilot_shear_xy_5e5",
+      "press_input_kbar": 1000.0,
+      "press_target_GPa": 100.0,
+      "status": "missing",
+      "wmass_amu": 65.71229946444649
+    },
+    {
+      "caimd": true,
+      "caimd_mask_order_xx_yy_zz_yz_xz_xy": [
+        true,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "caimd_step_strain_order_xx_yy_zz_yz_xz_xy": [
+        1e-05,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "caimd_stride": 5,
+      "calculation": "vc-md",
+      "case_dir": "pilot/tension/xx_step1e-5_stride5",
+      "dt_rydberg_au": 5.0,
+      "ecutrho_Ry": 520.0,
+      "ecutwfc_Ry": 65.0,
+      "include_300K_velocities": true,
+      "job_done": false,
+      "kgrid": [
+        2,
+        2,
+        2
+      ],
+      "max_seconds_hint": 7200,
+      "nstep": 20,
+      "prefix": "icex_pilot_tension_xx_1e5",
+      "press_input_kbar": 1000.0,
+      "press_target_GPa": 100.0,
+      "status": "missing",
+      "wmass_amu": 65.71229946444649
+    },
+    {
+      "caimd": true,
+      "caimd_mask_order_xx_yy_zz_yz_xz_xy": [
+        true,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "caimd_step_strain_order_xx_yy_zz_yz_xz_xy": [
+        5e-05,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "caimd_stride": 5,
+      "calculation": "vc-md",
+      "case_dir": "pilot/tension/xx_step5e-5_stride5",
+      "dt_rydberg_au": 5.0,
+      "ecutrho_Ry": 520.0,
+      "ecutwfc_Ry": 65.0,
+      "include_300K_velocities": true,
+      "job_done": false,
+      "kgrid": [
+        2,
+        2,
+        2
+      ],
+      "max_seconds_hint": 7200,
+      "nstep": 20,
+      "prefix": "icex_pilot_tension_xx_5e5",
+      "press_input_kbar": 1000.0,
+      "press_target_GPa": 100.0,
+      "status": "missing",
+      "wmass_amu": 65.71229946444649
+    },
+    {
+      "caimd": false,
+      "caimd_mask_order_xx_yy_zz_yz_xz_xy": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "caimd_step_strain_order_xx_yy_zz_yz_xz_xy": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "caimd_stride": 5,
+      "calculation": "vc-relax",
+      "case_dir": "reference/optional_vc_relax",
+      "dt_rydberg_au": null,
+      "ecutrho_Ry": 520.0,
+      "ecutwfc_Ry": 65.0,
+      "include_300K_velocities": false,
+      "job_done": false,
+      "kgrid": [
+        2,
+        2,
+        2
+      ],
+      "max_seconds_hint": 7200,
+      "nstep": 20,
+      "prefix": "icex_optional_vc_relax",
+      "press_input_kbar": 1000.0,
+      "press_target_GPa": 100.0,
+      "status": "optional_not_run",
+      "wmass_amu": 65.71229946444649
+    },
+    {
+      "caimd": false,
+      "caimd_mask_order_xx_yy_zz_yz_xz_xy": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "caimd_step_strain_order_xx_yy_zz_yz_xz_xy": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "caimd_stride": 5,
+      "calculation": "scf",
+      "case_dir": "reference/scf",
+      "dt_rydberg_au": null,
+      "ecutrho_Ry": 520.0,
+      "ecutwfc_Ry": 65.0,
+      "include_300K_velocities": false,
+      "job_done": false,
+      "kgrid": [
+        2,
+        2,
+        2
+      ],
+      "max_seconds_hint": 7200,
+      "nstep": null,
+      "prefix": "icex_reference_scf",
+      "press_input_kbar": 1000.0,
+      "press_target_GPa": 100.0,
+      "status": "missing",
+      "wmass_amu": null
+    },
+    {
+      "caimd": false,
+      "caimd_mask_order_xx_yy_zz_yz_xz_xy": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "caimd_step_strain_order_xx_yy_zz_yz_xz_xy": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "caimd_stride": 5,
+      "calculation": "vc-md",
+      "case_dir": "reference/zero_strain",
+      "dt_rydberg_au": 5.0,
+      "ecutrho_Ry": 520.0,
+      "ecutwfc_Ry": 65.0,
+      "include_300K_velocities": true,
+      "job_done": false,
+      "kgrid": [
+        2,
+        2,
+        2
+      ],
+      "max_seconds_hint": 7200,
+      "nstep": 20,
+      "prefix": "icex_zero_strain",
+      "press_input_kbar": 1000.0,
+      "press_target_GPa": 100.0,
+      "status": "missing",
+      "wmass_amu": 65.71229946444649
+    }
+  ],
+  "summary": {
+    "completed_cases": 0,
+    "ecut_reference_energy_Ry": null,
+    "final_not_submitted_cases": [
+      "deformation/compression",
+      "deformation/shear",
+      "deformation/tension"
+    ],
+    "kpoint_reference_energy_Ry": null,
+    "optional_not_run_cases": [
+      "reference/optional_vc_relax"
+    ],
+    "pending_validation_cases": [
+      "convergence/ecut/ecut_35Ry",
+      "convergence/ecut/ecut_45Ry",
+      "convergence/ecut/ecut_55Ry",
+      "convergence/ecut/ecut_65Ry",
+      "convergence/kpoints/k_2x2x2",
+      "convergence/kpoints/k_3x3x3",
+      "convergence/kpoints/k_gamma",
+      "pilot/compression/xx_stepm5e-5_stride5",
+      "pilot/parameter_screen/dt10_wmass_default",
+      "pilot/parameter_screen/dt5_wmass_default",
+      "pilot/parameter_screen/dt5_wmass_double",
+      "pilot/parameter_screen/dt5_wmass_half",
+      "pilot/parameter_screen/dt7p5_wmass_default",
+      "pilot/shear/xy_step5e-5_stride5",
+      "pilot/tension/xx_step1e-5_stride5",
+      "pilot/tension/xx_step5e-5_stride5",
+      "reference/scf",
+      "reference/zero_strain"
+    ]
+  }
+}

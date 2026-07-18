@@ -1,0 +1,35 @@
+{
+  "checks": [
+    {
+      "detail": "23 required files present",
+      "name": "required_files",
+      "ok": true
+    },
+    {
+      "detail": "144 atoms, 48 O, 96 H, source/structure hashes and roundtrip validated",
+      "name": "structure",
+      "ok": true
+    },
+    {
+      "detail": "deterministic 300 K velocities, ndof=429, COM removed",
+      "name": "velocities",
+      "ok": true
+    },
+    {
+      "detail": "all QE inputs pass static CAIMD boundary and pressure checks",
+      "name": "qe_inputs",
+      "ok": true
+    },
+    {
+      "detail": "manual deformation Slurm scripts have required Leonardo resources and checks",
+      "name": "slurm",
+      "ok": true
+    },
+    {
+      "detail": "no local UPF binaries present; remote symlinks documented",
+      "name": "pseudo",
+      "ok": true
+    }
+  ],
+  "ok": true
+}

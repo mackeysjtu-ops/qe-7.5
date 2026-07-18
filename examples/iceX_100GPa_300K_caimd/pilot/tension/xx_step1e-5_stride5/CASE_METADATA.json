@@ -1,0 +1,36 @@
+{
+  "caimd": true,
+  "caimd_mask_order_xx_yy_zz_yz_xz_xy": [
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+  ],
+  "caimd_step_strain_order_xx_yy_zz_yz_xz_xy": [
+    1e-05,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "caimd_stride": 5,
+  "calculation": "vc-md",
+  "dt_rydberg_au": 5.0,
+  "ecutrho_Ry": 520.0,
+  "ecutwfc_Ry": 65.0,
+  "include_300K_velocities": true,
+  "kgrid": [
+    2,
+    2,
+    2
+  ],
+  "max_seconds_hint": 7200,
+  "nstep": 20,
+  "prefix": "icex_pilot_tension_xx_1e5",
+  "press_input_kbar": 1000.0,
+  "press_target_GPa": 100.0,
+  "wmass_amu": 65.71229946444649
+}

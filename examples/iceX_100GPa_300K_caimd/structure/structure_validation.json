@@ -1,0 +1,103 @@
+{
+  "applied_rotation": false,
+  "applied_symmetrization": false,
+  "atom_counts": {
+    "H": 96,
+    "O": 48
+  },
+  "atom_style_flags": {
+    "has_charge": false,
+    "has_image_flags": false,
+    "has_molecule_id": false,
+    "has_velocities_section": false
+  },
+  "cell_parameters_angstrom": [
+    [
+      9.21451,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      6.515643,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      7.523616
+    ]
+  ],
+  "cell_parameters_bohr": [
+    [
+      17.412900280292412,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      12.31278080125642,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      14.217573713112522
+    ]
+  ],
+  "coordinate_unit": "angstrom",
+  "coordinate_unit_evidence": [
+    "LAMMPS data files conventionally store coordinates in the active unit system; the title states 100 GPa Ice X.",
+    "The Angstrom interpretation gives a high-pressure ice density near 3.18 g/cm^3.",
+    "The Angstrom interpretation gives O-H, H-H, and O-O nearest-neighbor distances plausible for symmetric Ice X."
+  ],
+  "density_g_cm3": 3.1789090030800904,
+  "max_roundtrip_error_angstrom": 8.881784197001252e-16,
+  "minimum_distances_angstrom": {
+    "H-H": {
+      "atom_ids": [
+        75,
+        117
+      ],
+      "distance_angstrom": 1.8809011681449401
+    },
+    "H-O": {
+      "atom_ids": [
+        3,
+        49
+      ],
+      "distance_angstrom": 1.1518106127211194
+    },
+    "O-O": {
+      "atom_ids": [
+        27,
+        41
+      ],
+      "distance_angstrom": 2.3036241580813464
+    }
+  },
+  "minimum_fractional_separation_norm": 0.12499991860663229,
+  "nat": 144,
+  "original_copy_sha256": "103ccf1fe76e3b3a737914a4eeddb4016d6fb8b308129516541ddc5de08aa6c6",
+  "preserved_lammps_atom_order": true,
+  "qe_structure_sha256": "f3474180cd30cd95f32d13c9348fe1316f430028dbb398ffa68c0b69b2f92ebd",
+  "source_path": "/Users/mengqicheng/Downloads/Learning/qe-7.5/iceX.data",
+  "source_sha256": "103ccf1fe76e3b3a737914a4eeddb4016d6fb8b308129516541ddc5de08aa6c6",
+  "stoichiometry": "48 H2O units; H:O=96:48",
+  "tilt_factors_angstrom": {
+    "xy": 0.0,
+    "xz": 0.0,
+    "yz": 0.0
+  },
+  "title": "LAMMPS data file for Ice 10 Rotated Supercell 100GPa 300K",
+  "total_mass_amu": 864.739200000004,
+  "type_mapping": {
+    "1": "O",
+    "2": "H"
+  },
+  "type_mapping_evidence": {
+    "1": "Masses comment 'O', mass=15.999400 amu",
+    "2": "Masses comment 'H', mass=1.008000 amu"
+  },
+  "volume_angstrom3": 451.7063000636826
+}

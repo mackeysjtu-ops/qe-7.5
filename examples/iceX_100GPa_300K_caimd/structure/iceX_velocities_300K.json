@@ -1,0 +1,35 @@
+{
+  "amu_ry": 911.4442431086565,
+  "center_of_mass_velocity_after_rescale_bohr_per_rydberg_au": [
+    1.466377223952049e-19,
+    2.824290426535887e-20,
+    -5.775356981943709e-21
+  ],
+  "center_of_mass_velocity_before_removal_bohr_per_rydberg_au": [
+    4.2290141863867865e-05,
+    2.1618809832464043e-05,
+    -9.99102831901636e-07
+  ],
+  "final_ekin_ry": 0.40756864821674593,
+  "final_temperature_K": 299.9999999999999,
+  "initial_ekin_ry": 0.46289464636333333,
+  "initial_temperature_before_com_removal_K": 338.3577973079814,
+  "masses_amu": {
+    "H": 1.008,
+    "O": 15.9994
+  },
+  "max_abs_com_velocity_after_rescale": 1.466377223952049e-19,
+  "max_speed_bohr_per_rydberg_au": 0.004859545361837754,
+  "nat": 144,
+  "ndof": 429,
+  "python_version": "3.9.7",
+  "rms_speed_bohr_per_rydberg_au": 0.002106084903589859,
+  "ry_to_kelvin": 157887.51240202977,
+  "scale_after_com_removal": 0.9392407308587526,
+  "seed": 20260718,
+  "structure_include_sha256": "f3474180cd30cd95f32d13c9348fe1316f430028dbb398ffa68c0b69b2f92ebd",
+  "target_temperature_K": 300.0,
+  "temperature_after_com_removal_before_rescale_K": 340.06929345851955,
+  "temperature_formula": "T = 2 * E_kin / ndof * ry_to_kelvin, with masses in amu_ry and velocities in Bohr/Ry atomic-time units",
+  "velocity_include_sha256": "e6b8e8b498c7467844e96cfb93c173ce7004e440c3c1fa9673c0470f437f4c7f"
+}

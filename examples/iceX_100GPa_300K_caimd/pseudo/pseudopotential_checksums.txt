@@ -1,0 +1,4 @@
+# Remote pseudopotential SHA256 checksums
+# Verified source paths on Leonardo:
+c7182caf52c4cad9fe912262ea40feaf4c3b757204189a14cb365869e3e0888e  /leonardo/home/userexternal/mcheng00/psd/H.upf
+fb96915f25537a73000b2db2fde27610f287b923f62c2ff52a674f651f394203  /leonardo/home/userexternal/mcheng00/psd/O.upf
