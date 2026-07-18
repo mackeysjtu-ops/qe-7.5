@@ -72,8 +72,16 @@ def energy_delta_mev_per_atom(reference: float | None, value: float | None, nat:
 def annotate_convergence(cases: list[dict[str, object]]) -> dict[str, object]:
     ecut_cases = [case for case in cases if str(case["case_dir"]).startswith("convergence/ecut/")]
     k_cases = [case for case in cases if str(case["case_dir"]).startswith("convergence/kpoints/")]
-    ecut_reference = next((case["final_total_energy_Ry"] for case in reversed(ecut_cases) if case.get("job_done")), None)
-    k_reference = next((case["final_total_energy_Ry"] for case in reversed(k_cases) if case.get("job_done")), None)
+    completed_ecut = sorted(
+        [case for case in ecut_cases if case.get("job_done")],
+        key=lambda case: float(case["ecutwfc_Ry"]),
+    )
+    completed_k = sorted(
+        [case for case in k_cases if case.get("job_done")],
+        key=lambda case: int(case["kgrid"][0]) * int(case["kgrid"][1]) * int(case["kgrid"][2]),
+    )
+    ecut_reference = completed_ecut[-1]["final_total_energy_Ry"] if completed_ecut else None
+    k_reference = completed_k[-1]["final_total_energy_Ry"] if completed_k else None
     for case in ecut_cases:
         case["delta_to_highest_ecut_meV_per_atom"] = energy_delta_mev_per_atom(
             ecut_reference if isinstance(ecut_reference, float) else None,
