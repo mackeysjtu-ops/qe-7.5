@@ -1,21 +1,29 @@
 # Ice X CAIMD Example Report
 
-Status: IN PROGRESS
+Status: PARTIAL
 
-This report is the local framework checkpoint for the Ice X 100 GPa / nominal
-300 K CAIMD example. It will be updated after deployment and bounded Leonardo
-validation jobs.
+The example package, bounded Leonardo convergence tests, short pilot jobs,
+analysis scripts, and final manual-submit deformation templates are prepared.
+The remaining limitation is scientific: with the current unmodified QE 7.5
+CAIMD source, active `vc-md`/Parrinello-Rahman trajectories initialize near 0 K
+even when the input contains a deterministic 300 K `ATOMIC_VELOCITIES` card.
+True active 300 K CAIMD therefore requires a source-level initialization change
+or another supported boundary design.
 
 ## Local Preflight
 
 - Repository root: `/Users/mengqicheng/Downloads/Learning/qe-7.5`
 - Branch: `main`
-- Starting HEAD: `0282a6e6f4e7d330f68ef4a2732777d8343fd716`
+- Requested starting HEAD:
+  `0282a6e6f4e7d330f68ef4a2732777d8343fd716`
 - Starting status: no tracked or staged diffs; only untracked local source file
   `iceX.data`.
 - Git remotes: none.
 - Local source file: `/Users/mengqicheng/Downloads/Learning/qe-7.5/iceX.data`
-- Source SHA256: `103ccf1fe76e3b3a737914a4eeddb4016d6fb8b308129516541ddc5de08aa6c6`
+- Source SHA256:
+  `103ccf1fe76e3b3a737914a4eeddb4016d6fb8b308129516541ddc5de08aa6c6`
+- QE/CAIMD source modifications: none.
+- Push: none.
 
 ## Structure Conversion
 
@@ -34,6 +42,8 @@ Validated facts:
 - Cell volume: `451.706300063683 Angstrom^3`.
 - LAMMPS tilt factors: `xy=0`, `xz=0`, `yz=0`.
 - Maximum roundtrip error: `8.881784197001252e-16 Angstrom`.
+- Minimum distances: H-H `1.880901 Angstrom`, H-O `1.151811 Angstrom`,
+  O-O `2.303624 Angstrom`.
 - No rotation, symmetrization, relaxation, or atom-order changes.
 
 ## Initial Velocities
@@ -43,61 +53,119 @@ Validated facts:
 - Metadata: `structure/iceX_velocities_300K.json`
 - Seed: `20260718`
 - QE-style degrees of freedom: `3N-3 = 429`
-- Final temperature by QE kinetic-energy formula: `299.9999999999999 K`
+- Final temperature by the generator's QE kinetic-energy formula:
+  `299.9999999999999 K`
 - Maximum residual COM velocity after rescale:
-  `1.466377223952049e-19 Bohr/Ry atomic-time units`
+  `1.466377223952049e-19`
 
-## Remote Preflight Already Verified
+Limitation: Leonardo active CAIMD pilots reported max `.caimd` temperatures of
+only `0.0035-0.0093 K`. Source inspection shows that current `vc-md`/PR
+initializes via `vcinit(..., temperature, ...)` and `ranv(temp, ...)`, while
+active CAIMD requires `ion_temperature='not_controlled'`, which sets
+`temperature=0.0`.
+
+## Remote Deployment And Provenance
 
 - Remote host: `login02.leonardo.local`
 - Remote user: `mcheng00`
 - Remote root:
   `/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-v1-7aa61919`
+- Remote example:
+  `/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-v1-7aa61919/example_iceX_100GPa_300K_caimd`
 - `pw.x`:
   `/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-v1-7aa61919/install-current-gpu/bin/pw.x`
 - `pw.x` SHA256:
   `c9588df640013f098a33e33e1eec6e1f0820ed53f7488efffb0a83ec7ed25b48`
 - `cp.x` SHA256:
   `2723af23df8306b5c4a52e380bd6a618606077198592fa1b6d03f8e287ba5882`
-- `ldd` inspection found deployment-local FFTW/ScaLAPACK/OpenBLAS/MPI/CUDA/NVHPC
-  libraries and no reported `not found` entries in the inspected output.
-- Pseudopotentials:
-  - H checksum
-    `c7182caf52c4cad9fe912262ea40feaf4c3b757204189a14cb365869e3e0888e`
-  - O checksum
-    `fb96915f25537a73000b2db2fde27610f287b923f62c2ff52a674f651f394203`
+- `ldd` inspection found no reported `not found` entries in the inspected
+  output.
+- Pseudopotential symlinks:
+  - `pseudo/H.upf -> /leonardo/home/userexternal/mcheng00/psd/H.upf`
+  - `pseudo/O.upf -> /leonardo/home/userexternal/mcheng00/psd/O.upf`
 
-## Prepared Inputs
+## Completed Validation
 
-Prepared bounded matrices:
+- Local static validation: PASS.
+- Remote static validation: PASS before short jobs; final archive validation is
+  performed after the final local commit.
+- Bounded cutoff/k-point/reference jobs: completed.
+- Bounded zero-strain and dt/wmass pilots: completed.
+- Bounded active tension/compression/shear pilots: completed.
+- `.caimd` analysis: 4 active pilot files parsed, 20 rows each, no parser flags.
+- Final deformation jobs: not submitted.
 
-- 4 cutoff SCF cases.
-- 3 k-point SCF cases.
-- 1 reference SCF case.
-- 1 optional bounded `vc-relax` template.
-- 1 zero-strain MD control.
-- 5 dt/wmass short pilots.
-- 4 active CAIMD strain pilots.
-- 3 final 24 h manual-submit deformation templates.
+## Key Numerical Findings
 
-Active CAIMD inputs use:
+- Reference SCF pressure: `99.623 GPa`, target deviation `-0.377 GPa`.
+- Reference max atomic force: `0.003139 eV/A`.
+- Optional `vc-relax`: prepared but not run or used.
+- Cutoff: 65 Ry is the highest tested pilot setting; cutoff convergence remains
+  unresolved because 55->65 Ry still changes energy by `4.711 meV/atom`.
+- K-points: 2x2x2 differs from 3x3x3 by `0.040 meV/atom` and `0.005 GPa`.
+- Selected pilot settings: `ecutwfc=65 Ry`, `ecutrho=520 Ry`, `2x2x2`,
+  `dt=5.0`, `wmass=65.7122994644 amu`, `caimd_stride=5`,
+  `caimd_step_strain=+/-5.0d-5`.
 
-- `calculation='vc-md'`
-- `restart_mode='from_scratch'`
-- `cell_dynamics='pr'`
-- `cell_dofree='all'`
-- `ion_temperature='not_controlled'`
-- `cell_temperature='not_controlled'`
-- explicit deterministic `ATOMIC_VELOCITIES { a.u }`
+## Leonardo Jobs
 
-## Pending
+| Job ID | Purpose | State | Node | Elapsed |
+| --- | --- | --- | --- | --- |
+| 49700757 | first cutoff attempt, exposed matrix stdin bug | COMPLETED 0:0 | lrdn3448 | 00:00:36 |
+| 49700800 | reference SCF | COMPLETED 0:0 | lrdn0026 | 00:00:58 |
+| 49700996 | remaining convergence matrix | COMPLETED 0:0 | lrdn0452 | 00:04:31 |
+| 49701674 | zero-strain plus dt/wmass matrix | COMPLETED 0:0 | lrdn0026 | 00:26:40 |
+| 49701713 | active strain pilot matrix | COMPLETED 0:0 | lrdn0062 | 00:19:24 |
 
-- Local static validation.
-- Local commit of the framework checkpoint.
-- Exact example archive creation and remote extraction.
-- Remote pseudo symlink creation.
-- Remote checkpoint file.
-- Bounded Leonardo convergence and pilot jobs.
-- Analysis updates and final manual-submit package report.
+Peak GPU monitor values:
 
-Final tension/compression/shear jobs have not been submitted.
+- reference SCF: 52%, 6084 MiB, 244.83 W.
+- convergence matrix: 75%, 6098 MiB, 263.12 W.
+- parameter matrix: 82%, 10390 MiB, 310.64 W.
+- strain matrix: 77%, 10390 MiB, 320.08 W.
+
+## Final Manual Templates
+
+Prepared but not submitted:
+
+- `deformation/tension`
+- `deformation/compression`
+- `deformation/shear`
+
+Each contains `qe.in`, `run.slurm`, `README.md`, `expected_files.txt`,
+`analyze.sh`, and `CASE_METADATA.json`. The final Slurm scripts use the custom
+CAIMD QE 7.5 executable and validate the executable and pseudopotential symlinks
+before launch.
+
+Manual commands:
+
+```bash
+ROOT=/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-v1-7aa61919
+
+cd "$ROOT/example_iceX_100GPa_300K_caimd/deformation/tension"
+sbatch run.slurm
+
+cd "$ROOT/example_iceX_100GPa_300K_caimd/deformation/compression"
+sbatch run.slurm
+
+cd "$ROOT/example_iceX_100GPa_300K_caimd/deformation/shear"
+sbatch run.slurm
+```
+
+## Evidence Paths
+
+- `convergence/analysis/convergence_summary.json`
+- `convergence/analysis/convergence_summary.md`
+- `convergence/analysis/stress_strain.csv`
+- `convergence/analysis/stress_strain_summary.json`
+- `convergence/analysis/caimd_stress_strain_summary.md`
+- `evidence/matrix-49701674.tsv`
+- `evidence/matrix-49701713.tsv`
+- `evidence/LEONARDO_JOB_SUMMARY.md`
+
+## Next Action
+
+Review the 300 K initialization limitation before submitting final deformation
+jobs. To obtain true active 300 K CAIMD with this boundary, update or extend the
+QE `vc-md`/PR initialization path so active CAIMD can consume explicit initial
+velocities without enabling unsupported thermostats.

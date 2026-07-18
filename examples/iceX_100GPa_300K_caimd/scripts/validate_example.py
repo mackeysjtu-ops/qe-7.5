@@ -31,10 +31,19 @@ REQUIRED_FILES = [
     "scripts/validate_example.py",
     "deformation/tension/qe.in",
     "deformation/tension/run.slurm",
+    "deformation/tension/README.md",
+    "deformation/tension/expected_files.txt",
+    "deformation/tension/analyze.sh",
     "deformation/compression/qe.in",
     "deformation/compression/run.slurm",
+    "deformation/compression/README.md",
+    "deformation/compression/expected_files.txt",
+    "deformation/compression/analyze.sh",
     "deformation/shear/qe.in",
     "deformation/shear/run.slurm",
+    "deformation/shear/README.md",
+    "deformation/shear/expected_files.txt",
+    "deformation/shear/analyze.sh",
 ]
 
 

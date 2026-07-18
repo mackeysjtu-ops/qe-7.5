@@ -1,7 +1,7 @@
 {
   "checks": [
     {
-      "detail": "23 required files present",
+      "detail": "32 required files present",
       "name": "required_files",
       "ok": true
     },

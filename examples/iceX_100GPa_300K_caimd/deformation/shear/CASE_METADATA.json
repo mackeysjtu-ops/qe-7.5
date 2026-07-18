@@ -29,7 +29,7 @@
   ],
   "max_seconds_hint": 86400,
   "nstep": 100,
-  "prefix": "icex_caimd_shear_xy",
+  "prefix": "icex_100gpa_300k_shear",
   "press_input_kbar": 1000.0,
   "press_target_GPa": 100.0,
   "wmass_amu": 65.71229946444649

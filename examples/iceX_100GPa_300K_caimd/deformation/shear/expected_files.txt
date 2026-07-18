@@ -1,0 +1,17 @@
+qe.in
+run.slurm
+README.md
+expected_files.txt
+analyze.sh
+CASE_METADATA.json
+qe.out
+tmp/icex_100gpa_300k_shear.caimd
+icex_100gpa_300k_shear.caimd
+nvidia-smi-<jobid>.log
+slurm-<jobid>.out
+slurm-<jobid>.err
+../../convergence/analysis/caimd_stress_strain_summary.csv
+../../convergence/analysis/caimd_stress_strain_summary.json
+../../convergence/analysis/caimd_stress_strain_summary.md
+../../convergence/analysis/stress_strain.csv
+../../convergence/analysis/stress_strain_summary.json

@@ -1,7 +1,7 @@
 &CONTROL
   calculation = 'vc-md',
   restart_mode = 'from_scratch',
-  prefix = 'icex_caimd_tension_xx',
+  prefix = 'icex_100gpa_300k_tension',
   pseudo_dir = '../../pseudo',
   outdir = './tmp',
   tstress = .true.,

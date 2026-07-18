@@ -339,7 +339,7 @@ def all_cases() -> list[Case]:
             ),
             md_case(
                 root / "deformation" / "tension",
-                "icex_caimd_tension_xx",
+                "icex_100gpa_300k_tension",
                 wmass=wmass,
                 nstep=FINAL_NSTEP,
                 caimd=True,
@@ -349,7 +349,7 @@ def all_cases() -> list[Case]:
             ),
             md_case(
                 root / "deformation" / "compression",
-                "icex_caimd_compression_xx",
+                "icex_100gpa_300k_compression",
                 wmass=wmass,
                 nstep=FINAL_NSTEP,
                 caimd=True,
@@ -359,7 +359,7 @@ def all_cases() -> list[Case]:
             ),
             md_case(
                 root / "deformation" / "shear",
-                "icex_caimd_shear_xy",
+                "icex_100gpa_300k_shear",
                 wmass=wmass,
                 nstep=FINAL_NSTEP,
                 caimd=True,
@@ -370,6 +370,113 @@ def all_cases() -> list[Case]:
         ]
     )
     return cases
+
+
+def final_case_notes(case: Case) -> tuple[str, str, str]:
+    rel = case.directory.relative_to(EXAMPLE_ROOT)
+    if rel.as_posix().endswith("/tension"):
+        name = "Uniaxial tension"
+        loading = "positive xx tensor strain"
+        final_strain = "+0.005 nominal xx tensor strain"
+    elif rel.as_posix().endswith("/compression"):
+        name = "Uniaxial compression"
+        loading = "negative xx tensor strain"
+        final_strain = "-0.005 nominal xx tensor strain"
+    elif rel.as_posix().endswith("/shear"):
+        name = "Tensor xy shear"
+        loading = "positive xy tensor shear; engineering gamma_xy = 2 * tensor_E_xy"
+        final_strain = "+0.005 nominal xy tensor strain, equivalent to +0.010 engineering shear"
+    else:
+        raise ValueError(f"not a final deformation case: {case.directory}")
+    return name, loading, final_strain
+
+
+def write_final_case_auxiliary(cases: list[Case]) -> None:
+    final_cases = [
+        case
+        for case in cases
+        if case.directory.relative_to(EXAMPLE_ROOT).parts[:1] == ("deformation",)
+    ]
+    for case in final_cases:
+        name, loading, final_strain = final_case_notes(case)
+        event_increment = case.caimd_stride * max(abs(value) for value in case.caimd_step_strain)
+        expected_events = (case.nstep or 0) // case.caimd_stride
+        mask = ", ".join("T" if value else "F" for value in case.caimd_mask)
+        step = ", ".join(f"{value:.1e}" for value in case.caimd_step_strain)
+        readme = f"""# {name}
+
+Target state:
+
+- Pressure: 100 GPa, written as `press = 1000.0` because QE PW input uses kbar.
+- Nominal initial temperature: deterministic 300 K velocity card from `../../structure/iceX_velocities_300K.inc`.
+- Active thermostats: none. Active CAIMD uses `ion_temperature='not_controlled'` and `cell_temperature='not_controlled'`.
+- Current CAIMD V1 caveat: QE 7.5 `vc-md`/PR with `not_controlled` initializes the variable-cell MD temperature from the namelist path, not from the explicit `ATOMIC_VELOCITIES` card used here. The velocity card is retained for reproducibility and future source work, but the current Leonardo pilot evidence starts near 0 K.
+
+Structure and provenance:
+
+- Source: `../../structure/iceX_original.data`.
+- Source SHA256: `103ccf1fe76e3b3a737914a4eeddb4016d6fb8b308129516541ddc5de08aa6c6`.
+- Converted structure: `../../structure/iceX_qe_structure.inc`, no rotation, relaxation, symmetrization, or atom-order changes.
+- Pseudopotentials are expected as remote symlinks at `../../pseudo/H.upf` and `../../pseudo/O.upf`.
+
+Parameters:
+
+- `ecutwfc = {case.ecutwfc:.1f} Ry`
+- `ecutrho = {case.ecutwfc * ECUT_RHO_FACTOR:.1f} Ry`
+- `K_POINTS automatic {case.kgrid[0]} {case.kgrid[1]} {case.kgrid[2]} 0 0 0`
+- `dt = {case.dt:.4f}` Rydberg atomic time units
+- `wmass = {case.wmass:.10f} amu`
+- `caimd_mask(xx, yy, zz, yz, xz, xy) = ({mask})`
+- `caimd_step_strain(xx, yy, zz, yz, xz, xy) = ({step})`
+- `caimd_stride = {case.caimd_stride}`
+- Per-event masked nominal increment: `{event_increment:.6g}`
+- `nstep = {case.nstep}`
+- Expected events: `{expected_events}`
+- Final nominal strain: {final_strain}
+- Loading direction/convention: {loading}
+
+Expected outputs:
+
+- `slurm-<jobid>.out`
+- `slurm-<jobid>.err`
+- `nvidia-smi-<jobid>.log`
+- `qe.out`
+- `tmp/{case.prefix}.caimd`
+- `{case.prefix}.caimd`
+- `../../convergence/analysis/stress_strain.csv`
+- `../../convergence/analysis/stress_strain_summary.json`
+- common analysis outputs under `../../convergence/analysis/` after `./analyze.sh`
+
+This is a bounded pilot template, not a production-converged mechanical protocol.
+Review `../../PARAMETER_SELECTION.md` and `../../ICE_X_CAIMD_EXAMPLE_REPORT.md`
+before submitting.
+"""
+        (case.directory / "README.md").write_text(readme, encoding="utf-8")
+        expected = f"""qe.in
+run.slurm
+README.md
+expected_files.txt
+analyze.sh
+CASE_METADATA.json
+qe.out
+tmp/{case.prefix}.caimd
+{case.prefix}.caimd
+nvidia-smi-<jobid>.log
+slurm-<jobid>.out
+slurm-<jobid>.err
+../../convergence/analysis/caimd_stress_strain_summary.csv
+../../convergence/analysis/caimd_stress_strain_summary.json
+../../convergence/analysis/caimd_stress_strain_summary.md
+../../convergence/analysis/stress_strain.csv
+../../convergence/analysis/stress_strain_summary.json
+"""
+        (case.directory / "expected_files.txt").write_text(expected, encoding="utf-8")
+        analyze = """#!/bin/bash
+set -euo pipefail
+cd "$(dirname "$0")/../.."
+python3 scripts/analyze_caimd_stress_strain.py
+"""
+        (case.directory / "analyze.sh").write_text(analyze, encoding="utf-8")
 
 
 def write_case_lists(cases: list[Case]) -> None:
@@ -389,6 +496,7 @@ def main() -> int:
     cases = all_cases()
     for case in cases:
         write_case(case)
+    write_final_case_auxiliary(cases)
     write_case_lists(cases)
     print(json.dumps({"cases_written": len(cases), "default_wmass_amu": default_wmass_amu()}, indent=2))
     return 0

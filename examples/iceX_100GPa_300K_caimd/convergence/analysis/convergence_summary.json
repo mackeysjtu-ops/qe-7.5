@@ -21,23 +21,74 @@
       "caimd_stride": 5,
       "calculation": "scf",
       "case_dir": "convergence/ecut/ecut_35Ry",
-      "delta_to_highest_ecut_meV_per_atom": null,
+      "delta_to_highest_ecut_meV_per_atom": 23.06322678108989,
       "dt_rydberg_au": null,
       "ecutrho_Ry": 280.0,
       "ecutwfc_Ry": 35.0,
+      "final_pressure_GPa": 95.25800000000001,
+      "final_pressure_kbar": 952.58,
+      "final_stress_GPa": [
+        [
+          97.673,
+          0.7769999999999999,
+          0.0
+        ],
+        [
+          0.7769999999999999,
+          93.547,
+          -0.0
+        ],
+        [
+          0.0,
+          -0.0,
+          94.55499999999999
+        ]
+      ],
+      "final_stress_kbar": [
+        [
+          976.73,
+          7.77,
+          0.0
+        ],
+        [
+          7.77,
+          935.47,
+          -0.0
+        ],
+        [
+          0.0,
+          -0.0,
+          945.55
+        ]
+      ],
+      "final_total_energy_Ry": -2109.44021125,
+      "final_total_force_Ry_bohr": 0.008658,
+      "final_total_force_eV_A": 0.2226062111201131,
+      "gpu_log_count": 0,
       "include_300K_velocities": false,
-      "job_done": false,
+      "job_done": true,
       "kgrid": [
         1,
         1,
         1
       ],
+      "last_temperature_K": null,
+      "max_atomic_force_Ry_bohr": 0.00717243057408017,
+      "max_atomic_force_eV_A": 0.18441067158905572,
+      "max_gpu_memory_MiB": null,
+      "max_gpu_power_W": null,
+      "max_gpu_utilization_pct": null,
       "max_seconds_hint": 5400,
+      "max_temperature_K": null,
+      "min_temperature_K": null,
       "nstep": null,
       "prefix": "icex_ecut_35Ry",
       "press_input_kbar": 1000.0,
       "press_target_GPa": 100.0,
-      "status": "missing",
+      "scf_iterations_last": 13,
+      "scf_not_converged": false,
+      "status": "ok",
+      "wall_time_text": "25.09s",
       "wmass_amu": null
     },
     {
@@ -61,23 +112,74 @@
       "caimd_stride": 5,
       "calculation": "scf",
       "case_dir": "convergence/ecut/ecut_45Ry",
-      "delta_to_highest_ecut_meV_per_atom": null,
+      "delta_to_highest_ecut_meV_per_atom": 10.06674840931836,
       "dt_rydberg_au": null,
       "ecutrho_Ry": 360.0,
       "ecutwfc_Ry": 45.0,
+      "final_pressure_GPa": 100.584,
+      "final_pressure_kbar": 1005.84,
+      "final_stress_GPa": [
+        [
+          103.152,
+          0.796,
+          0.0
+        ],
+        [
+          0.796,
+          98.692,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          99.90700000000001
+        ]
+      ],
+      "final_stress_kbar": [
+        [
+          1031.52,
+          7.96,
+          0.0
+        ],
+        [
+          7.96,
+          986.92,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          999.07
+        ]
+      ],
+      "final_total_energy_Ry": -2109.57776344,
+      "final_total_force_Ry_bohr": 0.009089,
+      "final_total_force_eV_A": 0.23368767069423746,
+      "gpu_log_count": 0,
       "include_300K_velocities": false,
-      "job_done": false,
+      "job_done": true,
       "kgrid": [
         1,
         1,
         1
       ],
+      "last_temperature_K": null,
+      "max_atomic_force_Ry_bohr": 0.0072219437896247855,
+      "max_atomic_force_eV_A": 0.18568370800771594,
+      "max_gpu_memory_MiB": null,
+      "max_gpu_power_W": null,
+      "max_gpu_utilization_pct": null,
       "max_seconds_hint": 5400,
+      "max_temperature_K": null,
+      "min_temperature_K": null,
       "nstep": null,
       "prefix": "icex_ecut_45Ry",
       "press_input_kbar": 1000.0,
       "press_target_GPa": 100.0,
-      "status": "missing",
+      "scf_iterations_last": 12,
+      "scf_not_converged": false,
+      "status": "ok",
+      "wall_time_text": "23.98s",
       "wmass_amu": null
     },
     {
@@ -101,23 +203,74 @@
       "caimd_stride": 5,
       "calculation": "scf",
       "case_dir": "convergence/ecut/ecut_55Ry",
-      "delta_to_highest_ecut_meV_per_atom": null,
+      "delta_to_highest_ecut_meV_per_atom": 4.711145094376541,
       "dt_rydberg_au": null,
       "ecutrho_Ry": 440.0,
       "ecutwfc_Ry": 55.0,
+      "final_pressure_GPa": 99.811,
+      "final_pressure_kbar": 998.11,
+      "final_stress_GPa": [
+        [
+          102.377,
+          0.796,
+          0.0
+        ],
+        [
+          0.796,
+          97.92,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          99.135
+        ]
+      ],
+      "final_stress_kbar": [
+        [
+          1023.77,
+          7.96,
+          0.0
+        ],
+        [
+          7.96,
+          979.2,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          991.35
+        ]
+      ],
+      "final_total_energy_Ry": -2109.6344461,
+      "final_total_force_Ry_bohr": 0.009149,
+      "final_total_force_eV_A": 0.2352303332799624,
+      "gpu_log_count": 0,
       "include_300K_velocities": false,
-      "job_done": false,
+      "job_done": true,
       "kgrid": [
         1,
         1,
         1
       ],
+      "last_temperature_K": null,
+      "max_atomic_force_Ry_bohr": 0.007217077167773669,
+      "max_atomic_force_eV_A": 0.1855585820835728,
+      "max_gpu_memory_MiB": null,
+      "max_gpu_power_W": null,
+      "max_gpu_utilization_pct": null,
       "max_seconds_hint": 5400,
+      "max_temperature_K": null,
+      "min_temperature_K": null,
       "nstep": null,
       "prefix": "icex_ecut_55Ry",
       "press_input_kbar": 1000.0,
       "press_target_GPa": 100.0,
-      "status": "missing",
+      "scf_iterations_last": 12,
+      "scf_not_converged": false,
+      "status": "ok",
+      "wall_time_text": "24.26s",
       "wmass_amu": null
     },
     {
@@ -141,23 +294,74 @@
       "caimd_stride": 5,
       "calculation": "scf",
       "case_dir": "convergence/ecut/ecut_65Ry",
-      "delta_to_highest_ecut_meV_per_atom": null,
+      "delta_to_highest_ecut_meV_per_atom": 0.0,
       "dt_rydberg_au": null,
       "ecutrho_Ry": 520.0,
       "ecutwfc_Ry": 65.0,
+      "final_pressure_GPa": 100.322,
+      "final_pressure_kbar": 1003.22,
+      "final_stress_GPa": [
+        [
+          102.89000000000001,
+          0.795,
+          0.0
+        ],
+        [
+          0.795,
+          98.437,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          99.639
+        ]
+      ],
+      "final_stress_kbar": [
+        [
+          1028.9,
+          7.95,
+          0.0
+        ],
+        [
+          7.95,
+          984.37,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          996.39
+        ]
+      ],
+      "final_total_energy_Ry": -2109.68430794,
+      "final_total_force_Ry_bohr": 0.009073,
+      "final_total_force_eV_A": 0.23327629400471078,
+      "gpu_log_count": 0,
       "include_300K_velocities": false,
-      "job_done": false,
+      "job_done": true,
       "kgrid": [
         1,
         1,
         1
       ],
+      "last_temperature_K": null,
+      "max_atomic_force_Ry_bohr": 0.007207354826675318,
+      "max_atomic_force_eV_A": 0.18530861055260475,
+      "max_gpu_memory_MiB": null,
+      "max_gpu_power_W": null,
+      "max_gpu_utilization_pct": null,
       "max_seconds_hint": 5400,
+      "max_temperature_K": null,
+      "min_temperature_K": null,
       "nstep": null,
       "prefix": "icex_ecut_65Ry",
       "press_input_kbar": 1000.0,
       "press_target_GPa": 100.0,
-      "status": "missing",
+      "scf_iterations_last": 12,
+      "scf_not_converged": false,
+      "status": "ok",
+      "wall_time_text": "24.51s",
       "wmass_amu": null
     },
     {
@@ -181,23 +385,74 @@
       "caimd_stride": 5,
       "calculation": "scf",
       "case_dir": "convergence/kpoints/k_2x2x2",
-      "delta_to_highest_k_meV_per_atom": null,
+      "delta_to_highest_k_meV_per_atom": 0.03977681073370706,
       "dt_rydberg_au": null,
       "ecutrho_Ry": 520.0,
       "ecutwfc_Ry": 65.0,
+      "final_pressure_GPa": 99.623,
+      "final_pressure_kbar": 996.23,
+      "final_stress_GPa": [
+        [
+          99.647,
+          -0.002,
+          0.0
+        ],
+        [
+          -0.002,
+          99.60900000000001,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          99.615
+        ]
+      ],
+      "final_stress_kbar": [
+        [
+          996.47,
+          -0.02,
+          0.0
+        ],
+        [
+          -0.02,
+          996.09,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          996.15
+        ]
+      ],
+      "final_total_energy_Ry": -2109.79374555,
+      "final_total_force_Ry_bohr": 0.000277,
+      "final_total_force_eV_A": 0.007121958937430276,
+      "gpu_log_count": 0,
       "include_300K_velocities": false,
-      "job_done": false,
+      "job_done": true,
       "kgrid": [
         2,
         2,
         2
       ],
+      "last_temperature_K": null,
+      "max_atomic_force_Ry_bohr": 0.00012209066999570442,
+      "max_atomic_force_eV_A": 0.003139078477807789,
+      "max_gpu_memory_MiB": null,
+      "max_gpu_power_W": null,
+      "max_gpu_utilization_pct": null,
       "max_seconds_hint": 7200,
+      "max_temperature_K": null,
+      "min_temperature_K": null,
       "nstep": null,
       "prefix": "icex_k_2x2x2",
       "press_input_kbar": 1000.0,
       "press_target_GPa": 100.0,
-      "status": "missing",
+      "scf_iterations_last": 12,
+      "scf_not_converged": false,
+      "status": "ok",
+      "wall_time_text": "48.11s",
       "wmass_amu": null
     },
     {
@@ -221,23 +476,74 @@
       "caimd_stride": 5,
       "calculation": "scf",
       "case_dir": "convergence/kpoints/k_3x3x3",
-      "delta_to_highest_k_meV_per_atom": null,
+      "delta_to_highest_k_meV_per_atom": 0.0,
       "dt_rydberg_au": null,
       "ecutrho_Ry": 520.0,
       "ecutwfc_Ry": 65.0,
+      "final_pressure_GPa": 99.618,
+      "final_pressure_kbar": 996.18,
+      "final_stress_GPa": [
+        [
+          99.618,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          99.618,
+          -0.0
+        ],
+        [
+          0.0,
+          -0.0,
+          99.619
+        ]
+      ],
+      "final_stress_kbar": [
+        [
+          996.18,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          996.18,
+          -0.0
+        ],
+        [
+          0.0,
+          -0.0,
+          996.19
+        ]
+      ],
+      "final_total_energy_Ry": -2109.79416654,
+      "final_total_force_Ry_bohr": 3.1e-05,
+      "final_total_force_eV_A": 0.0007970423359579009,
+      "gpu_log_count": 0,
       "include_300K_velocities": false,
-      "job_done": false,
+      "job_done": true,
       "kgrid": [
         3,
         3,
         3
       ],
+      "last_temperature_K": null,
+      "max_atomic_force_Ry_bohr": 5.751717395700175e-05,
+      "max_atomic_force_eV_A": 0.00147882653833502,
+      "max_gpu_memory_MiB": null,
+      "max_gpu_power_W": null,
+      "max_gpu_utilization_pct": null,
       "max_seconds_hint": 7200,
+      "max_temperature_K": null,
+      "min_temperature_K": null,
       "nstep": null,
       "prefix": "icex_k_3x3x3",
       "press_input_kbar": 1000.0,
       "press_target_GPa": 100.0,
-      "status": "missing",
+      "scf_iterations_last": 12,
+      "scf_not_converged": false,
+      "status": "ok",
+      "wall_time_text": "1m44.58s",
       "wmass_amu": null
     },
     {
@@ -261,23 +567,74 @@
       "caimd_stride": 5,
       "calculation": "scf",
       "case_dir": "convergence/kpoints/k_gamma",
-      "delta_to_highest_k_meV_per_atom": null,
+      "delta_to_highest_k_meV_per_atom": 10.379877767495604,
       "dt_rydberg_au": null,
       "ecutrho_Ry": 520.0,
       "ecutwfc_Ry": 65.0,
+      "final_pressure_GPa": 100.322,
+      "final_pressure_kbar": 1003.22,
+      "final_stress_GPa": [
+        [
+          102.89000000000001,
+          0.795,
+          0.0
+        ],
+        [
+          0.795,
+          98.437,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          99.639
+        ]
+      ],
+      "final_stress_kbar": [
+        [
+          1028.9,
+          7.95,
+          0.0
+        ],
+        [
+          7.95,
+          984.37,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          996.39
+        ]
+      ],
+      "final_total_energy_Ry": -2109.68430794,
+      "final_total_force_Ry_bohr": 0.009073,
+      "final_total_force_eV_A": 0.23327629400471078,
+      "gpu_log_count": 0,
       "include_300K_velocities": false,
-      "job_done": false,
+      "job_done": true,
       "kgrid": [
         1,
         1,
         1
       ],
+      "last_temperature_K": null,
+      "max_atomic_force_Ry_bohr": 0.007207354826675318,
+      "max_atomic_force_eV_A": 0.18530861055260475,
+      "max_gpu_memory_MiB": null,
+      "max_gpu_power_W": null,
+      "max_gpu_utilization_pct": null,
       "max_seconds_hint": 7200,
+      "max_temperature_K": null,
+      "min_temperature_K": null,
       "nstep": null,
       "prefix": "icex_k_gamma",
       "press_input_kbar": 1000.0,
       "press_target_GPa": 100.0,
-      "status": "missing",
+      "scf_iterations_last": 12,
+      "scf_not_converged": false,
+      "status": "ok",
+      "wall_time_text": "24.56s",
       "wmass_amu": null
     },
     {
@@ -304,6 +661,7 @@
       "dt_rydberg_au": 5.0,
       "ecutrho_Ry": 520.0,
       "ecutwfc_Ry": 65.0,
+      "gpu_log_count": 0,
       "include_300K_velocities": true,
       "job_done": false,
       "kgrid": [
@@ -311,9 +669,12 @@
         2,
         2
       ],
+      "max_gpu_memory_MiB": null,
+      "max_gpu_power_W": null,
+      "max_gpu_utilization_pct": null,
       "max_seconds_hint": 86400,
       "nstep": 100,
-      "prefix": "icex_caimd_compression_xx",
+      "prefix": "icex_100gpa_300k_compression",
       "press_input_kbar": 1000.0,
       "press_target_GPa": 100.0,
       "status": "not_submitted",
@@ -343,6 +704,7 @@
       "dt_rydberg_au": 5.0,
       "ecutrho_Ry": 520.0,
       "ecutwfc_Ry": 65.0,
+      "gpu_log_count": 0,
       "include_300K_velocities": true,
       "job_done": false,
       "kgrid": [
@@ -350,9 +712,12 @@
         2,
         2
       ],
+      "max_gpu_memory_MiB": null,
+      "max_gpu_power_W": null,
+      "max_gpu_utilization_pct": null,
       "max_seconds_hint": 86400,
       "nstep": 100,
-      "prefix": "icex_caimd_shear_xy",
+      "prefix": "icex_100gpa_300k_shear",
       "press_input_kbar": 1000.0,
       "press_target_GPa": 100.0,
       "status": "not_submitted",
@@ -382,6 +747,7 @@
       "dt_rydberg_au": 5.0,
       "ecutrho_Ry": 520.0,
       "ecutwfc_Ry": 65.0,
+      "gpu_log_count": 0,
       "include_300K_velocities": true,
       "job_done": false,
       "kgrid": [
@@ -389,9 +755,12 @@
         2,
         2
       ],
+      "max_gpu_memory_MiB": null,
+      "max_gpu_power_W": null,
+      "max_gpu_utilization_pct": null,
       "max_seconds_hint": 86400,
       "nstep": 100,
-      "prefix": "icex_caimd_tension_xx",
+      "prefix": "icex_100gpa_300k_tension",
       "press_input_kbar": 1000.0,
       "press_target_GPa": 100.0,
       "status": "not_submitted",
@@ -421,19 +790,70 @@
       "dt_rydberg_au": 5.0,
       "ecutrho_Ry": 520.0,
       "ecutwfc_Ry": 65.0,
+      "final_pressure_GPa": 100.19,
+      "final_pressure_kbar": 1001.9,
+      "final_stress_GPa": [
+        [
+          100.821,
+          0.001,
+          0.0
+        ],
+        [
+          0.001,
+          99.875,
+          -0.0
+        ],
+        [
+          0.0,
+          -0.0,
+          99.873
+        ]
+      ],
+      "final_stress_kbar": [
+        [
+          1008.21,
+          0.01,
+          0.0
+        ],
+        [
+          0.01,
+          998.75,
+          -0.0
+        ],
+        [
+          0.0,
+          -0.0,
+          998.73
+        ]
+      ],
+      "final_total_energy_Ry": -2109.77188913,
+      "final_total_force_Ry_bohr": 0.004908,
+      "final_total_force_eV_A": 0.1261897995123025,
+      "gpu_log_count": 0,
       "include_300K_velocities": true,
-      "job_done": false,
+      "job_done": true,
       "kgrid": [
         2,
         2,
         2
       ],
+      "last_temperature_K": 0.0,
+      "max_atomic_force_Ry_bohr": 0.004983457180793269,
+      "max_atomic_force_eV_A": 0.12812988233953687,
+      "max_gpu_memory_MiB": null,
+      "max_gpu_power_W": null,
+      "max_gpu_utilization_pct": null,
       "max_seconds_hint": 7200,
+      "max_temperature_K": 0.0,
+      "min_temperature_K": 0.0,
       "nstep": 20,
       "prefix": "icex_pilot_compression_xx_m5e5",
       "press_input_kbar": 1000.0,
       "press_target_GPa": 100.0,
-      "status": "missing",
+      "scf_iterations_last": 1,
+      "scf_not_converged": false,
+      "status": "ok",
+      "wall_time_text": "4m59.61s",
       "wmass_amu": 65.71229946444649
     },
     {
@@ -460,19 +880,70 @@
       "dt_rydberg_au": 10.0,
       "ecutrho_Ry": 520.0,
       "ecutwfc_Ry": 65.0,
+      "final_pressure_GPa": 99.801,
+      "final_pressure_kbar": 998.01,
+      "final_stress_GPa": [
+        [
+          99.783,
+          0.008,
+          0.0
+        ],
+        [
+          0.008,
+          99.822,
+          -0.0
+        ],
+        [
+          0.0,
+          -0.0,
+          99.798
+        ]
+      ],
+      "final_stress_kbar": [
+        [
+          997.83,
+          0.08,
+          0.0
+        ],
+        [
+          0.08,
+          998.22,
+          -0.0
+        ],
+        [
+          0.0,
+          -0.0,
+          997.98
+        ]
+      ],
+      "final_total_energy_Ry": -2109.78708206,
+      "final_total_force_Ry_bohr": 0.000311,
+      "final_total_force_eV_A": 0.007996134402674425,
+      "gpu_log_count": 0,
       "include_300K_velocities": true,
-      "job_done": false,
+      "job_done": true,
       "kgrid": [
         2,
         2,
         2
       ],
+      "last_temperature_K": 0.0,
+      "max_atomic_force_Ry_bohr": 0.0005412073389191983,
+      "max_atomic_force_eV_A": 0.013915005214507007,
+      "max_gpu_memory_MiB": null,
+      "max_gpu_power_W": null,
+      "max_gpu_utilization_pct": null,
       "max_seconds_hint": 7200,
+      "max_temperature_K": 0.0,
+      "min_temperature_K": 0.0,
       "nstep": 20,
       "prefix": "icex_dt10_wmass_default",
       "press_input_kbar": 1000.0,
       "press_target_GPa": 100.0,
-      "status": "missing",
+      "scf_iterations_last": 1,
+      "scf_not_converged": false,
+      "status": "ok",
+      "wall_time_text": "4m24.51s",
       "wmass_amu": 65.71229946444649
     },
     {
@@ -499,19 +970,70 @@
       "dt_rydberg_au": 5.0,
       "ecutrho_Ry": 520.0,
       "ecutwfc_Ry": 65.0,
+      "final_pressure_GPa": 99.67699999999999,
+      "final_pressure_kbar": 996.77,
+      "final_stress_GPa": [
+        [
+          99.688,
+          0.001,
+          0.0
+        ],
+        [
+          0.001,
+          99.673,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          99.67
+        ]
+      ],
+      "final_stress_kbar": [
+        [
+          996.88,
+          0.01,
+          0.0
+        ],
+        [
+          0.01,
+          996.73,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          996.7
+        ]
+      ],
+      "final_total_energy_Ry": -2109.79196836,
+      "final_total_force_Ry_bohr": 0.000101,
+      "final_total_force_eV_A": 0.002596815352637032,
+      "gpu_log_count": 0,
       "include_300K_velocities": true,
-      "job_done": false,
+      "job_done": true,
       "kgrid": [
         2,
         2,
         2
       ],
+      "last_temperature_K": 0.0,
+      "max_atomic_force_Ry_bohr": 0.00026359251222293854,
+      "max_atomic_force_eV_A": 0.0067772384413929835,
+      "max_gpu_memory_MiB": null,
+      "max_gpu_power_W": null,
+      "max_gpu_utilization_pct": null,
       "max_seconds_hint": 7200,
+      "max_temperature_K": 0.0,
+      "min_temperature_K": 0.0,
       "nstep": 20,
       "prefix": "icex_dt5_wmass_default",
       "press_input_kbar": 1000.0,
       "press_target_GPa": 100.0,
-      "status": "missing",
+      "scf_iterations_last": 1,
+      "scf_not_converged": false,
+      "status": "ok",
+      "wall_time_text": "4m21.51s",
       "wmass_amu": 65.71229946444649
     },
     {
@@ -538,19 +1060,70 @@
       "dt_rydberg_au": 5.0,
       "ecutrho_Ry": 520.0,
       "ecutwfc_Ry": 65.0,
+      "final_pressure_GPa": 99.654,
+      "final_pressure_kbar": 996.54,
+      "final_stress_GPa": [
+        [
+          99.67,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          99.646,
+          -0.0
+        ],
+        [
+          0.0,
+          -0.0,
+          99.646
+        ]
+      ],
+      "final_stress_kbar": [
+        [
+          996.7,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          996.46,
+          -0.0
+        ],
+        [
+          0.0,
+          -0.0,
+          996.46
+        ]
+      ],
+      "final_total_energy_Ry": -2109.79284746,
+      "final_total_force_Ry_bohr": 0.000142,
+      "final_total_force_eV_A": 0.0036509681195490947,
+      "gpu_log_count": 0,
       "include_300K_velocities": true,
-      "job_done": false,
+      "job_done": true,
       "kgrid": [
         2,
         2,
         2
       ],
+      "last_temperature_K": 0.0,
+      "max_atomic_force_Ry_bohr": 0.0002233214109753026,
+      "max_atomic_force_eV_A": 0.005741826421715148,
+      "max_gpu_memory_MiB": null,
+      "max_gpu_power_W": null,
+      "max_gpu_utilization_pct": null,
       "max_seconds_hint": 7200,
+      "max_temperature_K": 0.0,
+      "min_temperature_K": 0.0,
       "nstep": 20,
       "prefix": "icex_dt5_wmass_double",
       "press_input_kbar": 1000.0,
       "press_target_GPa": 100.0,
-      "status": "missing",
+      "scf_iterations_last": 2,
+      "scf_not_converged": false,
+      "status": "ok",
+      "wall_time_text": "4m22.18s",
       "wmass_amu": 131.42459892889298
     },
     {
@@ -577,19 +1150,70 @@
       "dt_rydberg_au": 5.0,
       "ecutrho_Ry": 520.0,
       "ecutwfc_Ry": 65.0,
+      "final_pressure_GPa": 99.72,
+      "final_pressure_kbar": 997.2,
+      "final_stress_GPa": [
+        [
+          99.72200000000001,
+          0.003,
+          0.0
+        ],
+        [
+          0.003,
+          99.724,
+          -0.0
+        ],
+        [
+          0.0,
+          -0.0,
+          99.715
+        ]
+      ],
+      "final_stress_kbar": [
+        [
+          997.22,
+          0.03,
+          0.0
+        ],
+        [
+          0.03,
+          997.24,
+          -0.0
+        ],
+        [
+          0.0,
+          -0.0,
+          997.15
+        ]
+      ],
+      "final_total_energy_Ry": -2109.79026555,
+      "final_total_force_Ry_bohr": 6.3e-05,
+      "final_total_force_eV_A": 0.001619795715011218,
+      "gpu_log_count": 0,
       "include_300K_velocities": true,
-      "job_done": false,
+      "job_done": true,
       "kgrid": [
         2,
         2,
         2
       ],
+      "last_temperature_K": 0.0,
+      "max_atomic_force_Ry_bohr": 0.0003257356058216541,
+      "max_atomic_force_eV_A": 0.00837500219899204,
+      "max_gpu_memory_MiB": null,
+      "max_gpu_power_W": null,
+      "max_gpu_utilization_pct": null,
       "max_seconds_hint": 7200,
+      "max_temperature_K": 0.0,
+      "min_temperature_K": 0.0,
       "nstep": 20,
       "prefix": "icex_dt5_wmass_half",
       "press_input_kbar": 1000.0,
       "press_target_GPa": 100.0,
-      "status": "missing",
+      "scf_iterations_last": 1,
+      "scf_not_converged": false,
+      "status": "ok",
+      "wall_time_text": "4m22.22s",
       "wmass_amu": 32.856149732223244
     },
     {
@@ -616,19 +1240,70 @@
       "dt_rydberg_au": 7.5,
       "ecutrho_Ry": 520.0,
       "ecutwfc_Ry": 65.0,
+      "final_pressure_GPa": 99.731,
+      "final_pressure_kbar": 997.31,
+      "final_stress_GPa": [
+        [
+          99.729,
+          0.004,
+          0.0
+        ],
+        [
+          0.004,
+          99.738,
+          -0.0
+        ],
+        [
+          0.0,
+          -0.0,
+          99.725
+        ]
+      ],
+      "final_stress_kbar": [
+        [
+          997.29,
+          0.04,
+          0.0
+        ],
+        [
+          0.04,
+          997.38,
+          -0.0
+        ],
+        [
+          0.0,
+          -0.0,
+          997.25
+        ]
+      ],
+      "final_total_energy_Ry": -2109.78985226,
+      "final_total_force_Ry_bohr": 0.000117,
+      "final_total_force_eV_A": 0.0030081920421636903,
+      "gpu_log_count": 0,
       "include_300K_velocities": true,
-      "job_done": false,
+      "job_done": true,
       "kgrid": [
         2,
         2,
         2
       ],
+      "last_temperature_K": 0.0,
+      "max_atomic_force_Ry_bohr": 0.0004003770984959055,
+      "max_atomic_force_eV_A": 0.010294112833845907,
+      "max_gpu_memory_MiB": null,
+      "max_gpu_power_W": null,
+      "max_gpu_utilization_pct": null,
       "max_seconds_hint": 7200,
+      "max_temperature_K": 0.0,
+      "min_temperature_K": 0.0,
       "nstep": 20,
       "prefix": "icex_dt7p5_wmass_default",
       "press_input_kbar": 1000.0,
       "press_target_GPa": 100.0,
-      "status": "missing",
+      "scf_iterations_last": 1,
+      "scf_not_converged": false,
+      "status": "ok",
+      "wall_time_text": "4m23.30s",
       "wmass_amu": 65.71229946444649
     },
     {
@@ -655,19 +1330,70 @@
       "dt_rydberg_au": 5.0,
       "ecutrho_Ry": 520.0,
       "ecutwfc_Ry": 65.0,
+      "final_pressure_GPa": 99.684,
+      "final_pressure_kbar": 996.84,
+      "final_stress_GPa": [
+        [
+          99.69500000000001,
+          -0.395,
+          -0.0
+        ],
+        [
+          -0.395,
+          99.316,
+          0.0
+        ],
+        [
+          -0.0,
+          0.0,
+          100.042
+        ]
+      ],
+      "final_stress_kbar": [
+        [
+          996.95,
+          -3.95,
+          -0.0
+        ],
+        [
+          -3.95,
+          993.16,
+          0.0
+        ],
+        [
+          -0.0,
+          0.0,
+          1000.42
+        ]
+      ],
+      "final_total_energy_Ry": -2109.79158027,
+      "final_total_force_Ry_bohr": 0.004842,
+      "final_total_force_eV_A": 0.12449287066800505,
+      "gpu_log_count": 0,
       "include_300K_velocities": true,
-      "job_done": false,
+      "job_done": true,
       "kgrid": [
         2,
         2,
         2
       ],
+      "last_temperature_K": 0.0,
+      "max_atomic_force_Ry_bohr": 0.0050052359124820485,
+      "max_atomic_force_eV_A": 0.12868983624855057,
+      "max_gpu_memory_MiB": null,
+      "max_gpu_power_W": null,
+      "max_gpu_utilization_pct": null,
       "max_seconds_hint": 7200,
+      "max_temperature_K": 0.0,
+      "min_temperature_K": 0.0,
       "nstep": 20,
       "prefix": "icex_pilot_shear_xy_5e5",
       "press_input_kbar": 1000.0,
       "press_target_GPa": 100.0,
-      "status": "missing",
+      "scf_iterations_last": 1,
+      "scf_not_converged": false,
+      "status": "ok",
+      "wall_time_text": "4m51.39s",
       "wmass_amu": 65.71229946444649
     },
     {
@@ -694,19 +1420,70 @@
       "dt_rydberg_au": 5.0,
       "ecutrho_Ry": 520.0,
       "ecutwfc_Ry": 65.0,
+      "final_pressure_GPa": 99.562,
+      "final_pressure_kbar": 995.62,
+      "final_stress_GPa": [
+        [
+          99.437,
+          0.001,
+          -0.0
+        ],
+        [
+          0.001,
+          99.627,
+          -0.0
+        ],
+        [
+          -0.0,
+          -0.0,
+          99.624
+        ]
+      ],
+      "final_stress_kbar": [
+        [
+          994.37,
+          0.01,
+          -0.0
+        ],
+        [
+          0.01,
+          996.27,
+          -0.0
+        ],
+        [
+          -0.0,
+          -0.0,
+          996.24
+        ]
+      ],
+      "final_total_energy_Ry": -2109.79639249,
+      "final_total_force_Ry_bohr": 0.001037,
+      "final_total_force_eV_A": 0.026662351689946556,
+      "gpu_log_count": 0,
       "include_300K_velocities": true,
-      "job_done": false,
+      "job_done": true,
       "kgrid": [
         2,
         2,
         2
       ],
+      "last_temperature_K": 0.0,
+      "max_atomic_force_Ry_bohr": 0.0012352359789934875,
+      "max_atomic_force_eV_A": 0.031759205488910126,
+      "max_gpu_memory_MiB": null,
+      "max_gpu_power_W": null,
+      "max_gpu_utilization_pct": null,
       "max_seconds_hint": 7200,
+      "max_temperature_K": 0.0,
+      "min_temperature_K": 0.0,
       "nstep": 20,
       "prefix": "icex_pilot_tension_xx_1e5",
       "press_input_kbar": 1000.0,
       "press_target_GPa": 100.0,
-      "status": "missing",
+      "scf_iterations_last": 2,
+      "scf_not_converged": false,
+      "status": "ok",
+      "wall_time_text": "4m25.06s",
       "wmass_amu": 65.71229946444649
     },
     {
@@ -733,19 +1510,70 @@
       "dt_rydberg_au": 5.0,
       "ecutrho_Ry": 520.0,
       "ecutwfc_Ry": 65.0,
+      "final_pressure_GPa": 99.147,
+      "final_pressure_kbar": 991.47,
+      "final_stress_GPa": [
+        [
+          98.522,
+          0.002,
+          -0.0
+        ],
+        [
+          0.002,
+          99.462,
+          0.0
+        ],
+        [
+          -0.0,
+          0.0,
+          99.458
+        ]
+      ],
+      "final_stress_kbar": [
+        [
+          985.22,
+          0.02,
+          -0.0
+        ],
+        [
+          0.02,
+          994.62,
+          0.0
+        ],
+        [
+          -0.0,
+          0.0,
+          994.58
+        ]
+      ],
+      "final_total_energy_Ry": -2109.81254132,
+      "final_total_force_Ry_bohr": 0.004962,
+      "final_total_force_eV_A": 0.12757819583945498,
+      "gpu_log_count": 0,
       "include_300K_velocities": true,
-      "job_done": false,
+      "job_done": true,
       "kgrid": [
         2,
         2,
         2
       ],
+      "last_temperature_K": 0.0,
+      "max_atomic_force_Ry_bohr": 0.005311524903951783,
+      "max_atomic_force_eV_A": 0.13656484570788047,
+      "max_gpu_memory_MiB": null,
+      "max_gpu_power_W": null,
+      "max_gpu_utilization_pct": null,
       "max_seconds_hint": 7200,
+      "max_temperature_K": 0.0,
+      "min_temperature_K": 0.0,
       "nstep": 20,
       "prefix": "icex_pilot_tension_xx_5e5",
       "press_input_kbar": 1000.0,
       "press_target_GPa": 100.0,
-      "status": "missing",
+      "scf_iterations_last": 1,
+      "scf_not_converged": false,
+      "status": "ok",
+      "wall_time_text": "4m53.63s",
       "wmass_amu": 65.71229946444649
     },
     {
@@ -772,6 +1600,7 @@
       "dt_rydberg_au": null,
       "ecutrho_Ry": 520.0,
       "ecutwfc_Ry": 65.0,
+      "gpu_log_count": 0,
       "include_300K_velocities": false,
       "job_done": false,
       "kgrid": [
@@ -779,6 +1608,9 @@
         2,
         2
       ],
+      "max_gpu_memory_MiB": null,
+      "max_gpu_power_W": null,
+      "max_gpu_utilization_pct": null,
       "max_seconds_hint": 7200,
       "nstep": 20,
       "prefix": "icex_optional_vc_relax",
@@ -811,19 +1643,70 @@
       "dt_rydberg_au": null,
       "ecutrho_Ry": 520.0,
       "ecutwfc_Ry": 65.0,
+      "final_pressure_GPa": 99.623,
+      "final_pressure_kbar": 996.23,
+      "final_stress_GPa": [
+        [
+          99.647,
+          -0.002,
+          0.0
+        ],
+        [
+          -0.002,
+          99.60900000000001,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          99.615
+        ]
+      ],
+      "final_stress_kbar": [
+        [
+          996.47,
+          -0.02,
+          0.0
+        ],
+        [
+          -0.02,
+          996.09,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          996.15
+        ]
+      ],
+      "final_total_energy_Ry": -2109.79374555,
+      "final_total_force_Ry_bohr": 0.000277,
+      "final_total_force_eV_A": 0.007121958937430276,
+      "gpu_log_count": 1,
       "include_300K_velocities": false,
-      "job_done": false,
+      "job_done": true,
       "kgrid": [
         2,
         2,
         2
       ],
+      "last_temperature_K": null,
+      "max_atomic_force_Ry_bohr": 0.00012209066999570442,
+      "max_atomic_force_eV_A": 0.003139078477807789,
+      "max_gpu_memory_MiB": 6084.0,
+      "max_gpu_power_W": 244.83,
+      "max_gpu_utilization_pct": 52.0,
       "max_seconds_hint": 7200,
+      "max_temperature_K": null,
+      "min_temperature_K": null,
       "nstep": null,
       "prefix": "icex_reference_scf",
       "press_input_kbar": 1000.0,
       "press_target_GPa": 100.0,
-      "status": "missing",
+      "scf_iterations_last": 12,
+      "scf_not_converged": false,
+      "status": "ok",
+      "wall_time_text": "48.80s",
       "wmass_amu": null
     },
     {
@@ -850,53 +1733,85 @@
       "dt_rydberg_au": 5.0,
       "ecutrho_Ry": 520.0,
       "ecutwfc_Ry": 65.0,
+      "final_pressure_GPa": 99.67699999999999,
+      "final_pressure_kbar": 996.77,
+      "final_stress_GPa": [
+        [
+          99.688,
+          0.001,
+          0.0
+        ],
+        [
+          0.001,
+          99.673,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          99.67
+        ]
+      ],
+      "final_stress_kbar": [
+        [
+          996.88,
+          0.01,
+          0.0
+        ],
+        [
+          0.01,
+          996.73,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          996.7
+        ]
+      ],
+      "final_total_energy_Ry": -2109.79196836,
+      "final_total_force_Ry_bohr": 0.000101,
+      "final_total_force_eV_A": 0.002596815352637032,
+      "gpu_log_count": 0,
       "include_300K_velocities": true,
-      "job_done": false,
+      "job_done": true,
       "kgrid": [
         2,
         2,
         2
       ],
+      "last_temperature_K": 0.0,
+      "max_atomic_force_Ry_bohr": 0.0002635749513895431,
+      "max_atomic_force_eV_A": 0.006776786934048761,
+      "max_gpu_memory_MiB": null,
+      "max_gpu_power_W": null,
+      "max_gpu_utilization_pct": null,
       "max_seconds_hint": 7200,
+      "max_temperature_K": 0.0,
+      "min_temperature_K": 0.0,
       "nstep": 20,
       "prefix": "icex_zero_strain",
       "press_input_kbar": 1000.0,
       "press_target_GPa": 100.0,
-      "status": "missing",
+      "scf_iterations_last": 1,
+      "scf_not_converged": false,
+      "status": "ok",
+      "wall_time_text": "4m22.17s",
       "wmass_amu": 65.71229946444649
     }
   ],
   "summary": {
-    "completed_cases": 0,
-    "ecut_reference_energy_Ry": null,
+    "completed_cases": 18,
+    "ecut_reference_energy_Ry": -2109.68430794,
     "final_not_submitted_cases": [
       "deformation/compression",
       "deformation/shear",
       "deformation/tension"
     ],
-    "kpoint_reference_energy_Ry": null,
+    "kpoint_reference_energy_Ry": -2109.79416654,
     "optional_not_run_cases": [
       "reference/optional_vc_relax"
     ],
-    "pending_validation_cases": [
-      "convergence/ecut/ecut_35Ry",
-      "convergence/ecut/ecut_45Ry",
-      "convergence/ecut/ecut_55Ry",
-      "convergence/ecut/ecut_65Ry",
-      "convergence/kpoints/k_2x2x2",
-      "convergence/kpoints/k_3x3x3",
-      "convergence/kpoints/k_gamma",
-      "pilot/compression/xx_stepm5e-5_stride5",
-      "pilot/parameter_screen/dt10_wmass_default",
-      "pilot/parameter_screen/dt5_wmass_default",
-      "pilot/parameter_screen/dt5_wmass_double",
-      "pilot/parameter_screen/dt5_wmass_half",
-      "pilot/parameter_screen/dt7p5_wmass_default",
-      "pilot/shear/xy_step5e-5_stride5",
-      "pilot/tension/xx_step1e-5_stride5",
-      "pilot/tension/xx_step5e-5_stride5",
-      "reference/scf",
-      "reference/zero_strain"
-    ]
+    "pending_validation_cases": []
   }
 }

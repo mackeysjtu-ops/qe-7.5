@@ -12,6 +12,7 @@ from pathlib import Path
 
 EXAMPLE_ROOT = Path(__file__).resolve().parents[1]
 ANALYSIS_DIR = EXAMPLE_ROOT / "convergence" / "analysis"
+RY_BOHR_TO_EV_ANG = 25.71104309541616
 
 
 def parse_float(value: str) -> float:
@@ -25,9 +26,20 @@ def parse_qe_output(path: Path) -> dict[str, object]:
     energies = [parse_float(match) for match in re.findall(r"!\s+total energy\s+=\s+([-+0-9.eEdD]+)\s+Ry", text)]
     pressures = [parse_float(match) for match in re.findall(r"P=\s*([-+0-9.eEdD]+)", text)]
     total_forces = [parse_float(match) for match in re.findall(r"Total force\s+=\s*([-+0-9.eEdD]+)", text)]
+    atomic_forces = [
+        math.sqrt(sum(parse_float(value) ** 2 for value in match))
+        for match in re.findall(
+            r"force\s+=\s*([-+0-9.eEdD]+)\s+([-+0-9.eEdD]+)\s+([-+0-9.eEdD]+)",
+            text,
+            flags=re.IGNORECASE,
+        )
+    ]
     temperatures = [parse_float(match) for match in re.findall(r"temperature\s+=\s*([-+0-9.eEdD]+)\s+K", text, flags=re.IGNORECASE)]
+    temperatures.extend(parse_float(match) for match in re.findall(r"\bT\s*=\s*([-+0-9.eEdD]+)\s+K", text))
+    scf_iterations = [int(match) for match in re.findall(r"convergence has been achieved in\s+([0-9]+)\s+iterations", text)]
     scf_not_converged = bool(re.search(r"convergence\s+NOT\s+achieved", text, flags=re.IGNORECASE))
     wall_times = re.findall(r"PWSCF\s+:\s+(.+?)CPU\s+(.+?)WALL", text)
+    stress_tensors_kbar = parse_stress_tensors_kbar(text)
     return {
         "status": "ok" if "JOB DONE." in text and not scf_not_converged else "incomplete",
         "job_done": "JOB DONE." in text,
@@ -36,10 +48,56 @@ def parse_qe_output(path: Path) -> dict[str, object]:
         "final_pressure_kbar": pressures[-1] if pressures else None,
         "final_pressure_GPa": pressures[-1] / 10.0 if pressures else None,
         "final_total_force_Ry_bohr": total_forces[-1] if total_forces else None,
+        "final_total_force_eV_A": total_forces[-1] * RY_BOHR_TO_EV_ANG if total_forces else None,
+        "max_atomic_force_Ry_bohr": max(atomic_forces) if atomic_forces else None,
+        "max_atomic_force_eV_A": max(atomic_forces) * RY_BOHR_TO_EV_ANG if atomic_forces else None,
+        "final_stress_kbar": stress_tensors_kbar[-1] if stress_tensors_kbar else None,
+        "final_stress_GPa": [[value / 10.0 for value in row] for row in stress_tensors_kbar[-1]] if stress_tensors_kbar else None,
         "min_temperature_K": min(temperatures) if temperatures else None,
         "max_temperature_K": max(temperatures) if temperatures else None,
         "last_temperature_K": temperatures[-1] if temperatures else None,
+        "scf_iterations_last": scf_iterations[-1] if scf_iterations else None,
         "wall_time_text": wall_times[-1][1].strip() if wall_times else None,
+    }
+
+
+def parse_stress_tensors_kbar(text: str) -> list[list[list[float]]]:
+    lines = text.splitlines()
+    tensors: list[list[list[float]]] = []
+    for index, line in enumerate(lines):
+        if "total   stress" not in line or "(kbar)" not in line:
+            continue
+        rows: list[list[float]] = []
+        for candidate in lines[index + 1 : index + 4]:
+            values = re.findall(r"[-+]?(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)(?:[eEdD][-+]?[0-9]+)?", candidate)
+            if len(values) >= 6:
+                rows.append([parse_float(value) for value in values[-3:]])
+        if len(rows) == 3:
+            tensors.append(rows)
+    return tensors
+
+
+def parse_gpu_log(case_dir: Path) -> dict[str, object]:
+    logs = sorted(case_dir.glob("nvidia-smi-*.log"))
+    gpu_utils: list[float] = []
+    mem_used: list[float] = []
+    power: list[float] = []
+    for log in logs:
+        for line in log.read_text(encoding="utf-8", errors="replace").splitlines():
+            fields = [field.strip() for field in line.split(",")]
+            if len(fields) < 7:
+                continue
+            try:
+                gpu_utils.append(float(fields[3]))
+                mem_used.append(float(fields[5]))
+                power.append(float(fields[6]))
+            except ValueError:
+                continue
+    return {
+        "gpu_log_count": len(logs),
+        "max_gpu_utilization_pct": max(gpu_utils) if gpu_utils else None,
+        "max_gpu_memory_MiB": max(mem_used) if mem_used else None,
+        "max_gpu_power_W": max(power) if power else None,
     }
 
 
@@ -54,12 +112,13 @@ def collect_cases() -> list[dict[str, object]]:
     for metadata_path in sorted(EXAMPLE_ROOT.glob("**/CASE_METADATA.json")):
         metadata = read_case_metadata(metadata_path)
         parsed = parse_qe_output(metadata_path.parent / "qe.out")
+        gpu = parse_gpu_log(metadata_path.parent)
         case_dir = str(metadata["case_dir"])
         if parsed["status"] == "missing" and case_dir.startswith("deformation/"):
             parsed["status"] = "not_submitted"
         if parsed["status"] == "missing" and case_dir == "reference/optional_vc_relax":
             parsed["status"] = "optional_not_run"
-        cases.append({**metadata, **parsed})
+        cases.append({**metadata, **parsed, **gpu})
     return cases
 
 
@@ -120,7 +179,7 @@ def write_outputs(cases: list[dict[str, object]], summary: dict[str, object]) ->
 
     fieldnames = sorted({key for case in cases for key in case.keys()})
     with csv_path.open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=fieldnames)
+        writer = csv.DictWriter(handle, fieldnames=fieldnames, lineterminator="\n")
         writer.writeheader()
         for case in cases:
             writer.writerow(case)
