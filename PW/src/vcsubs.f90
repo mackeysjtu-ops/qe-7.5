@@ -140,13 +140,13 @@ SUBROUTINE vcinit( mxdtyp, mxdatm, ntype, natot, rat, ityp, avec, vcell, force, 
   !
   ! ... local variables
   !
-  REAL(DP) :: tr, ekk, ww, pv
+  REAL(DP) :: tr, ekk, ww, pv, temp_ions
   !
   REAL(DP) :: g(3,3), gm1(3,3), gd(3,3), &
               sigav(3,3), gmgd(3,3),     &
               pim(3,3), piml(3,3)
   !
-  REAL(DP) :: d2(3,3)
+  REAL(DP) :: d2(3,3), temphh_proj(3,3)
   REAL(DP) :: avec_old(3,3)
   
   INTEGER :: na, nt, i, j, l, k, m, natom
@@ -505,6 +505,11 @@ SUBROUTINE vcinit( mxdtyp, mxdatm, ntype, natot, rat, ityp, avec, vcell, force, 
      ! update cell quantities just in case forclj need them
      !
      call updg (avec, avecd, g, gd, gm1, gmgd, sigma, vcell)
+     IF ( caimd_controls_cell() ) &
+        CALL vc_refresh_projected_energies( mxdtyp, mxdatm, ntype, natot, &
+             ityp, atmass, calc, cmass, press, vcell, frr, sigma, avecd,   &
+             ratd, g, enew, eka, ekla, eta, utl, etl, ut, ekint, etot, p, &
+             temphh_proj, temp_ions )
 
   endif
 
@@ -654,7 +659,7 @@ SUBROUTINE vcmove( mxdtyp, mxdatm, ntype, ityp, rat, avec, vcell, force, if_pos,
   INTEGER :: i, j, k, l, m, na, nt, &
              ntcheck, i_update, n_update
   !
-  REAL(DP) :: pv, ww, ts, xx, alpha, x,  &
+  REAL(DP) :: pv, ww, ts, xx, alpha, x, temp_ions,  &
               tr, ekk
   !
   REAL(DP) :: sigav(3,3), gmgd(3,3)
@@ -1135,9 +1140,142 @@ SUBROUTINE vcmove( mxdtyp, mxdatm, ntype, ityp, rat, avec, vcell, force, if_pos,
   !
 
   call updg (avec, avecd, g, gd, gm1, gmgd, sigma, vcell)
+  IF ( caimd_controls_cell() ) THEN
+     CALL vc_refresh_projected_energies( mxdtyp, mxdatm, ntype, natot, &
+          ityp, atmass, calc, cmass, press, vcell, frr, sigma, avecd,  &
+          ratd, g, enew, eka, ekla, eta, utl, etl, ut, ekint, etot, p, &
+          temphh, temp_ions )
+     IF ( tnosep ) &
+        CALL vc_refresh_projected_nose_ekin( mxdatm, natot, ityp, atmass, &
+             ratd, g, ekin2nhp, atm2nhp, nhpdim )
+     tnew = temp_ions
+  END IF
 
   return
 END SUBROUTINE vcmove
+!*
+!*
+!----------------------------------------------------------------------------
+SUBROUTINE vc_refresh_projected_energies( mxdtyp, mxdatm, ntype, natot, ityp, &
+                                          atmass, calc, cmass, press, vcell,  &
+                                          frr, sigma, avecd, ratd, g, enew,   &
+                                          eka, ekla, eta, utl, etl, ut,       &
+                                          ekint, etot, p, temphh, temp_ions )
+  !----------------------------------------------------------------------------
+  !! Recompute kinetic-energy quantities after CAIMD has projected the final
+  !! cell and transformed the ionic histories into that final basis.
+  !
+  USE kinds,     ONLY : DP
+  USE constants, ONLY : k_boltzmann_ry
+  !
+  IMPLICIT NONE
+  !
+  INTEGER, INTENT(IN) :: mxdtyp, mxdatm, ntype, natot
+  INTEGER, INTENT(IN) :: ityp(mxdatm)
+  REAL(DP), INTENT(IN) :: atmass(mxdtyp), cmass, press, vcell
+  REAL(DP), INTENT(IN) :: frr(3,3), sigma(3,3), avecd(3,3)
+  REAL(DP), INTENT(IN) :: ratd(3,mxdatm), g(3,3), enew
+  CHARACTER(LEN=2), INTENT(IN) :: calc
+  REAL(DP), INTENT(OUT) :: eka, ekla, eta, utl, etl, ut, ekint, etot
+  REAL(DP), INTENT(OUT) :: p, temphh(3,3), temp_ions
+  !
+  INTEGER :: i, j, k, m, na, nt
+  REAL(DP) :: ekk, sigav(3,3), tr, ww
+  INTEGER :: ndof
+  REAL(DP), PARAMETER :: zero=0.0d0, dois=2.0d0, tres=3.0d0
+  !
+  eka = zero
+  DO na = 1, natot
+     nt = ityp(na)
+     DO i = 1, 3
+        ekk = zero
+        DO j = 1, 3
+           ekk = ekk + ratd(i,na) * g(i,j) * ratd(j,na)
+        END DO
+        eka = eka + ekk * atmass(nt) / dois
+     END DO
+  END DO
+  !
+  ekla = zero
+  temphh = zero
+  IF ( calc(1:1) == 'n' ) THEN
+     DO j = 1, 3
+        DO i = 1, 3
+           sigav(i,j) = zero
+           DO k = 1, 3
+              sigav(i,j) = sigav(i,j) + sigma(k,i) * avecd(k,j)
+           END DO
+        END DO
+     END DO
+     DO k = 1, 3
+        tr = zero
+        DO m = 1, 3
+           tr = tr + sigav(m,k) * sigav(m,k)
+        END DO
+        ekla = ekla + tr
+     END DO
+  ELSE IF ( calc(1:1) == 'c' ) THEN
+     DO k = 1, 3
+        tr = zero
+        DO m = 1, 3
+           temphh(m,k) = avecd(m,k) * avecd(m,k)
+           tr = tr + temphh(m,k)
+        END DO
+        ekla = ekla + tr
+     END DO
+  END IF
+  ekla = ekla * cmass / dois
+  temphh = cmass * temphh / k_boltzmann_ry
+  !
+  utl = press * vcell
+  etl = utl + ekla
+  ut = enew + utl
+  eta = eka + enew
+  ekint = eka + ekla
+  etot = ekint + ut
+  ww = frr(1,1) + frr(2,2) + frr(3,3)
+  p = ( dois * eka + ww ) / tres / vcell
+  ndof = MAX( 3 * ( natot - 1 ), 1 )
+  temp_ions = dois * eka / ( REAL( ndof, DP ) * k_boltzmann_ry )
+  !
+END SUBROUTINE vc_refresh_projected_energies
+!*
+!*
+!----------------------------------------------------------------------------
+SUBROUTINE vc_refresh_projected_nose_ekin( mxdatm, natot, ityp, atmass, ratd, &
+                                           g, ekin2nhp, atm2nhp, nhpdim )
+  !----------------------------------------------------------------------------
+  !! Refresh Nose-Hoover chain kinetic inputs from the same projected ionic
+  !! velocities that will be written to the PR MD history file.
+  !
+  USE kinds,           ONLY : DP
+  USE dynamics_module, ONLY : Ha_to_Ry
+  !
+  IMPLICIT NONE
+  !
+  INTEGER, INTENT(IN) :: mxdatm, natot, nhpdim
+  INTEGER, INTENT(IN) :: ityp(mxdatm), atm2nhp(natot)
+  REAL(DP), INTENT(IN) :: atmass(*), ratd(3,mxdatm), g(3,3)
+  REAL(DP), INTENT(OUT) :: ekin2nhp(nhpdim)
+  !
+  INTEGER :: i, j, na, nt
+  REAL(DP) :: ekk
+  REAL(DP), PARAMETER :: zero=0.0d0, dois=2.0d0
+  !
+  ekin2nhp = zero
+  DO na = 1, natot
+     nt = ityp(na)
+     DO i = 1, 3
+        ekk = zero
+        DO j = 1, 3
+           ekk = ekk + ratd(i,na) * g(i,j) * ratd(j,na)
+        END DO
+        ekin2nhp(atm2nhp(na)) = ekin2nhp(atm2nhp(na)) + &
+                                ekk * atmass(nt) / dois / Ha_to_Ry
+     END DO
+  END DO
+  !
+END SUBROUTINE vc_refresh_projected_nose_ekin
 !*
 !*
 !----------------------------------------------------------------------------

@@ -7,6 +7,26 @@ Quantum ESPRESSO 7.5 source tree. The implementation commit that contains this
 file is created after the report is staged; its hash is reported in the final
 Codex response.
 
+## Thermostatted Active-CAIMD Checkpoint
+
+- Status: in progress in the current working tree.
+- Scope: extend active PW `vc-md`/PR CAIMD so `ion_temperature='nose'` can run
+  with constrained strain while unsupported thermostat/rescaling modes continue
+  to reject explicitly.
+- Audit: `THERMOSTAT_CAIMD_AUDIT.md` records the source call graph and the
+  thermostat allowlist decision.
+- Key source conclusion: Langevin, Andersen, SVR, Berendsen, and the fixed-cell
+  rescaling variants are not valid active-CAIMD production choices in this PW
+  `vc-md` path. QE's Nose-Hoover path is already integrated in
+  `vcsmd/vcsubs` and can be coupled to CAIMD by refreshing projected ionic
+  kinetic state after the CAIMD final projection.
+- Diagnostic update: `.caimd` remains 26 columns; `temperature_K` is now the
+  ionic kinetic temperature from the last completed move when available, not a
+  total ionic-plus-cell kinetic temperature.
+- Restart note: exact Nose-Hoover continuation would require persisting Nose
+  chain coordinates, velocities, dimensions, and atom-to-chain mapping in
+  addition to CAIMD protocol state. CAIMD restart remains unsupported.
+
 ## Current Documentation Structure
 
 This file is a historical implementation report. For current project guidance

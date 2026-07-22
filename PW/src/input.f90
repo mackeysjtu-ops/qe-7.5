@@ -1740,11 +1740,11 @@ SUBROUTINE iosys_end ( )
      IF ( ANY( if_pos(:,1:nat) /= 1 ) ) CALL errore( 'iosys', &
           'active CAIMD does not support fixed atomic coordinates', 1 )
      SELECT CASE ( TRIM( ion_temperature ) )
-     CASE ( 'not_controlled', 'not-controlled', 'not controlled' )
+     CASE ( 'not_controlled', 'not-controlled', 'not controlled', 'nose' )
         CONTINUE
      CASE DEFAULT
         CALL errore( 'iosys', &
-             'active CAIMD does not support ionic thermostats or rescaling', 1 )
+             'active CAIMD supports only ion_temperature=''not_controlled'' or ''nose''', 1 )
      END SELECT
      SELECT CASE ( TRIM( cell_temperature ) )
      CASE ( 'not_controlled', 'not-controlled', 'not controlled' )

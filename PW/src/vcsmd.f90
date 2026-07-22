@@ -50,7 +50,8 @@ SUBROUTINE vcsmd( conv_ions )
   USE parameters,          ONLY : ntypx
   USE ener,                ONLY : etot
   USE io_files,            ONLY : prefix, delete_if_present, seqopn
-  USE caimd_module,        ONLY : caimd_enabled, caimd_note_temperature_from_ekint
+  USE caimd_module,        ONLY : caimd_enabled, caimd_controls_cell, &
+                                  caimd_note_ionic_temperature
   !
   USE constraints_module,  ONLY : remove_constr_force, check_constraint
   !
@@ -316,12 +317,15 @@ SUBROUTINE vcsmd( conv_ions )
                 avec2di, sigmamet, sig0, avec0, v0, rati, ratd, rat2d, rat2di, &
                 enew, uta, eka, eta, ekla, utl, etl, ut, ekint, edyn, iforceh, &
                 tv0rd, input_velocity )
-     IF ( calc(1:1) /= 'm' ) THEN
+     IF ( caimd_controls_cell() ) THEN
+        tnew = 2.D0 * eka / ( 3.D0 * DBLE( MAX( nat - 1, 1 ) ) * &
+                              k_boltzmann_ry )
+     ELSE IF ( calc(1:1) /= 'm' ) THEN
         tnew = 2.D0 / 3.D0 / DBLE( nat + 1 ) * ekint / k_boltzmann_ry
      ELSE
         tnew = 2.D0 / 3.D0 / DBLE( MAX( nat - 1, 1 ) ) * ekint / k_boltzmann_ry
      END IF
-     CALL caimd_note_temperature_from_ekint( calc, nat, ekint )
+     CALL caimd_note_ionic_temperature( nat, eka )
      !
   ELSE
      !
@@ -337,7 +341,7 @@ SUBROUTINE vcsmd( conv_ions )
                 edyn, temperature, tolp, ntcheck, ntimes, istep, tnew, nzero,  &
                 nat, acu, ack, acp, acpv, avu, avk, avp, avpv, iforceh, tnosep,&
                 vnhp, ekin2nhp, atm2nhp, nhpdim, nhpcl, tnoseh, vnhh, temphh) 
-     CALL caimd_note_temperature_from_ekint( calc, nat, ekint )
+     CALL caimd_note_ionic_temperature( nat, eka )
      !
      IF (tnosep) THEN
       DO  

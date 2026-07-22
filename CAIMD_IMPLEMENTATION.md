@@ -60,14 +60,23 @@ CAIMD V1 is supported only when all of the following hold:
 - no existing/stale MD history file;
 - no fixed atomic coordinate component when `caimd=.true.` and any
   `caimd_mask` component is true;
-- `ion_temperature='not_controlled'` when `caimd=.true.` and any mask component
-  is true;
+- `ion_temperature='not_controlled'` or `ion_temperature='nose'` when
+  `caimd=.true.` and any mask component is true;
 - `cell_temperature='not_controlled'` when `caimd=.true.` and any mask
   component is true.
 
 When `caimd=.false.` or all `caimd_mask` values are false, CAIMD must be an
 exact no-op. In particular, inactive/all-false CAIMD must not reject ordinary
 fixed atomic coordinates or thermostats beyond baseline QE behavior.
+
+Active CAIMD has an explicit ionic-temperature allowlist. QE's existing PW
+`vc-md` Nose-Hoover path is supported because it is implemented inside
+`vcsmd/vcsubs` and acts on ionic velocity histories. `rescaling`,
+`rescale-v`, `rescale-T`, `reduce-T`, `berendsen`, `svr`, `andersen`,
+`initial`, and Langevin-style fixed-cell dynamics are not supported with active
+CAIMD. Some of those keywords are valid in ordinary QE input, but they are
+either not connected to the PW `vc-md` path or would rescale PR cell velocities
+as well as ionic velocities.
 
 CP does not implement CAIMD. Because CP can parse the shared `&CELL` variables,
 `caimd=.true.` in CP input must fail explicitly instead of being silently
@@ -154,6 +163,14 @@ rat2di_projected = inverse(H_projected) * H_candidate * rat2di_candidate
 The same transformation principle applies to the stored acceleration histories.
 Atomic thermal motion is not zeroed.
 
+With `ion_temperature='nose'`, the ordinary QE Nose-Hoover friction term is
+applied in `vcmove` before the CAIMD final projection. After projection, CAIMD
+refreshes the ionic kinetic energy and Nose chain kinetic inputs from the final
+projected cell and transformed `ratd`, so the thermostat update and MD history
+refer to the same committed physical velocity state. Ionic thermostats are not
+applied to PR cell variables; `cell_temperature` remains unsupported for active
+CAIMD.
+
 ## Stress And Atomic Forces
 
 CAIMD V1 does not alter force or stress calculation.
@@ -220,11 +237,12 @@ Important semantics:
   CAIMD reference cell.
 - `following_move_is_event` tells whether the move after the logged stress is
   scheduled to apply an imposed strain event.
-- `temperature_K` is a CAIMD diagnostic derived from the ionic kinetic-energy
-  quantity passed through the existing `vcsmd` path when available; otherwise it
-  falls back to the current input/target temperature value available to the
-  premove writer. It is not a new thermostat variable and does not include a
-  redesigned CAIMD temperature definition.
+- `temperature_K` is a CAIMD diagnostic derived from ionic kinetic energy when
+  a completed `vcsmd` move has provided it; otherwise it falls back to the
+  current input/target temperature value available to the premove writer. It
+  excludes PR cell kinetic energy. Because `.caimd` rows are written before
+  `move_ions`, rows after the first report the ionic kinetic temperature of the
+  last committed move.
 - `velocity_jump_max` and `velocity_jump_rms` are residual diagnostics of the
   enforced velocity-history transformation. At a correctly transformed event
   they should be at roundoff scale; they are not physical velocity jumps to be
@@ -245,6 +263,11 @@ persisting and validating extra CAIMD protocol state:
 - reference cell;
 - history projection convention;
 - output/log append state.
+
+Exact continuation with `ion_temperature='nose'` would additionally require
+persisting the Nose-Hoover chain coordinates, velocities, dimensions, and
+atom-to-chain mapping. CAIMD restart remains unsupported until those state
+variables and the CAIMD protocol state are written and validated together.
 
 The implementation rejects restart mode, stale MD history before cleanup, and
 unexpected MD history at the start of `vcsmd`.
@@ -274,6 +297,7 @@ Changed source files for CAIMD V1 are:
 - `PW/src/vcsubs.f90`
 - `PW/src/Makefile`
 - `PW/CMakeLists.txt`
+- `THERMOSTAT_CAIMD_AUDIT.md`
 
 Validation support is in:
 
@@ -292,12 +316,15 @@ Focused validation should include:
 - stride scheduling;
 - tensor shear convention;
 - non-orthogonal-cell left-multiplication behavior;
+- active CAIMD with `ion_temperature='nose'`, including active zero-increment,
+  stride, non-orthogonal-cell, tensor-shear, explicit-velocity, and temperature
+  smoke tests;
 - antisymmetric/rotation suppression diagnostics;
 - `.caimd` 26-column schema and finite diagnostic columns;
 - explicit rejections for unsupported calculation, non-PR cell dynamics,
   non-`all` `cell_dofree`, restart/stale history, invalid stride, oversized
-  event increment, fixed atomic coordinates, thermostats/rescaling, and CP
-  `caimd=.true.`;
+  event increment, fixed atomic coordinates, unsupported ionic thermostats or
+  rescaling modes, cell thermostats, and CP `caimd=.true.`;
 - parser behavior for ignored non-variable-cell `&CELL` without card scanning.
 
 Leonardo-specific build and validation instructions are intentionally kept in

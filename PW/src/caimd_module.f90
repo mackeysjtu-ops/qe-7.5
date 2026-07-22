@@ -40,7 +40,7 @@ MODULE caimd_module
   !
   PUBLIC :: caimd_configure, caimd_enabled, caimd_controls_cell
   PUBLIC :: caimd_project_tangent, caimd_apply_final_projection
-  PUBLIC :: caimd_write_premove, caimd_note_temperature_from_ekint
+  PUBLIC :: caimd_write_premove, caimd_note_ionic_temperature
   PUBLIC :: caimd_step_strain, caimd_mask, caimd_stride
   PUBLIC :: caimd_event_count, caimd_cumulative_strain
   !
@@ -198,23 +198,19 @@ CONTAINS
     !
   END SUBROUTINE caimd_apply_final_projection
   !
-  SUBROUTINE caimd_note_temperature_from_ekint( calc, nat, ekint )
+  SUBROUTINE caimd_note_ionic_temperature( nat, ionic_ekin )
     !
-    CHARACTER(LEN=*), INTENT(IN) :: calc
     INTEGER, INTENT(IN) :: nat
-    REAL(DP), INTENT(IN) :: ekint
+    REAL(DP), INTENT(IN) :: ionic_ekin
+    INTEGER :: ndof
     !
     IF ( .NOT. caimd_enabled_ ) RETURN
-    IF ( calc(1:1) /= 'm' ) THEN
-       caimd_temperature_ = 2.0_DP / 3.0_DP / REAL( nat + 1, DP ) * &
-                            ekint / k_boltzmann_ry
-    ELSE
-       caimd_temperature_ = 2.0_DP / 3.0_DP / REAL( MAX( nat - 1, 1 ), DP ) * &
-                            ekint / k_boltzmann_ry
-    END IF
+    ndof = MAX( 3 * ( nat - 1 ), 1 )
+    caimd_temperature_ = 2.0_DP * ionic_ekin / &
+                         ( REAL( ndof, DP ) * k_boltzmann_ry )
     caimd_have_temperature_ = .TRUE.
     !
-  END SUBROUTINE caimd_note_temperature_from_ekint
+  END SUBROUTINE caimd_note_ionic_temperature
   !
   SUBROUTINE caimd_write_premove( ionic_step, dt, h, volume, stress, input_temp )
     !

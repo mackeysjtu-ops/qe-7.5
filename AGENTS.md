@@ -29,7 +29,11 @@ CAIMD V1 is a PW-only constrained AIMD mode for:
 - `restart_mode='from_scratch'`;
 - no fixed-volume/fixed-area cell modes;
 - no fixed atomic coordinates when any CAIMD mask component is active;
-- no ionic or cell thermostat/rescaling when any CAIMD mask component is active.
+- ionic temperature either `not_controlled` or QE's existing PW `vc-md`
+  Nose-Hoover path when any CAIMD mask component is active;
+- no ionic rescaling, Langevin, Andersen, SVR, Berendsen, `initial`, or other
+  unsupported ionic thermostat mode when any CAIMD mask component is active;
+- no cell thermostat/rescaling when any CAIMD mask component is active.
 
 The implementation must remain an exact no-op when `caimd=.false.` or when all
 `caimd_mask` values are false. CP does not implement CAIMD; `caimd=.true.` in

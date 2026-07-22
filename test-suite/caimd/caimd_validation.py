@@ -189,6 +189,8 @@ def parse_caimd(path: Path) -> dict[str, Any]:
                 parsed.append(float(part.replace("D", "E").replace("d", "e")))
         rows.append(parsed)
     column_counts = sorted({len(row) for row in rows})
+    temperatures = [float(row[22]) for row in rows]
+    window = temperatures[-min(5, len(temperatures)) :] if temperatures else []
     return {
         "exists": True,
         "path": str(path),
@@ -199,6 +201,10 @@ def parse_caimd(path: Path) -> dict[str, Any]:
         "event_flags": [bool(row[3]) for row in rows] if rows else [],
         "event_counters": [int(round(row[2])) for row in rows] if rows else [],
         "temperature_finite": all(math.isfinite(float(row[22])) for row in rows) if rows else False,
+        "temperature_values": temperatures,
+        "temperature_first": temperatures[0] if temperatures else None,
+        "temperature_last": temperatures[-1] if temperatures else None,
+        "temperature_final_window_mean": sum(window) / len(window) if window else None,
         "volume_finite": all(math.isfinite(float(row[23])) for row in rows) if rows else False,
         "velocity_residual_finite": all(
             math.isfinite(float(row[24])) and math.isfinite(float(row[25])) for row in rows
@@ -329,6 +335,15 @@ def parse_gpu_monitor(path: Path) -> dict[str, Any]:
         "max_memory_used_mib": max(s["memory_used_mib"] for s in samples),
         "max_power_w": max(s["power_w"] for s in samples),
     }
+
+
+def parse_stdout_temperatures(text: str) -> list[float]:
+    values: list[float] = []
+    for line in text.splitlines():
+        match = re.search(r"\bT\s*=\s*([-+0-9.EeDd]+)\s*K", line)
+        if match:
+            values.append(float(match.group(1).replace("D", "E").replace("d", "e")))
+    return values
 
 
 def artifact_path(run_dir: Path, prefix: str, ext: str) -> Path:
@@ -601,6 +616,8 @@ def positions_text(nat: int = 2, fixed_flags: bool = False) -> str:
 def velocities_text(nat: int = 2, kind: str = "default") -> str:
     if kind == "balanced":
         base = [(0.00020, -0.00010, 0.00015), (-0.00020, 0.00010, -0.00015)]
+    elif kind == "warm":
+        base = [(0.00024, -0.00012, 0.00018), (-0.00024, 0.00012, -0.00018)]
     elif kind == "zero":
         base = [(0.0, 0.0, 0.0), (0.0, 0.0, 0.0)]
     else:
@@ -627,6 +644,8 @@ def qe_input(
     extra_cell: str = "",
     after_cards: str = "",
     velocity_kind: str = "default",
+    dt: float = 5.0,
+    wmass: float = 20.0,
 ) -> str:
     ions = ""
     if calculation in {"md", "vc-md", "relax", "vc-relax"}:
@@ -655,7 +674,7 @@ def qe_input(
 &CELL
  {cdyn}
  press=0.0,
- wmass=20.0,
+ wmass={wmass},
  cell_dofree='all',
  {extra_cell}
  {caimd}
@@ -681,7 +700,7 @@ K_POINTS gamma
  tstress=.true.,
  tprnfor=.true.,
  nstep={nstep},
- dt=5.0,
+ dt={dt},
  verbosity='high',
  {extra_control}
 /
@@ -764,6 +783,10 @@ def input_templates(pseudo_dir: Path) -> dict[str, str]:
     active_system = "nosym=.true., noinv=.true.,"
     velocity_control = "iprint=1,"
     velocity_event = "caimd=.true., caimd_stride=1, caimd_step_strain(1)=1.0d-4, caimd_mask(1)=.true.,"
+    nose_ions = (
+        "ion_temperature='nose', tempw=300.0, fnosep(1)=100.0, "
+        "nhpcl=1, ndega=0,"
+    )
     return {
         "startup_scf": qe_input("startup_scf", "scf", pseudo_dir, include_cell=False),
         "scf_ignored_cell_false": qe_input("scf_ignored_cell_false", "scf", pseudo_dir, caimd=caimd_false),
@@ -921,6 +944,106 @@ def input_templates(pseudo_dir: Path) -> dict[str, str]:
             velocities=True,
             extra_system=active_system,
         ),
+        "ordinary_vcmd_nose": qe_input(
+            "ordinary_vcmd_nose",
+            "vc-md",
+            pseudo_dir,
+            nstep=20,
+            velocities=True,
+            extra_ions=nose_ions,
+            extra_system=active_system,
+            velocity_kind="warm",
+            dt=5.0,
+            wmass=2000.0,
+        ),
+        "vcmd_false_nose": qe_input(
+            "vcmd_false_nose",
+            "vc-md",
+            pseudo_dir,
+            nstep=20,
+            caimd=caimd_false,
+            velocities=True,
+            extra_ions=nose_ions,
+            extra_system=active_system,
+            velocity_kind="warm",
+            dt=5.0,
+            wmass=2000.0,
+        ),
+        "vcmd_allfalse_nose": qe_input(
+            "vcmd_allfalse_nose",
+            "vc-md",
+            pseudo_dir,
+            nstep=20,
+            caimd=all_false,
+            velocities=True,
+            extra_ions=nose_ions,
+            extra_system=active_system,
+            velocity_kind="warm",
+            dt=5.0,
+            wmass=2000.0,
+        ),
+        "active_nose_zero": qe_input(
+            "active_nose_zero",
+            "vc-md",
+            pseudo_dir,
+            nstep=8,
+            caimd=fixed_xx_zero,
+            velocities=True,
+            extra_ions=nose_ions,
+            extra_system=active_system,
+            velocity_kind="warm",
+            dt=5.0,
+            wmass=2000.0,
+        ),
+        "active_nose_stride2_xx": qe_input(
+            "active_nose_stride2_xx",
+            "vc-md",
+            pseudo_dir,
+            nstep=8,
+            caimd=stride2_xx,
+            velocities=True,
+            extra_ions=nose_ions,
+            extra_system=active_system,
+            velocity_kind="warm",
+            dt=5.0,
+            wmass=2000.0,
+        ),
+        "active_nose_nonorthogonal": qe_input(
+            "active_nose_nonorthogonal",
+            "vc-md",
+            pseudo_dir,
+            nstep=8,
+            caimd=fixed_xx_zero,
+            cell_kind="nonorthogonal",
+            velocities=True,
+            extra_ions=nose_ions,
+            extra_system=active_system,
+            velocity_kind="warm",
+            dt=5.0,
+            wmass=2000.0,
+        ),
+        "active_nose_shear_xy": qe_input(
+            "active_nose_shear_xy",
+            "vc-md",
+            pseudo_dir,
+            nstep=8,
+            caimd=shear_xy,
+            velocities=True,
+            extra_ions=nose_ions,
+            extra_system=active_system,
+            velocity_kind="warm",
+            dt=5.0,
+            wmass=2000.0,
+        ),
+        "reject_unsupported_thermostat": qe_input(
+            "reject_unsupported_thermostat",
+            "vc-md",
+            pseudo_dir,
+            caimd=fixed_xx_zero,
+            velocities=True,
+            extra_ions="ion_temperature='svr', tempw=300.0, nraise=5,",
+            extra_system=active_system,
+        ),
         "reject_fixed_atom": qe_input(
             "reject_fixed_atom",
             "vc-md",
@@ -1068,6 +1191,19 @@ def case_specs() -> dict[str, CaseSpec]:
         CaseSpec("active_shear_xy", "F_active", "pw", "active_shear_xy"),
         CaseSpec("active_nonorthogonal", "F_active", "pw", "active_nonorthogonal"),
         CaseSpec(
+            "ordinary_vcmd_nose",
+            "L_thermostat",
+            "pw",
+            "ordinary_vcmd_nose",
+            tokens=("nose` temperature control",),
+        ),
+        CaseSpec("vcmd_false_nose", "L_thermostat", "pw", "vcmd_false_nose"),
+        CaseSpec("vcmd_allfalse_nose", "L_thermostat", "pw", "vcmd_allfalse_nose"),
+        CaseSpec("active_nose_zero", "L_thermostat", "pw", "active_nose_zero"),
+        CaseSpec("active_nose_stride2_xx", "L_thermostat", "pw", "active_nose_stride2_xx"),
+        CaseSpec("active_nose_nonorthogonal", "L_thermostat", "pw", "active_nose_nonorthogonal"),
+        CaseSpec("active_nose_shear_xy", "L_thermostat", "pw", "active_nose_shear_xy"),
+        CaseSpec(
             "policy_cumulative_warning",
             "G_policies",
             "pw",
@@ -1088,7 +1224,15 @@ def case_specs() -> dict[str, CaseSpec]:
             "pw",
             "reject_ionic_thermostat",
             expect="failure",
-            tokens=("ionic thermostats",),
+            tokens=("not_controlled", "nose"),
+        ),
+        CaseSpec(
+            "policy_unsupported_thermostat_reject",
+            "G_policies",
+            "pw",
+            "reject_unsupported_thermostat",
+            expect="failure",
+            tokens=("not_controlled", "nose"),
         ),
         CaseSpec(
             "policy_cell_thermostat_reject",
@@ -1289,6 +1433,7 @@ def enrich_result(result: CaseResult, spec: CaseSpec) -> None:
     result.mpi_abort = "MPI_ABORT" in text or "MPI_ABORT was invoked" in text
     result.missing_library = "not found" in text and "lib" in text
     result.metrics["energies_Ry"] = parse_energy(text)
+    result.metrics["stdout_temperatures_K"] = parse_stdout_temperatures(text)
     result.metrics["input_velocity_card"] = parse_qe_input_metadata(Path(result.input_path))
     for ext in ("cel", "pos", "vel", "for", "ave", "avec", "e", "eal", "p", "tv"):
         path = artifact_path(run_dir, prefix, ext)
@@ -1484,6 +1629,14 @@ def add_comparisons(summary: dict[str, Any]) -> None:
         comparisons["velocity_explicit_vs_allfalse"] = compare_result_files(
             results["velocity_vcmd_explicit"], results["velocity_vcmd_allfalse"]
         )
+    if "ordinary_vcmd_nose" in results and "vcmd_false_nose" in results:
+        comparisons["nose_default_vs_false"] = compare_result_files(
+            results["ordinary_vcmd_nose"], results["vcmd_false_nose"]
+        )
+    if "ordinary_vcmd_nose" in results and "vcmd_allfalse_nose" in results:
+        comparisons["nose_default_vs_allfalse"] = compare_result_files(
+            results["ordinary_vcmd_nose"], results["vcmd_allfalse_nose"]
+        )
     summary["comparisons"] = comparisons
 
 
@@ -1624,6 +1777,97 @@ def add_velocity_checks(summary: dict[str, Any]) -> None:
             fail("baseline_velocity_md_explicit", "fixed_md_velocity_mismatch")
 
 
+def add_thermostat_checks(summary: dict[str, Any]) -> None:
+    results = summary["cases"]
+    failures: list[str] = summary["failures"]
+
+    def case(name: str) -> dict[str, Any] | None:
+        item = results.get(name)
+        if not item or item.get("skipped"):
+            return None
+        return item
+
+    def fail(name: str, reason: str) -> None:
+        marker = f"{name}:{reason}"
+        if marker not in failures:
+            failures.append(marker)
+
+    def caimd(item: dict[str, Any]) -> dict[str, Any]:
+        return item.get("metrics", {}).get("caimd", {})
+
+    def require_caimd_temperature(name: str, item: dict[str, Any]) -> None:
+        entry = caimd(item)
+        if not entry.get("single_column_count_26"):
+            fail(name, "caimd_columns")
+        if not entry.get("temperature_finite"):
+            fail(name, "temperature_not_finite")
+        if entry.get("volume_finite") is False:
+            fail(name, "volume_not_finite")
+        if entry.get("velocity_residual_max", 1.0) > 1.0e-10:
+            fail(name, "velocity_transform_residual")
+
+    for name in (
+        "active_nose_zero",
+        "active_nose_stride2_xx",
+        "active_nose_nonorthogonal",
+        "active_nose_shear_xy",
+    ):
+        item = case(name)
+        if item:
+            require_caimd_temperature(name, item)
+
+    stride = case("active_nose_stride2_xx")
+    if stride:
+        entry = caimd(stride)
+        nominal = entry.get("nominal_final") or []
+        actual = entry.get("actual_final") or []
+        if len(nominal) >= 1 and len(actual) >= 1:
+            if abs(float(nominal[0]) - float(actual[0])) > 1.0e-8:
+                fail("active_nose_stride2_xx", "xx_strain_mismatch")
+        else:
+            fail("active_nose_stride2_xx", "missing_strain")
+        if not any(entry.get("event_flags", [])):
+            fail("active_nose_stride2_xx", "missing_event_flag")
+
+    shear = case("active_nose_shear_xy")
+    if shear:
+        entry = caimd(shear)
+        nominal = entry.get("nominal_final") or []
+        actual = entry.get("actual_final") or []
+        if len(nominal) >= 6 and len(actual) >= 6:
+            if abs(float(nominal[5]) - float(actual[5])) > 1.0e-8:
+                fail("active_nose_shear_xy", "xy_strain_mismatch")
+
+    heated = case("active_nose_zero")
+    if heated:
+        values = [
+            float(x)
+            for x in caimd(heated).get("temperature_values", [])[1:]
+            if math.isfinite(float(x))
+        ]
+        if len(values) >= 5:
+            initial = values[0]
+            final_window = values[-min(5, len(values)) :]
+            final_mean = sum(final_window) / len(final_window)
+            if final_mean < 0.5 * initial:
+                fail("active_nose_zero", "temperature_collapsed")
+            if final_mean < 150.0 or final_mean > 650.0:
+                fail("active_nose_zero", "temperature_final_window_outside_smoke_range")
+            if abs(final_mean - 300.0) >= abs(initial - 300.0):
+                fail("active_nose_zero", "temperature_not_moving_toward_target")
+        else:
+            fail("active_nose_zero", "insufficient_temperature_samples")
+
+    for comparison_name in ("nose_default_vs_false", "nose_default_vs_allfalse"):
+        comparison = summary.get("comparisons", {}).get(comparison_name, {})
+        stdout = comparison.get("stdout", {})
+        if stdout.get("max_abs") is not None and stdout.get("relative_max", 0.0) > 5.0e-5:
+            fail(comparison_name, "stdout_float_mismatch")
+        md = comparison.get("md", {})
+        if md.get("max_abs") is not None and md.get("relative_max", 0.0) > 5.0e-5:
+            fail(comparison_name, "md_float_mismatch")
+
+
 def compare_result_files(a: dict[str, Any], b: dict[str, Any]) -> dict[str, Any]:
     if a.get("skipped") or b.get("skipped") or not a.get("run_dir") or not b.get("run_dir"):
         return {"skipped": True}
@@ -1731,6 +1975,7 @@ def main() -> int:
         write_summary(paths, summary)
     add_comparisons(summary)
     add_velocity_checks(summary)
+    add_thermostat_checks(summary)
     for name, case in summary["cases"].items():
         if name.startswith("current_vcmd_") or name.startswith("active_") or name.startswith("caimd_"):
             caimd = case.get("metrics", {}).get("caimd")
