@@ -1,0 +1,62 @@
+{
+  "common_state_source": {
+    "ionic_degrees_of_freedom": 21,
+    "path": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_controls_ABC_20260723T134303Z/01_common_state/COMMON_STATE.json",
+    "source_files": {
+      "cel": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/01_common_equilibration/tmp/diamond8_common_equil.cel",
+      "eal": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/01_common_equilibration/diamond8_common_equil.eal",
+      "md": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/01_common_equilibration/tmp/diamond8_common_equil.md",
+      "pos": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/01_common_equilibration/tmp/diamond8_common_equil.pos"
+    },
+    "source_step": 2000,
+    "starting_temperature_K": 300.00000000000006,
+    "units": {
+      "cell": "bohr, QE internal avec rows with lattice vectors in columns",
+      "cell_parameters_for_qe": "bohr, rows are transpose of QE internal avec",
+      "positions": "crystal fractional reconstructed from synchronized .cel/.pos",
+      "temperature": "K, 3N-3 ionic DOF",
+      "velocities": "a.u. Cartesian written to ATOMIC_VELOCITIES"
+    },
+    "velocity_scaling_factor": 0.7325209676741878
+  },
+  "created_utc": "2026-07-23T18:15:25Z",
+  "local_branch": "main",
+  "local_control_workflow": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_controls_ABC_20260723T134303Z",
+  "local_git_status": [
+    "## main",
+    "?? examples/caimd_diamond8_local_nose_continuation_0p30_20260723T102331Z/",
+    "?? examples/caimd_diamond8_local_nose_controls_ABC_20260723T134303Z/",
+    "?? examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/",
+    "?? examples/diamond8_ordinary_nose_qe74_vs_qe75_af7ebfc_20260723T175625Z/"
+  ],
+  "local_head": "af7ebfc",
+  "local_head_full": "af7ebfc757c32e0b4f050ed9f2208e01020b2ee3",
+  "local_pw_provenance": {
+    "path": "/private/tmp/qe_diamond8_af7ebfc_build/bin/pw.x",
+    "sha256": "7f7f5f815f53983c3b41dfab1570d96e8f8816d56cdcc574a3a2e33fcf492303"
+  },
+  "local_repo_root": "/Users/mengqicheng/Downloads/Learning/qe-7.5",
+  "parameters": {
+    "conv_thr": 0.0001,
+    "dt_fs": 2.0,
+    "dt_qe": 41.34137333665,
+    "ecutrho": 120.0,
+    "ecutwfc": 25.0,
+    "electron_maxstep": 40,
+    "fnosep": 50.0,
+    "mixing_beta": 0.3,
+    "nhpcl": 4,
+    "nstep": 1000,
+    "simulated_time_ps": 2.0,
+    "tempw_K": 300.0,
+    "wmass": 2000000.0
+  },
+  "pseudo": {
+    "bundle_path": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/diamond8_ordinary_nose_qe74_vs_qe75_af7ebfc_20260723T175625Z/pseudo/C.UPF",
+    "sha256": "9c06aa642d22981491b32a18ec129086fe8366164984930389e4fc071c978639",
+    "source": "/Users/mengqicheng/Downloads/Learning/qe-7.5/pseudo/C.UPF"
+  },
+  "qe74_module": "quantum-espresso/7.4.1--hpcx-mpi--2.19--nvhpc--24.5-openblas",
+  "qe75_af7ebfc_executable": "/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-thermostat-af7ebfc/install-current-gpu/bin/pw.x",
+  "remote_workdir": "/leonardo/home/userexternal/mcheng00/workspace/Diamond/diamond8_ordinary_nose_qe74_vs_qe75_af7ebfc_20260723T175625Z"
+}

@@ -1,0 +1,3 @@
+case,job_id,slurm_state,exit_code,qe_rc,job_done,bfgs_converged,bfgs_steps,final_P_kbar,final_V_bohr3,final_a_ang,max_force_Ry_au,Epa_eV,cubic,classification
+qe75,50605866,COMPLETED,0:0,0,True,True,2,0.25,295.5588,3.524919,3.984e-07,-155.62536,True,QE75_VCRELAX_VALID
+qe74,50605867,COMPLETED,0:0,0,True,True,2,0.25,295.5588,3.524919,3.984e-07,-155.62536,True,QE74_VCRELAX_VALID

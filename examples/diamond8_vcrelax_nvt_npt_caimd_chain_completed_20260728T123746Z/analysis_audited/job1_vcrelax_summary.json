@@ -1,0 +1,23 @@
+{
+  "stage": "vcrelax",
+  "slurm_state": "FAILED",
+  "exit_code": "1:0",
+  "qe_return_code": 1,
+  "job_done": false,
+  "bfgs_converged": false,
+  "md_or_scf_steps_completed": 0,
+  "failure_mode": "INPUT_PARSE_ABORT",
+  "qe_error": "Error in routine cell_dofree (1): Isotropic expansion is only allowed for ibrav=1; i.e. for simple cubic",
+  "root_cause": "cell_dofree='volume' is guarded in Modules/cell_base.f90 init_dofree by IF(ibrav/=1); at that call site (PW/src/input.f90:1306) the cell_base module variable ibrav was not 1, so QE aborted at input parsing even though the &SYSTEM namelist specifies ibrav=1. The ibrav=1 + cell_dofree='volume' combination does not work in this pw.x build.",
+  "final_pressure_kbar": null,
+  "final_volume_bohr3": null,
+  "final_celldm1_bohr": null,
+  "final_max_force": null,
+  "final_energy": null,
+  "determinant": null,
+  "condition_number": null,
+  "min_CC_distance": null,
+  "n_atoms": 8,
+  "classification": "VCRELAX_NUMERICAL_FAILURE",
+  "classification_note": "input/parse-time abort before any SCF or BFGS step; no pressure/volume/force data produced"
+}

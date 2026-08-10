@@ -1,0 +1,248 @@
+{
+  "cell": {
+    "identical": true,
+    "qe74": [
+      [
+        3.89171787574137,
+        4.76636150921721,
+        2.75186010040163
+      ],
+      [
+        3.89171787574137,
+        -4.76636150921721,
+        2.75186010040163
+      ],
+      [
+        3.89171787574137,
+        0.0,
+        -5.50372020080326
+      ]
+    ],
+    "qe75": [
+      [
+        3.89171787574137,
+        4.76636150921721,
+        2.75186010040163
+      ],
+      [
+        3.89171787574137,
+        -4.76636150921721,
+        2.75186010040163
+      ],
+      [
+        3.89171787574137,
+        0.0,
+        -5.50372020080326
+      ]
+    ]
+  },
+  "cell_units": {
+    "identical": true,
+    "qe74": "bohr",
+    "qe75": "bohr"
+  },
+  "positions": {
+    "identical": true,
+    "qe74": [
+      [
+        "C",
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      [
+        "C",
+        [
+          0.0,
+          0.5,
+          0.5
+        ]
+      ],
+      [
+        "C",
+        [
+          0.5,
+          0.0,
+          0.5
+        ]
+      ],
+      [
+        "C",
+        [
+          0.5,
+          0.5,
+          0.0
+        ]
+      ],
+      [
+        "C",
+        [
+          0.25,
+          0.25,
+          0.25
+        ]
+      ],
+      [
+        "C",
+        [
+          0.25,
+          0.75,
+          0.75
+        ]
+      ],
+      [
+        "C",
+        [
+          0.75,
+          0.25,
+          0.75
+        ]
+      ],
+      [
+        "C",
+        [
+          0.75,
+          0.75,
+          0.25
+        ]
+      ]
+    ],
+    "qe75": [
+      [
+        "C",
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      [
+        "C",
+        [
+          0.0,
+          0.5,
+          0.5
+        ]
+      ],
+      [
+        "C",
+        [
+          0.5,
+          0.0,
+          0.5
+        ]
+      ],
+      [
+        "C",
+        [
+          0.5,
+          0.5,
+          0.0
+        ]
+      ],
+      [
+        "C",
+        [
+          0.25,
+          0.25,
+          0.25
+        ]
+      ],
+      [
+        "C",
+        [
+          0.25,
+          0.75,
+          0.75
+        ]
+      ],
+      [
+        "C",
+        [
+          0.75,
+          0.25,
+          0.75
+        ]
+      ],
+      [
+        "C",
+        [
+          0.75,
+          0.75,
+          0.25
+        ]
+      ]
+    ]
+  },
+  "position_units": {
+    "identical": true,
+    "qe74": "crystal",
+    "qe75": "crystal"
+  },
+  "species_and_masses": {
+    "identical": true,
+    "qe74": [
+      [
+        "C",
+        12.0107,
+        "C.UPF"
+      ]
+    ],
+    "qe75": [
+      [
+        "C",
+        12.0107,
+        "C.UPF"
+      ]
+    ]
+  },
+  "kpoints": {
+    "identical": true,
+    "qe74": "gamma",
+    "qe75": "gamma"
+  },
+  "namelist_differences_outside_allowed_set": {},
+  "allowed_differences": [
+    "CELL.caimd",
+    "CONTROL.outdir",
+    "CONTROL.prefix"
+  ],
+  "structure_checks": {
+    "n_atoms": 8,
+    "cell_determinant_bohr3": 306.2710374914435,
+    "cell_determinant_positive": true,
+    "min_periodic_CC_distance_bohr": 2.9187884068060264,
+    "min_periodic_CC_distance_angstrom": 1.5445563083296239,
+    "duplicate_atoms": false,
+    "gamma_point": true,
+    "structure_provenance": "ideal unstrained Diamond8 conventional cell, a=3.567 Angstrom (DIAMOND8_SETUP.json); not a terminal state from a failed trajectory"
+  },
+  "matched_physical_fields": {
+    "cutoffs": {
+      "ecutwfc": 25.0,
+      "ecutrho": 120.0
+    },
+    "timestep_qe": 41.34137333665,
+    "timestep_fs": 2.0,
+    "nstep": 1000,
+    "temperature_mode": "initial",
+    "tempw": 300.0,
+    "cell_dynamics": "pr",
+    "cell_dofree": "all",
+    "press": 0.0,
+    "wmass": 2000000.0,
+    "conv_thr": 0.0001,
+    "mixing_beta": 0.3,
+    "electron_maxstep": 40
+  },
+  "checksums": {
+    "qe74_input_sha256": "99ae1077a3eab5a738e59c9e6d2d2758ecdb094337adc6c897cf5c6dc7b40382",
+    "qe75_input_sha256": "a7ad97b873f1fda24892695802164e7b6e86e2ceb06e6f5193d2238980f4fd39",
+    "pseudo_sha256": "9c06aa642d22981491b32a18ec129086fe8366164984930389e4fc071c978639",
+    "pseudo_sha256_expected": "9c06aa642d22981491b32a18ec129086fe8366164984930389e4fc071c978639",
+    "pseudo_matches_expected": true
+  },
+  "all_checks_passed": true
+}

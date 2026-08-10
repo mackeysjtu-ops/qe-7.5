@@ -1,0 +1,28 @@
+{
+  "caimd_mask": [
+    true,
+    false,
+    false,
+    true,
+    true,
+    true
+  ],
+  "caimd_step_strain": [
+    -6e-06,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "caimd_stride": 10,
+  "dt_fs": 2.0,
+  "expected_events": 500,
+  "expected_final_nominal_xx": -0.030000000000000002,
+  "nstep": 5000,
+  "simulated_time_ps": 10.0,
+  "source_state": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/01_common_equilibration/common_start_state.json",
+  "strain_rate_ps_inv": 0.003,
+  "test": "test3",
+  "title": "xx loading with yy/zz free and shears constrained"
+}

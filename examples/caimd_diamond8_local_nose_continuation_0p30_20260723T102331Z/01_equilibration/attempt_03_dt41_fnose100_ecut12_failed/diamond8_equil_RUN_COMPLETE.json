@@ -1,0 +1,15 @@
+{
+  "command": [
+    "/private/tmp/qe_diamond8_af7ebfc_build/bin/pw.x",
+    "-in",
+    "qe.in"
+  ],
+  "elapsed_s": 23.902364015579224,
+  "input": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_continuation_0p30_20260723T102331Z/01_equilibration/qe.in",
+  "job_done": true,
+  "output": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_continuation_0p30_20260723T102331Z/01_equilibration/qe.out",
+  "prefix": "diamond8_equil",
+  "returncode": 0,
+  "run_dir": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_continuation_0p30_20260723T102331Z/01_equilibration",
+  "timestamp_utc": "2026-07-23T10:53:54Z"
+}

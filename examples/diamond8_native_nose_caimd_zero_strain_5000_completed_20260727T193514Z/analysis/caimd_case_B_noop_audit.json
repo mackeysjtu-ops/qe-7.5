@@ -1,0 +1,16 @@
+{
+  "case": "B",
+  "all_masks_false_in_input": true,
+  "caimd_file_present": true,
+  "caimd_rows": 5000,
+  "caimd_ncols_seen": [
+    26
+  ],
+  "any_event_flag_true": false,
+  "max_abs_actual_strain": 0.10096005298848232,
+  "max_velocity_jump_max": 0.0,
+  "mean_T_vs_control_delta_K": 10.777205815987145,
+  "final5ps_T_vs_control_delta_K": 60.93923867785634,
+  "eka_first_divergence_step_vs_control": 701,
+  "statistically_consistent_with_control": true
+}

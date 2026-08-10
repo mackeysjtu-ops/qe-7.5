@@ -1,0 +1,4 @@
+qe74_official_executable=/leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/nvhpc-24.5/quantum-espresso-7.4.1-jfm6pcx2dqkcfcwywdgoyao3m3ncvc5a/bin/pw.x
+beb956cce572605941b791c37bc4dd30ac6cee714e18be7b93fd4ff0e47f4aca  /leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/nvhpc-24.5/quantum-espresso-7.4.1-jfm6pcx2dqkcfcwywdgoyao3m3ncvc5a/bin/pw.x
+qe75_af7ebfc_executable=/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-thermostat-af7ebfc/install-current-gpu/bin/pw.x
+89d4fda827d2cc22a3b4c1670e90dc40ce629af42096c785b55c70c355a10e7d  /leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-thermostat-af7ebfc/install-current-gpu/bin/pw.x

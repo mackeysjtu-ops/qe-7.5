@@ -1,0 +1,6 @@
+control,source,step,time_ps,temperature_K,notes
+A,input_direct_scaled_velocities,0,0.0,300.00000000000006,COMMON_STATE velocities after COM removal and uniform rescale
+A,terminal_md_direct,664,1.328,5064.727517264306,.md terminal ratd transformed by terminal .cel
+A,eal_terminal_ionic_ekin,664,1.328,5064.730659738254,.eal column 2 eka converted with 3N-3 DOF
+B,input_direct_scaled_velocities,0,0.0,300.00000000000006,COMMON_STATE velocities after COM removal and uniform rescale
+C,input_direct_scaled_velocities,0,0.0,300.00000000000006,COMMON_STATE velocities after COM removal and uniform rescale

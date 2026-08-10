@@ -1,0 +1,13 @@
+{
+  "caimd": false,
+  "dt_fs": 2.0,
+  "fnosep_THz": 50.0,
+  "initial_velocity_scale_factor": 0.0003778381228686354,
+  "initial_velocity_seed": 20260723,
+  "initial_velocity_temperature_3N_minus_3_K": 300.0,
+  "nhpcl": 4,
+  "nstep": 2000,
+  "target_pressure_GPa": 0.0,
+  "target_temperature_K": 300.0,
+  "wmass": 2000000.0
+}

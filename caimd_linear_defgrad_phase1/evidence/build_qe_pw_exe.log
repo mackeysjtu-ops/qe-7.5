@@ -1,0 +1,25 @@
+^D[  0%] Built target qe_xml
+[  2%] Built target qe_utilx_c
+[  2%] Built target qe_devxlib
+[  5%] Built target mbd
+[  5%] Built target qe_device_lapack
+[  5%] Built target qe_fftx_c
+[  5%] Built target qe_modules_c
+[  5%] Built target qe_libbeef
+[  5%] Built target qe_lax_headers
+[  5%] Built target qe_ks_headers
+[  8%] Built target qe_fftx
+[ 11%] Built target qe_utilx
+[ 14%] Built target qe_xclib
+[ 17%] Built target qe_lax
+[ 26%] Built target qe_upflib
+[ 26%] Built target qe_kssolver_rmmdiis
+[ 29%] Built target qe_kssolver_dense
+[ 29%] Built target qe_kssolver_cg
+[ 29%] Built target qe_kssolver_paro
+[ 29%] Built target qe_kssolver_davidson
+[ 29%] Built target gitrev
+[ 58%] Built target qe_modules
+[ 61%] Built target qe_dftd3
+[100%] Built target qe_pw
+[100%] Built target qe_pw_exe

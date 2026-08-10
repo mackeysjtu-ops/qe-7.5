@@ -1,0 +1,3 @@
+run,mean_sxx_kbar,mean_syy_kbar,mean_szz_kbar,mean_syz_kbar,mean_sxz_kbar,mean_sxy_kbar,normal_anisotropy_kbar,mean_abs_shear_kbar
+qe74,-726.23964,-712.28811,-698.81605,15.38245,12.31317,3.88374,27.42359,10.52645333
+qe75,-725.86679,-712.181,-699.09037,14.64695,11.21596,4.25025,26.77642,10.03772

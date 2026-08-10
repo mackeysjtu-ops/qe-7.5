@@ -1,0 +1,12 @@
+metric,qe75,qe74,diff,rel_diff,tolerance,pass
+final_pressure_kbar,0.25,0.25,0.0,,<=5 each,True
+final_volume_bohr3,295.5588,295.5588,0.0,0.0,<=0.5%,True
+final_lattice_const_ang,3.524918683143288,3.524918683143288,0.0,0.0,<=0.2%,True
+final_energy_per_atom_eV,-155.62536179684153,-155.62536179684153,0.0,,diagnostic,NA
+max_atomic_force_Ry_au,3.9837168574084176e-07,3.9837168574084176e-07,0.0,,<=1e-4 each,True
+bfgs_steps,2,2,0,,diagnostic,NA
+total_scf_iterations,28,28,0,,diagnostic,NA
+normalized_cartesian_rms_ang,,,4.3171240399670293e-10,,<=1e-3,True
+max_atom_position_diff_ang,,,6.10533875691091e-10,,<=5e-3,True
+min_CC_distance_ang,1.5263345151130954,1.5263345153166066,-2.0351120788575372e-10,,diagnostic,NA
+both_cubic,True,True,,,,True

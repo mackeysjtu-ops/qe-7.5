@@ -1,0 +1,2 @@
+pw_x=/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-thermostat-af7ebfc/install-current-gpu/bin/pw.x
+89d4fda827d2cc22a3b4c1670e90dc40ce629af42096c785b55c70c355a10e7d  /leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-thermostat-af7ebfc/install-current-gpu/bin/pw.x

@@ -1,0 +1,10 @@
+{
+  "audit_utc": "2026-07-28T12:39:17Z",
+  "checked_inputs": [
+    "inputs/generated/01_vc_relax.in"
+  ],
+  "atomic_velocities_found": false,
+  "ion_velocities_from_input_found": false,
+  "note": "Only JOB1 input exists (vc-relax, no velocities). JOBS 2-4 MD inputs were never generated because those jobs were cancelled.",
+  "explicit_velocities_absent": true
+}

@@ -17,8 +17,10 @@ MODULE caimd_module
   PRIVATE
   !
   LOGICAL  :: caimd_enabled_ = .FALSE.
+  CHARACTER(LEN=32) :: caimd_loading_mode_ = 'legacy_strain'
   INTEGER  :: caimd_stride_ = 1
   REAL(DP) :: caimd_step_strain_(6) = 0.0_DP
+  REAL(DP) :: caimd_step_defgrad_(3,3) = 0.0_DP
   LOGICAL  :: caimd_mask_(6) = .FALSE.
   REAL(DP) :: caimd_cumulative_strain_(6) = 0.0_DP
   REAL(DP) :: caimd_reference_cell_(3,3) = 0.0_DP
@@ -27,39 +29,63 @@ MODULE caimd_module
   LOGICAL  :: caimd_last_event_ = .FALSE.
   REAL(DP) :: caimd_last_increment_(6) = 0.0_DP
   LOGICAL  :: caimd_output_initialized_ = .FALSE.
+  LOGICAL  :: caimd_defgrad_output_initialized_ = .FALSE.
   LOGICAL  :: caimd_have_temperature_ = .FALSE.
   LOGICAL  :: caimd_cumulative_warning_emitted_ = .FALSE.
   REAL(DP) :: caimd_temperature_ = 0.0_DP
   REAL(DP) :: caimd_last_velocity_jump_max_ = 0.0_DP
   REAL(DP) :: caimd_last_velocity_jump_rms_ = 0.0_DP
+  REAL(DP) :: caimd_last_f_before_(3,3) = 0.0_DP
+  REAL(DP) :: caimd_last_f_after_(3,3) = 0.0_DP
+  REAL(DP) :: caimd_last_a_event_(3,3) = 0.0_DP
+  REAL(DP) :: caimd_last_green_lagrange_(3,3) = 0.0_DP
+  REAL(DP) :: caimd_last_det_f_before_ = 1.0_DP
+  REAL(DP) :: caimd_last_det_f_after_ = 1.0_DP
+  REAL(DP) :: caimd_last_det_a_event_ = 1.0_DP
+  INTEGER  :: caimd_last_event_index_ = 0
   !
   REAL(DP), PARAMETER :: caimd_max_event_strain = 1.0D-2
   REAL(DP), PARAMETER :: caimd_max_condition = 1.0D12
   REAL(DP), PARAMETER :: caimd_det_floor = 1.0D-18
   REAL(DP), PARAMETER :: caimd_change_tol = 1.0D-14
+  REAL(DP), PARAMETER :: caimd_zero_tol = 0.0_DP
   !
   PUBLIC :: caimd_configure, caimd_enabled, caimd_controls_cell
   PUBLIC :: caimd_project_tangent, caimd_apply_final_projection
   PUBLIC :: caimd_write_premove, caimd_note_ionic_temperature
-  PUBLIC :: caimd_step_strain, caimd_mask, caimd_stride
+  PUBLIC :: caimd_step_strain, caimd_step_defgrad, caimd_mask, caimd_stride
+  PUBLIC :: caimd_loading_mode
   PUBLIC :: caimd_event_count, caimd_cumulative_strain
   !
 CONTAINS
   !
-  SUBROUTINE caimd_configure( enabled, stride, step_strain, mask, calculation, &
-                              calc, cell_dofree, restart, fix_volume, fix_area )
+  SUBROUTINE caimd_configure( enabled, loading_mode, stride, step_strain,     &
+                              step_defgrad, mask, calculation, calc,         &
+                              cell_dofree, restart, fix_volume, fix_area )
     !
     LOGICAL, INTENT(IN) :: enabled, restart, fix_volume, fix_area
     INTEGER, INTENT(IN) :: stride
     REAL(DP), INTENT(IN) :: step_strain(6)
+    REAL(DP), INTENT(IN) :: step_defgrad(3,3)
     LOGICAL, INTENT(IN) :: mask(6)
-    CHARACTER(LEN=*), INTENT(IN) :: calculation, calc, cell_dofree
-    INTEGER :: i
+    CHARACTER(LEN=*), INTENT(IN) :: loading_mode, calculation, calc, cell_dofree
+    INTEGER :: i, j
     REAL(DP) :: event_inc(6)
+    LOGICAL :: strain_nonzero, defgrad_nonzero
     !
     caimd_enabled_ = enabled
+    SELECT CASE ( TRIM( loading_mode ) )
+    CASE ( 'legacy_strain' )
+       caimd_loading_mode_ = 'legacy_strain'
+    CASE ( 'linear_defgrad' )
+       caimd_loading_mode_ = 'linear_defgrad'
+    CASE DEFAULT
+       CALL errore( 'caimd_configure', &
+            'unknown caimd_loading_mode: ' // TRIM( loading_mode ), 1 )
+    END SELECT
     caimd_stride_ = stride
     caimd_step_strain_ = step_strain
+    caimd_step_defgrad_ = step_defgrad
     caimd_mask_ = mask
     caimd_cumulative_strain_ = 0.0_DP
     caimd_reference_cell_ = 0.0_DP
@@ -68,11 +94,25 @@ CONTAINS
     caimd_last_event_ = .FALSE.
     caimd_last_increment_ = 0.0_DP
     caimd_output_initialized_ = .FALSE.
+    caimd_defgrad_output_initialized_ = .FALSE.
     caimd_have_temperature_ = .FALSE.
     caimd_cumulative_warning_emitted_ = .FALSE.
     caimd_temperature_ = 0.0_DP
     caimd_last_velocity_jump_max_ = 0.0_DP
     caimd_last_velocity_jump_rms_ = 0.0_DP
+    caimd_last_f_before_ = 0.0_DP
+    caimd_last_f_after_ = 0.0_DP
+    caimd_last_a_event_ = 0.0_DP
+    caimd_last_green_lagrange_ = 0.0_DP
+    DO i = 1, 3
+       caimd_last_f_before_(i,i) = 1.0_DP
+       caimd_last_f_after_(i,i) = 1.0_DP
+       caimd_last_a_event_(i,i) = 1.0_DP
+    END DO
+    caimd_last_det_f_before_ = 1.0_DP
+    caimd_last_det_f_after_ = 1.0_DP
+    caimd_last_det_a_event_ = 1.0_DP
+    caimd_last_event_index_ = 0
     !
     IF ( stride <= 0 ) CALL errore( 'caimd_configure', &
          'caimd_stride must be positive', 1 )
@@ -88,6 +128,21 @@ CONTAINS
           CALL errore( 'caimd_configure', &
                'caimd event strain increment is non-finite', i )
     END DO
+    DO j = 1, 3
+       DO i = 1, 3
+          IF ( .NOT. caimd_finite( step_defgrad(i,j) ) ) &
+             CALL errore( 'caimd_configure', &
+                  'caimd_step_defgrad contains a non-finite value', 3 * (j - 1) + i )
+       END DO
+    END DO
+    strain_nonzero = ANY( ABS( step_strain ) > caimd_zero_tol )
+    defgrad_nonzero = ANY( ABS( step_defgrad ) > caimd_zero_tol )
+    IF ( TRIM( caimd_loading_mode_ ) == 'legacy_strain' .AND. defgrad_nonzero ) &
+       CALL errore( 'caimd_configure', &
+            'caimd_step_defgrad requires caimd_loading_mode=''linear_defgrad''', 1 )
+    IF ( TRIM( caimd_loading_mode_ ) == 'linear_defgrad' .AND. strain_nonzero ) &
+       CALL errore( 'caimd_configure', &
+            'caimd_step_strain requires caimd_loading_mode=''legacy_strain''', 1 )
     IF ( MAXVAL( ABS( event_inc ) ) > caimd_max_event_strain ) &
        CALL errore( 'caimd_configure', &
             'max abs(caimd_stride*caimd_step_strain) exceeds 1.0d-2', 1 )
@@ -98,11 +153,13 @@ CONTAINS
        CALL errore( 'caimd_configure', &
             'caimd=.true. requires calculation=''vc-md'' and cell_dynamics=''pr''', 1 )
     IF ( restart ) CALL errore( 'caimd_configure', &
-         'caimd version 1 supports restart_mode=''from_scratch'' only', 1 )
+         'caimd legacy_strain and linear_defgrad modes support restart_mode=''from_scratch'' only', 1 )
     IF ( TRIM( cell_dofree ) /= 'all' ) CALL errore( 'caimd_configure', &
          'caimd version 1 requires cell_dofree=''all''', 1 )
     IF ( fix_volume .OR. fix_area ) CALL errore( 'caimd_configure', &
          'caimd version 1 does not support fixed-volume or fixed-area cell modes', 1 )
+    !
+    CALL caimd_print_configuration()
     !
   END SUBROUTINE caimd_configure
   !
@@ -111,8 +168,16 @@ CONTAINS
   END FUNCTION caimd_enabled
   !
   LOGICAL FUNCTION caimd_controls_cell()
-    caimd_controls_cell = caimd_enabled_ .AND. ANY( caimd_mask_ )
+    caimd_controls_cell = caimd_enabled_ .AND. &
+       ( ( TRIM( caimd_loading_mode_ ) == 'legacy_strain' .AND. &
+           ANY( caimd_mask_ ) ) .OR. &
+         TRIM( caimd_loading_mode_ ) == 'linear_defgrad' )
   END FUNCTION caimd_controls_cell
+  !
+  FUNCTION caimd_loading_mode() RESULT( loading_mode )
+    CHARACTER(LEN=32) :: loading_mode
+    loading_mode = caimd_loading_mode_
+  END FUNCTION caimd_loading_mode
   !
   INTEGER FUNCTION caimd_stride()
     caimd_stride = caimd_stride_
@@ -122,6 +187,11 @@ CONTAINS
     REAL(DP) :: step_strain(6)
     step_strain = caimd_step_strain_
   END FUNCTION caimd_step_strain
+  !
+  FUNCTION caimd_step_defgrad() RESULT( step_defgrad )
+    REAL(DP) :: step_defgrad(3,3)
+    step_defgrad = caimd_step_defgrad_
+  END FUNCTION caimd_step_defgrad
   !
   FUNCTION caimd_mask() RESULT( mask )
     LOGICAL :: mask(6)
@@ -146,6 +216,7 @@ CONTAINS
     INTEGER :: i
     !
     IF ( .NOT. caimd_controls_cell() ) RETURN
+    IF ( TRIM( caimd_loading_mode_ ) == 'linear_defgrad' ) RETURN
     !
     CALL caimd_inverse3( h, hinv, det, TRIM( label ) // ' inverse cell' )
     k = MATMUL( x, hinv )
@@ -182,6 +253,9 @@ CONTAINS
               MAX( 1.0_DP, caimd_norm_inf( h_pr ) )
     IF ( changed ) CALL caimd_transform_atomic_history( nat, h_pr, h_new, &
                                                         ratd, rat2d, rat2di )
+    IF ( event_step .AND. TRIM( caimd_loading_mode_ ) == 'linear_defgrad' ) &
+       CALL caimd_transform_cell_history( caimd_last_a_event_, avecd, avec2d, &
+                                          avec2di )
     h_candidate = h_new
     CALL caimd_project_tangent( h_candidate, avecd, 'caimd final avecd' )
     CALL caimd_project_tangent( h_candidate, avec2d, 'caimd final avec2d' )
@@ -194,6 +268,8 @@ CONTAINS
        caimd_cumulative_strain_ = caimd_cumulative_strain_ + inc
        caimd_event_count_ = caimd_event_count_ + 1
        CALL caimd_warn_large_cumulative_strain()
+       IF ( TRIM( caimd_loading_mode_ ) == 'linear_defgrad' ) &
+          CALL caimd_write_defgrad_event( ionic_step )
     END IF
     !
   END SUBROUTINE caimd_apply_final_projection
@@ -245,8 +321,11 @@ CONTAINS
           OPEN( NEWUNIT = iun, FILE = TRIM( filename ), STATUS = 'NEW', &
                 FORM = 'FORMATTED' )
           WRITE( iun, '(A)' ) '# CAIMD_V1 stress-strain output'
+          WRITE( iun, '(A,A)' ) '# loading_mode: ', TRIM( caimd_loading_mode_ )
           WRITE( iun, '(A)' ) '# units: time ps; strain dimensionless; stress GPa; volume bohr^3; temperature K'
           WRITE( iun, '(A)' ) '# shear convention: tensor components yz xz xy; engineering shear is 2*tensor shear'
+          IF ( TRIM( caimd_loading_mode_ ) == 'linear_defgrad' ) &
+             WRITE( iun, '(A)' ) '# linear_defgrad event matrices are written to prefix.caimd_defgrad'
           WRITE( iun, '(A)' ) '# columns: ionic_step time_ps imposed_events_done following_move_is_event ' // &
                               'nominal_xx nominal_yy nominal_zz nominal_yz nominal_xz nominal_xy ' // &
                               'actual_xx actual_yy actual_zz actual_yz actual_xz actual_xy ' // &
@@ -274,10 +353,46 @@ CONTAINS
     REAL(DP), INTENT(OUT) :: h_new(3,3), inc(6)
     LOGICAL, INTENT(OUT) :: event_step
     REAL(DP) :: href_inv(3,3), fpr(3,3), lpr(3,3), epr(3,3), enew(3,3)
-    REAL(DP) :: vec(6), target(6), det
+    REAL(DP) :: vec(6), target(6), det, f_before_inv(3,3)
     INTEGER :: i
     !
     CALL caimd_ensure_reference( h_old )
+    event_step = caimd_is_event_step( ionic_step )
+    inc = 0.0_DP
+    IF ( TRIM( caimd_loading_mode_ ) == 'linear_defgrad' ) THEN
+       h_new = h_pr
+       IF ( event_step ) THEN
+          caimd_last_event_index_ = caimd_event_count_ + 1
+          CALL caimd_build_f_load( caimd_event_count_, caimd_last_f_before_ )
+          CALL caimd_build_f_load( caimd_last_event_index_, caimd_last_f_after_ )
+          CALL caimd_inverse3( caimd_last_f_before_, f_before_inv, &
+                               caimd_last_det_f_before_, &
+                               'caimd linear_defgrad F_load before event' )
+          caimd_last_det_f_after_ = caimd_det3( caimd_last_f_after_ )
+          IF ( .NOT. caimd_finite( caimd_last_det_f_before_ ) .OR. &
+               caimd_last_det_f_before_ <= caimd_det_floor ) &
+             CALL errore( 'caimd_project_cell_increment', &
+                  'caimd linear_defgrad F_load before event has non-positive determinant', 1 )
+          IF ( .NOT. caimd_finite( caimd_last_det_f_after_ ) .OR. &
+               caimd_last_det_f_after_ <= caimd_det_floor ) &
+             CALL errore( 'caimd_project_cell_increment', &
+                  'caimd linear_defgrad F_load after event has non-positive determinant', 1 )
+          caimd_last_a_event_ = MATMUL( caimd_last_f_after_, f_before_inv )
+          caimd_last_det_a_event_ = caimd_det3( caimd_last_a_event_ )
+          IF ( .NOT. caimd_finite( caimd_last_det_a_event_ ) .OR. &
+               caimd_last_det_a_event_ <= caimd_det_floor ) &
+             CALL errore( 'caimd_project_cell_increment', &
+                  'caimd linear_defgrad A_event has non-positive determinant', 1 )
+          CALL caimd_green_lagrange( caimd_last_f_after_, &
+                                     caimd_last_green_lagrange_ )
+          ! QE stores lattice vectors as columns, so the physical affine
+          ! relation r_new=A*r_old is H_new=A*H_old for the cell matrix.
+          h_new = MATMUL( caimd_last_a_event_, h_pr )
+       END IF
+       CALL caimd_check_cell( h_new, 'caimd linear_defgrad projected cell' )
+       RETURN
+    END IF
+    !
     CALL caimd_inverse3( caimd_reference_cell_, href_inv, det, &
                          'caimd reference cell inverse' )
     fpr = MATMUL( h_pr, href_inv )
@@ -288,8 +403,6 @@ CONTAINS
     epr = 0.5_DP * ( lpr + TRANSPOSE( lpr ) )
     CALL caimd_mat_to_vec( epr, vec )
     !
-    event_step = caimd_is_event_step( ionic_step )
-    inc = 0.0_DP
     IF ( event_step ) THEN
        DO i = 1, 6
           IF ( caimd_mask_(i) ) &
@@ -317,6 +430,109 @@ CONTAINS
                           MOD( ionic_step - 1, caimd_stride_ ) == 0
     !
   END FUNCTION caimd_is_event_step
+  !
+  SUBROUTINE caimd_build_f_load( event_index, f_load )
+    !
+    INTEGER, INTENT(IN) :: event_index
+    REAL(DP), INTENT(OUT) :: f_load(3,3)
+    INTEGER :: i
+    !
+    f_load = REAL( event_index, DP ) * REAL( caimd_stride_, DP ) * &
+             caimd_step_defgrad_
+    DO i = 1, 3
+       f_load(i,i) = f_load(i,i) + 1.0_DP
+    END DO
+    !
+  END SUBROUTINE caimd_build_f_load
+  !
+  SUBROUTINE caimd_green_lagrange( f_load, e_green )
+    !
+    REAL(DP), INTENT(IN) :: f_load(3,3)
+    REAL(DP), INTENT(OUT) :: e_green(3,3)
+    INTEGER :: i
+    !
+    e_green = 0.5_DP * MATMUL( TRANSPOSE( f_load ), f_load )
+    DO i = 1, 3
+       e_green(i,i) = e_green(i,i) - 0.5_DP
+    END DO
+    !
+  END SUBROUTINE caimd_green_lagrange
+  !
+  SUBROUTINE caimd_transform_cell_history( a_event, avecd, avec2d, avec2di )
+    !
+    REAL(DP), INTENT(IN) :: a_event(3,3)
+    REAL(DP), INTENT(INOUT) :: avecd(3,3), avec2d(3,3), avec2di(3,3)
+    !
+    avecd = MATMUL( a_event, avecd )
+    avec2d = MATMUL( a_event, avec2d )
+    avec2di = MATMUL( a_event, avec2di )
+    !
+  END SUBROUTINE caimd_transform_cell_history
+  !
+  SUBROUTINE caimd_write_defgrad_event( ionic_step )
+    !
+    USE io_files,  ONLY : tmp_dir, prefix, delete_if_present
+    USE io_global, ONLY : ionode
+    !
+    INTEGER, INTENT(IN) :: ionic_step
+    INTEGER :: i, j, iun
+    CHARACTER(LEN=512) :: filename
+    !
+    IF ( TRIM( caimd_loading_mode_ ) /= 'linear_defgrad' ) RETURN
+    IF ( .NOT. ionode ) RETURN
+    !
+    filename = TRIM( tmp_dir ) // TRIM( prefix ) // '.caimd_defgrad'
+    IF ( .NOT. caimd_defgrad_output_initialized_ ) THEN
+       CALL delete_if_present( TRIM( filename ) )
+       OPEN( NEWUNIT = iun, FILE = TRIM( filename ), STATUS = 'NEW', &
+             FORM = 'FORMATTED' )
+       WRITE( iun, '(A)' ) '# CAIMD_LINEAR_DEFGRAD_V1 event output'
+       WRITE( iun, '(A)' ) '# F_load(m)=I+m*caimd_stride*caimd_step_defgrad'
+       WRITE( iun, '(A)' ) '# A_event(m)=F_load(m)*inverse(F_load(m-1))'
+       WRITE( iun, '(A)' ) '# matrix order: row-major 11 12 13 21 22 23 31 32 33'
+       WRITE( iun, '(A)' ) '# columns: ionic_step event_index det_F_before det_F_after det_A_event ' // &
+                           'F_before_11 F_before_12 F_before_13 F_before_21 F_before_22 F_before_23 ' // &
+                           'F_before_31 F_before_32 F_before_33 F_after_11 F_after_12 F_after_13 ' // &
+                           'F_after_21 F_after_22 F_after_23 F_after_31 F_after_32 F_after_33 ' // &
+                           'A_event_11 A_event_12 A_event_13 A_event_21 A_event_22 A_event_23 ' // &
+                           'A_event_31 A_event_32 A_event_33 E_11 E_12 E_13 E_21 E_22 E_23 ' // &
+                           'E_31 E_32 E_33 velocity_jump_max velocity_jump_rms'
+       caimd_defgrad_output_initialized_ = .TRUE.
+    ELSE
+       OPEN( NEWUNIT = iun, FILE = TRIM( filename ), STATUS = 'OLD', &
+             POSITION = 'APPEND', FORM = 'FORMATTED' )
+    END IF
+    WRITE( iun, '(I8,1X,I8,41(1X,ES24.16))' ) &
+       ionic_step, caimd_last_event_index_, caimd_last_det_f_before_, &
+       caimd_last_det_f_after_, caimd_last_det_a_event_, &
+       ((caimd_last_f_before_(i,j), j = 1, 3), i = 1, 3), &
+       ((caimd_last_f_after_(i,j), j = 1, 3), i = 1, 3), &
+       ((caimd_last_a_event_(i,j), j = 1, 3), i = 1, 3), &
+       ((caimd_last_green_lagrange_(i,j), j = 1, 3), i = 1, 3), &
+       caimd_last_velocity_jump_max_, caimd_last_velocity_jump_rms_
+    CLOSE( UNIT = iun, STATUS = 'KEEP' )
+    !
+  END SUBROUTINE caimd_write_defgrad_event
+  !
+  SUBROUTINE caimd_print_configuration()
+    !
+    USE io_global, ONLY : ionode, stdout
+    !
+    INTEGER :: i
+    !
+    IF ( .NOT. caimd_enabled_ ) RETURN
+    IF ( .NOT. ionode ) RETURN
+    WRITE( stdout, '(/,5X,A)' ) 'CAIMD loading configuration:'
+    WRITE( stdout, '(8X,A,A)' ) 'caimd_loading_mode = ', TRIM( caimd_loading_mode_ )
+    WRITE( stdout, '(8X,A,I8)' ) 'caimd_stride = ', caimd_stride_
+    WRITE( stdout, '(8X,A)' ) 'caimd_step_defgrad matrix, per MD step:'
+    DO i = 1, 3
+       WRITE( stdout, '(10X,3(1X,ES14.6))' ) caimd_step_defgrad_(i,1:3)
+    END DO
+    WRITE( stdout, '(8X,A)' ) 'event convention: steps 1, 1+stride, 1+2*stride, ...'
+    WRITE( stdout, '(8X,A)' ) 'restart support: not implemented; from_scratch only'
+    !
+  END SUBROUTINE caimd_print_configuration
   !
   SUBROUTINE caimd_transform_atomic_history( nat, h_from, h_to, ratd, rat2d, &
                                              rat2di )
@@ -449,15 +665,23 @@ CONTAINS
     !
   END SUBROUTINE caimd_check_cell
   !
+  REAL(DP) FUNCTION caimd_det3( a )
+    !
+    REAL(DP), INTENT(IN) :: a(3,3)
+    !
+    caimd_det3 = a(1,1) * ( a(2,2) * a(3,3) - a(2,3) * a(3,2) ) - &
+                 a(1,2) * ( a(2,1) * a(3,3) - a(2,3) * a(3,1) ) + &
+                 a(1,3) * ( a(2,1) * a(3,2) - a(2,2) * a(3,1) )
+    !
+  END FUNCTION caimd_det3
+  !
   SUBROUTINE caimd_inverse3( a, ainv, det, label )
     !
     REAL(DP), INTENT(IN) :: a(3,3)
     REAL(DP), INTENT(OUT) :: ainv(3,3), det
     CHARACTER(LEN=*), INTENT(IN) :: label
     !
-    det = a(1,1) * ( a(2,2) * a(3,3) - a(2,3) * a(3,2) ) - &
-          a(1,2) * ( a(2,1) * a(3,3) - a(2,3) * a(3,1) ) + &
-          a(1,3) * ( a(2,1) * a(3,2) - a(2,2) * a(3,1) )
+    det = caimd_det3( a )
     IF ( .NOT. caimd_finite( det ) .OR. ABS( det ) <= caimd_det_floor ) &
        CALL errore( 'caimd_inverse3', TRIM( label ) // ' is singular', 1 )
     !

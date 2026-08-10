@@ -1,0 +1,31 @@
+{
+  "native_path": "vcinit->ranv(temp=tempw); ranv zeroes total linear momentum",
+  "cases": {
+    "A": {
+      "forbidden_hits_complete_text": {},
+      "atomic_velocities_header": false,
+      "velocity_rows": 0,
+      "restart_mode": "from_scratch",
+      "tempw": 300.0,
+      "ion_temperature": "nose"
+    },
+    "B": {
+      "forbidden_hits_complete_text": {},
+      "atomic_velocities_header": false,
+      "velocity_rows": 0,
+      "restart_mode": "from_scratch",
+      "tempw": 300.0,
+      "ion_temperature": "nose"
+    },
+    "C": {
+      "forbidden_hits_complete_text": {},
+      "atomic_velocities_header": false,
+      "velocity_rows": 0,
+      "restart_mode": "from_scratch",
+      "tempw": 300.0,
+      "ion_temperature": "nose"
+    }
+  },
+  "explicit_velocities_absent_in_all": true,
+  "native_initialization_conclusion": "all three cases start from native vcinit->ranv(300 K); no explicit velocity card or keyword present"
+}

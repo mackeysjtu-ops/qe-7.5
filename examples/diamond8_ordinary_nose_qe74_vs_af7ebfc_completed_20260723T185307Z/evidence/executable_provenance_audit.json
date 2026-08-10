@@ -1,0 +1,125 @@
+{
+  "job_id": "50127909",
+  "local_workflow_metadata": {
+    "common_state_source": {
+      "ionic_degrees_of_freedom": 21,
+      "path": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_controls_ABC_20260723T134303Z/01_common_state/COMMON_STATE.json",
+      "source_files": {
+        "cel": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/01_common_equilibration/tmp/diamond8_common_equil.cel",
+        "eal": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/01_common_equilibration/diamond8_common_equil.eal",
+        "md": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/01_common_equilibration/tmp/diamond8_common_equil.md",
+        "pos": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/01_common_equilibration/tmp/diamond8_common_equil.pos"
+      },
+      "source_step": 2000,
+      "starting_temperature_K": 300.00000000000006,
+      "units": {
+        "cell": "bohr, QE internal avec rows with lattice vectors in columns",
+        "cell_parameters_for_qe": "bohr, rows are transpose of QE internal avec",
+        "positions": "crystal fractional reconstructed from synchronized .cel/.pos",
+        "temperature": "K, 3N-3 ionic DOF",
+        "velocities": "a.u. Cartesian written to ATOMIC_VELOCITIES"
+      },
+      "velocity_scaling_factor": 0.7325209676741878
+    },
+    "created_utc": "2026-07-23T18:15:25Z",
+    "local_branch": "main",
+    "local_control_workflow": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_controls_ABC_20260723T134303Z",
+    "local_git_status": [
+      "## main",
+      "?? examples/caimd_diamond8_local_nose_continuation_0p30_20260723T102331Z/",
+      "?? examples/caimd_diamond8_local_nose_controls_ABC_20260723T134303Z/",
+      "?? examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/",
+      "?? examples/diamond8_ordinary_nose_qe74_vs_qe75_af7ebfc_20260723T175625Z/"
+    ],
+    "local_head": "af7ebfc",
+    "local_head_full": "af7ebfc757c32e0b4f050ed9f2208e01020b2ee3",
+    "local_pw_provenance": {
+      "path": "/private/tmp/qe_diamond8_af7ebfc_build/bin/pw.x",
+      "sha256": "7f7f5f815f53983c3b41dfab1570d96e8f8816d56cdcc574a3a2e33fcf492303"
+    },
+    "local_repo_root": "/Users/mengqicheng/Downloads/Learning/qe-7.5",
+    "parameters": {
+      "conv_thr": 0.0001,
+      "dt_fs": 2.0,
+      "dt_qe": 41.34137333665,
+      "ecutrho": 120.0,
+      "ecutwfc": 25.0,
+      "electron_maxstep": 40,
+      "fnosep": 50.0,
+      "mixing_beta": 0.3,
+      "nhpcl": 4,
+      "nstep": 1000,
+      "simulated_time_ps": 2.0,
+      "tempw_K": 300.0,
+      "wmass": 2000000.0
+    },
+    "pseudo": {
+      "bundle_path": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/diamond8_ordinary_nose_qe74_vs_qe75_af7ebfc_20260723T175625Z/pseudo/C.UPF",
+      "sha256": "9c06aa642d22981491b32a18ec129086fe8366164984930389e4fc071c978639",
+      "source": "/Users/mengqicheng/Downloads/Learning/qe-7.5/pseudo/C.UPF"
+    },
+    "qe74_module": "quantum-espresso/7.4.1--hpcx-mpi--2.19--nvhpc--24.5-openblas",
+    "qe75_af7ebfc_executable": "/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-thermostat-af7ebfc/install-current-gpu/bin/pw.x",
+    "remote_workdir": "/leonardo/home/userexternal/mcheng00/workspace/Diamond/diamond8_ordinary_nose_qe74_vs_qe75_af7ebfc_20260723T175625Z"
+  },
+  "notes": [
+    "The pre-submit --version files are empty because the submission helper used timeout protection around pw.x --version.",
+    "Runtime stdout records the PWSCF version actually launched for each process."
+  ],
+  "qe74": {
+    "executable": "/leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/nvhpc-24.5/quantum-espresso-7.4.1-jfm6pcx2dqkcfcwywdgoyao3m3ncvc5a/bin/pw.x",
+    "module": "quantum-espresso/7.4.1--hpcx-mpi--2.19--nvhpc--24.5-openblas",
+    "module_environment_excerpt": [
+      "module=quantum-espresso/7.4.1--hpcx-mpi--2.19--nvhpc--24.5-openblas",
+      "executable=/leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/nvhpc-24.5/quantum-espresso-7.4.1-jfm6pcx2dqkcfcwywdgoyao3m3ncvc5a/bin/pw.x",
+      "srun_command=srun --mpi=pmix_v3 -n 1 /leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/nvhpc-24.5/quantum-espresso-7.4.1-jfm6pcx2dqkcfcwywdgoyao3m3ncvc5a/bin/pw.x -in /leonardo/home/userexternal/mcheng00/workspace/Diamond/diamond8_ordinary_nose_qe74_vs_qe75_af7ebfc_20260723T175625Z/inputs/qe74.in",
+      "Currently Loaded Modulefiles:",
+      " 1) profile/base(default)                                                  ",
+      " 2) profile/chem-phys                                                      ",
+      " 3) glibc/2.28--gcc--12.2.0-gi6mmti <aL>                                   ",
+      " 4) hpcx-mpi/2.19(default) <aL>                                            ",
+      " 5) fftw/3.3.10--hpcx-mpi--2.19--nvhpc--24.5 <aL>                          ",
+      " 6) libxc/7.0.0--nvhpc--24.5 <aL>                                          ",
+      " 7) openblas/0.3.26--nvhpc--24.5 <aL>                                      ",
+      " 8) quantum-espresso/7.4.1--hpcx-mpi--2.19--nvhpc--24.5-openblas(default)  ",
+      "",
+      "Key:"
+    ],
+    "official_module_evidence": true,
+    "pre_submit_version_output": "",
+    "runtime_stdout_version": "7.4.1",
+    "sha256": "beb956cce572605941b791c37bc4dd30ac6cee714e18be7b93fd4ff0e47f4aca"
+  },
+  "qe75_af7ebfc": {
+    "executable": "/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-thermostat-af7ebfc/install-current-gpu/bin/pw.x",
+    "expected_sha256": "89d4fda827d2cc22a3b4c1670e90dc40ce629af42096c785b55c70c355a10e7d",
+    "module_environment_excerpt": [
+      "executable=/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-thermostat-af7ebfc/install-current-gpu/bin/pw.x",
+      "loader=/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-thermostat-af7ebfc/scripts/load_build_environment.sh",
+      "srun_command=srun --mpi=pmix_v3 -n 1 /leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-thermostat-af7ebfc/install-current-gpu/bin/pw.x -in /leonardo/home/userexternal/mcheng00/workspace/Diamond/diamond8_ordinary_nose_qe74_vs_qe75_af7ebfc_20260723T175625Z/inputs/qe75_af7ebfc.in",
+      "Currently Loaded Modulefiles:",
+      " 1) profile/base(default)                                ",
+      " 2) profile/chem-phys                                    ",
+      " 3) nvhpc/24.5(default)                                  ",
+      " 4) hpcx-mpi/2.19(default)                               ",
+      " 5) glibc/2.28--gcc--12.2.0-gi6mmti <aL>                 ",
+      " 6) fftw/3.3.10--hpcx-mpi--2.19--nvhpc--24.5             ",
+      " 7) libxc/7.0.0--nvhpc--24.5                             ",
+      " 8) openblas/0.3.26--nvhpc--24.5                         ",
+      " 9) netlib-scalapack/2.2.0--hpcx-mpi--2.19--nvhpc--24.5  ",
+      "10) nghttp2/1.57.0-634bffh <aL>                          ",
+      "11) zlib-ng/2.1.6-jkgunjc <aL>                           ",
+      "12) curl/8.7.1(default) <aL>                             ",
+      "13) gmake/4.4.1-phqmvks <aL>                             ",
+      "14) ncurses/6.5-svfl57u <aL>                             "
+    ],
+    "path_matches_required": true,
+    "pre_submit_version_output": "",
+    "runtime_stdout_version": "7.5",
+    "sha256": "89d4fda827d2cc22a3b4c1670e90dc40ce629af42096c785b55c70c355a10e7d"
+  },
+  "runtime_hostname": "lrdn2602.leonardo.local",
+  "runtime_node": "lrdn2602",
+  "submission_timestamp_from_scontrol": "2026-07-23T20:17:06",
+  "workdir": "/leonardo/home/userexternal/mcheng00/workspace/Diamond/diamond8_ordinary_nose_qe74_vs_qe75_af7ebfc_20260723T175625Z"
+}

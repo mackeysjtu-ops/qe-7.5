@@ -1,0 +1,22 @@
+{
+  "native_path": "vcinit->ranv(temp=tempw); ranv zeroes total linear momentum",
+  "runs": {
+    "control": {
+      "forbidden_hits_complete_text": {},
+      "atomic_velocities_header": false,
+      "velocity_rows": 0,
+      "restart_mode": "from_scratch",
+      "ion_temperature": "initial",
+      "tempw": 300.0
+    },
+    "nose": {
+      "forbidden_hits_complete_text": {},
+      "atomic_velocities_header": false,
+      "velocity_rows": 0,
+      "restart_mode": "from_scratch",
+      "ion_temperature": "nose",
+      "tempw": 300.0
+    }
+  },
+  "explicit_velocities_absent_in_both": true
+}

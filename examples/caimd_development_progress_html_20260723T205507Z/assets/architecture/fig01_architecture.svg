@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 1050" font-family="system-ui, -apple-system, 'PingFang SC', 'Hiragino Sans GB', sans-serif">
+  <style>
+    .box { fill: #ffffff; stroke: #c3c2b7; stroke-width: 1.4; rx: 8; }
+    .caimd { stroke: #2a78d6; stroke-width: 2; }
+    .nose { fill: #fff7e6; stroke: #fab219; stroke-width: 1.6; }
+    .t { fill: #0b0b0b; font-size: 14px; }
+    .code { font-family: ui-monospace, Menlo, monospace; font-size: 13px; fill: #0b0b0b; font-weight: 600; }
+    .sub { fill: #52514e; font-size: 11.5px; }
+    .tag { font-size: 10.5px; fill: #ffffff; font-weight: 700; }
+    .arrow { stroke: #898781; stroke-width: 1.6; fill: none; marker-end: url(#ah); }
+  </style>
+  <defs>
+    <marker id="ah" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+      <path d="M0,0 L8,4.5 L0,9 z" fill="#898781"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="860" height="1050" fill="#fcfcfb"/>
+  <text x="24" y="34" class="t" font-size="17" font-weight="700">图 1 · PW vc-md 调用路径与 CAIMD V1 / Nose 插入点（af7ebfc，源代码核实）</text>
+
+  <!-- run_pwscf -->
+  <rect x="230" y="56" width="400" height="86" class="box"/>
+  <text x="250" y="80" class="code">PW/src/run_pwscf.f90</text>
+  <text x="250" y="100" class="sub">电子自洽 → forces() → stress(sigma)（普通 QE 路径，CAIMD 不修改）</text>
+  <text x="250" y="118" class="sub">CAIMD: caimd_write_premove() 在 move_ions 之前写 26 列 .caimd 行</text>
+  <rect x="560" y="62" width="62" height="18" rx="4" fill="#2a78d6"/><text x="591" y="75" class="tag" text-anchor="middle">CAIMD</text>
+
+  <path class="arrow" d="M430,142 L430,168"/>
+  <!-- move_ions -->
+  <rect x="230" y="168" width="400" height="60" class="box"/>
+  <text x="250" y="192" class="code">PW/src/move_ions.f90（基线未修改）</text>
+  <text x="250" y="212" class="sub">calculation='vc-md' + cell_dynamics='pr' → calc='cd' → 调用 vcsmd()</text>
+
+  <path class="arrow" d="M430,228 L430,254"/>
+  <!-- vcsmd -->
+  <rect x="150" y="254" width="560" height="128" class="box caimd"/>
+  <text x="170" y="278" class="code">PW/src/vcsmd.f90</text>
+  <text x="170" y="298" class="sub">PW 笛卡尔位置/力 → 晶格坐标（rat, force）；桥接 PR 状态与 MD 历史文件 prefix.md</text>
+  <text x="170" y="316" class="sub">CAIMD: istep==0 时拒绝已存在的 MD 历史；caimd_note_ionic_temperature() 记录离子动能温度</text>
+  <text x="170" y="338" class="sub">Nose: ions_nosevel() 在 vcmove 之前；ions_noseupd() + ions_nose_shiftvar() 在 vcmove 之后</text>
+  <rect x="170" y="350" width="140" height="20" rx="4" fill="#fab219"/><text x="240" y="364" class="tag" text-anchor="middle">Nose 链更新在此</text>
+  <rect x="640" y="260" width="62" height="18" rx="4" fill="#2a78d6"/><text x="671" y="273" class="tag" text-anchor="middle">CAIMD</text>
+
+  <path class="arrow" d="M290,382 L290,412"/>
+  <path class="arrow" d="M570,382 L570,412"/>
+
+  <!-- vcinit -->
+  <rect x="90" y="412" width="380" height="118" class="box caimd"/>
+  <text x="110" y="436" class="code">vcsubs.f90 : vcinit（第 1 个离子步）</text>
+  <text x="110" y="456" class="sub">初速度：input_velocities_read 时取 ATOMIC_VELOCITIES；</text>
+  <text x="110" y="472" class="sub">否则 ranv(temp,...) 按目标温度生成 Maxwell 分布</text>
+  <text x="110" y="490" class="sub">PR 胞加速度 avec2d 由应力-压力项初始化</text>
+  <text x="110" y="508" class="sub">CAIMD: caimd_project_tangent(avec2d / avec2di)</text>
+  <rect x="400" y="418" width="62" height="18" rx="4" fill="#2a78d6"/><text x="431" y="431" class="tag" text-anchor="middle">CAIMD</text>
+
+  <!-- vcmove -->
+  <rect x="490" y="412" width="340" height="118" class="box caimd"/>
+  <text x="510" y="436" class="code">vcsubs.f90 : vcmove（第 ≥2 步）</text>
+  <text x="510" y="456" class="sub">Beeman 预测-校正；rat2d = force/m − Nose 摩擦项</text>
+  <text x="510" y="474" class="sub">（tnosep 时：−vnhp·ratd，作用于晶格坐标速度历史）</text>
+  <text x="510" y="492" class="sub">度规耦合更新 rat / ratd / rat2d；PR 胞方程更新 avec2d</text>
+  <text x="510" y="510" class="sub">CAIMD: caimd_project_tangent(avecd / avec2d / avec2di)</text>
+  <rect x="760" y="418" width="62" height="18" rx="4" fill="#fab219"/><text x="791" y="431" class="tag" text-anchor="middle">Nose 摩擦</text>
+
+  <path class="arrow" d="M430,530 L430,560"/>
+  <!-- PR candidate -->
+  <rect x="230" y="560" width="400" height="64" class="box"/>
+  <text x="250" y="584" class="code">普通 PR 候选胞 H_candidate</text>
+  <text x="250" y="604" class="sub">avec ← avec + dt·avecd + dt²·(4·avec2d − avec2di)/6（PR/Beeman）</text>
+
+  <path class="arrow" d="M430,624 L430,654"/>
+  <!-- CAIMD projection -->
+  <rect x="120" y="654" width="620" height="150" class="box caimd"/>
+  <text x="140" y="678" class="code">caimd_module.f90 : caimd_apply_final_projection</text>
+  <text x="140" y="700" class="sub">1. E_pr = sym(H_candidate·H_ref⁻¹ − I)；掩码分量替换为名义目标（事件步累加 stride·step_strain）</text>
+  <text x="140" y="718" class="sub">2. H_projected = (I + E_projected)·H_ref；行列式 / 条件数安全检查（失败即报错停止）</text>
+  <text x="140" y="736" class="sub">3. 反对称胞增量被移除（tangent 投影 + 对称重构）</text>
+  <text x="140" y="754" class="sub">4. ratd / rat2d / rat2di ← (H_projected⁻¹·H_candidate)·(·)，保持物理笛卡尔速度 u = H·ratd</text>
+  <text x="140" y="772" class="sub">5. vc_refresh_projected_energies + vc_refresh_projected_nose_ekin：以投影后状态刷新离子动能与</text>
+  <text x="140" y="788" class="sub">&#160;&#160;&#160;&#160;Nose 链动能输入 ekin2nhp（保证 thermostat 与提交历史一致）</text>
+  <rect x="670" y="660" width="62" height="18" rx="4" fill="#2a78d6"/><text x="701" y="673" class="tag" text-anchor="middle">CAIMD</text>
+  <rect x="600" y="660" width="62" height="18" rx="4" fill="#fab219"/><text x="631" y="673" class="tag" text-anchor="middle">Nose 同步</text>
+
+  <path class="arrow" d="M430,804 L430,834"/>
+  <!-- committed state -->
+  <rect x="230" y="834" width="400" height="92" class="box"/>
+  <text x="250" y="858" class="code">提交的下一步状态与历史</text>
+  <text x="250" y="878" class="sub">MD 历史 tmp/prefix.md（rat, ratd, rat2d, rat2di, avec, avecd, …）</text>
+  <text x="250" y="896" class="sub">轨迹 .cel / .pos / .vel / .for；能量 .e / .eal / .ave / .p / .tv</text>
+  <text x="250" y="914" class="sub">MD 历史是物理积分器状态的一部分（Beeman 需要上一步加速度）</text>
+
+  <text x="24" y="972" class="sub">图例：蓝色描边/标签 = CAIMD V1 插入点；琥珀色标签 = Nose-Hoover 作用点；灰色 = 未修改的基线 QE 7.5 路径。</text>
+  <text x="24" y="992" class="sub">依据：PW/src/run_pwscf.f90:241、move_ions.f90:393、vcsmd.f90:334-353、vcsubs.f90:708-715 / 1123-1152、caimd_module.f90:140-349（af7ebfc）。</text>
+</svg>

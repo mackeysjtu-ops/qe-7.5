@@ -1,0 +1,138 @@
+{
+  "audit_utc": "2026-07-28T06:46:56Z",
+  "audit_task": "AUDIT_COMPLETED_DIAMOND8_VCRELAX_NVT_NPT_CAIMD_DEPENDENCY_CHAIN",
+  "phase": "Phase 1 - locate the exact workflow",
+  "result": "BLOCKED_AMBIGUOUS_WORKFLOW",
+  "result_detail": "No candidate workflow was found. The blocking condition is ABSENCE of any matching workflow, not ambiguity between several candidates. Phase 1 mandates stopping without guessing.",
+
+  "expected_root_pattern": "/leonardo/home/userexternal/mcheng00/workspace/Diamond/diamond8_vcrelax_nvt_npt_caimd_chain_*",
+  "expected_root_matches": [],
+
+  "remote_host_verified": "login01.leonardo.local",
+  "remote_user_verified": "mcheng00",
+  "remote_time_utc": "2026-07-28T06:44:06Z",
+
+  "searches_performed_read_only": [
+    {
+      "target": "/leonardo/home/userexternal/mcheng00/workspace/Diamond/diamond8_vcrelax_nvt_npt_caimd_chain_*",
+      "method": "ls -ld",
+      "matches": 0
+    },
+    {
+      "target": "01_vc_relax.slurm, 02_fixed_nvt.slurm, 03_free_npt.slurm, 04_caimd_zero_nonzero.slurm",
+      "method": "find over /leonardo/home/userexternal/mcheng00 and /leonardo_scratch/fast/ICT26_CMSP_0/mcheng, maxdepth 6",
+      "matches": 0
+    },
+    {
+      "target": "DEPENDENCY_CHAIN.json",
+      "method": "find over home and scratch, maxdepth 6",
+      "matches": 0
+    },
+    {
+      "target": "WORKFLOW_METADATA.json",
+      "method": "find over home and scratch, maxdepth 6",
+      "matches": 3,
+      "note": "All three belong to unrelated Diamond studies (see rejected_candidates); none describes a four-job dependent chain."
+    },
+    {
+      "target": "directories named *vcrelax*, *vc_relax*, *npt_caimd*",
+      "method": "find -type d over home and scratch, maxdepth 5",
+      "matches": 2,
+      "matched_paths": [
+        "/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-v1-7aa61919/example_iceX_100GPa_300K_caimd/reference/optional_vc_relax",
+        "/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-v1-7aa61919/validation/runs/ordinary_vc_relax"
+      ],
+      "note": "Both are QE source-tree example/validation directories, unrelated to this chain."
+    },
+    {
+      "target": "directories named *chain*",
+      "method": "find -type d over home, scratch and /leonardo_work/ICT26_CMSP_0, maxdepth 5",
+      "matches": 1,
+      "matched_paths": [
+        "/leonardo/home/userexternal/mcheng00/workspace/CARTACE/runs/lj7_cv2_cv3_retrain/gnn_spib_reference_mu_1m_plateau_chain_20260723T204244Z"
+      ],
+      "note": "Unrelated CARTACE/LJ7 project."
+    },
+    {
+      "target": "directories modified since 2026-07-26",
+      "method": "find -type d -newermt over workspace and scratch, maxdepth 3",
+      "note": "Only the Jul 27 three-case Diamond study, unrelated CARTACE/CALYPSO runs, and the SinglePhase lambda-branch smoke test appeared. No four-stage chain."
+    },
+    {
+      "target": "local repository examples",
+      "method": "ls of /Users/mengqicheng/Downloads/Learning/qe-7.5/examples",
+      "matches": 0,
+      "note": "No *chain* or *vcrelax* example directory exists locally either."
+    }
+  ],
+
+  "rejected_candidates": [
+    {
+      "path": "/leonardo/home/userexternal/mcheng00/workspace/Diamond/diamond8_native_nose_caimd_zero_strain_5000_20260727T151734Z",
+      "created_utc": "2026-07-27T15:26:03Z",
+      "why_rejected": "Newest Diamond workflow, but a THREE-case single-stage study, not a four-job dependent chain. Its WORKFLOW_METADATA.json purpose field reads: 'three 5000-step (10 ps) native-init Nose trajectories: CASE A caimd=.false. (control), CASE B caimd=.true. all masks .false. (no-op), CASE C caimd=.true. all masks .true. step_strain=0'. Its scripts/ contains generate_inputs.py, pre_submit_validate.py, run_long_zero_strain.slurm, analyze_long_zero_strain.py - none of the four required stage scripts. Contains no vc-relax stage, no fixed-cell NVT stage, no free-cell NPT stage, and no DEPENDENCY_CHAIN.json.",
+      "selection_rule_violated": "Phase 1 explicitly forbids selecting a directory solely because it is the newest."
+    },
+    {
+      "path": "/leonardo/home/userexternal/mcheng00/workspace/Diamond/diamond8_af7ebfc_no_velocity_initial_vs_nose_300K_20260724T120726Z",
+      "why_rejected": "Two-case velocity-initialization comparison; no four-stage chain, no stage scripts, no dependency metadata."
+    },
+    {
+      "path": "/leonardo/home/userexternal/mcheng00/workspace/Diamond/diamond8_no_velocity_qe74_vs_qe75_caimd_false_300K_20260724T092828Z",
+      "why_rejected": "QE 7.4 vs 7.5 comparison study; no four-stage chain."
+    },
+    {
+      "path": "/leonardo/home/userexternal/mcheng00/workspace/Diamond/diamond8_ordinary_nose_qe74_vs_qe75_af7ebfc_20260723T175625Z",
+      "why_rejected": "QE version comparison study; no four-stage chain."
+    },
+    {
+      "path": "/leonardo/home/userexternal/mcheng00/workspace/Diamond/diamond111_* and continuation_to_15000_*",
+      "why_rejected": "Different system (diamond 111 / 64-atom), predates the described task, no four-stage chain."
+    }
+  ],
+
+  "slurm_accounting_query": {
+    "executed": false,
+    "reason": "The task authorizes exactly one grouped sacct query and only AFTER all four Job IDs have been recovered. Zero Job IDs were recovered, so the precondition was never met and no scheduler query was issued.",
+    "suggested_followup_if_user_authorizes": "sacct -S 2026-07-26 -u mcheng00 --format=JobID,JobName%36,State,ExitCode,Elapsed,Start,End,WorkDir%80"
+  },
+
+  "downstream_phases_not_executed": [
+    "Phase 2 dependency-chain recovery",
+    "Phase 3 local immutable mirror",
+    "Phase 4 runtime provenance verification",
+    "Phase 5 input contract and handoff audit",
+    "Phase 6 JOB 1 vc-relax audit",
+    "Phase 7 JOB 2 NVT audit",
+    "Phase 8 JOB 3 NPT audit",
+    "Phase 9 JOB 4A CAIMD zero strain audit",
+    "Phase 10 JOB 4B CAIMD nonzero strain audit",
+    "Phase 11 first-failed-prerequisite determination",
+    "Phase 12 comparison plots",
+    "Phase 13 overall status beyond the Phase 1 stop",
+    "Phase 14 physical conclusions"
+  ],
+  "downstream_reason": "Every downstream phase consumes raw output of the selected workflow. With no workflow located, executing them would require fabricating data, which is forbidden.",
+
+  "local_repository_state_readonly": {
+    "root": "/Users/mengqicheng/Downloads/Learning/qe-7.5",
+    "branch": "main",
+    "head": "af7ebfc757c32e0b4f050ed9f2208e01020b2ee3",
+    "head_matches_expected": true,
+    "modified_by_this_audit": false
+  },
+
+  "safety_contract": {
+    "jobs_submitted": 0,
+    "jobs_cancelled": 0,
+    "qe_reruns": 0,
+    "dependencies_changed": 0,
+    "qe_source_modified": false,
+    "qe_rebuilt": false,
+    "remote_raw_outputs_modified": false,
+    "commits_created": 0,
+    "pushes": 0,
+    "waiting_sleeping_polling": false,
+    "remote_access_mode": "read-only inspection (ls, find, cat, hostname, date)"
+  }
+}

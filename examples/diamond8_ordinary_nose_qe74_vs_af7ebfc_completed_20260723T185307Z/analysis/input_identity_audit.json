@@ -1,0 +1,49 @@
+{
+  "caimd_absent": true,
+  "max_cell_abs_diff": 0.0,
+  "max_position_abs_diff": 0.0,
+  "max_velocity_abs_diff": 0.0,
+  "normalized_diff_path": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/diamond8_ordinary_nose_qe74_vs_af7ebfc_completed_20260723T185307Z/analysis/input_normalized.diff",
+  "physical_inputs_identical": true,
+  "pseudo_sha256": "9c06aa642d22981491b32a18ec129086fe8366164984930389e4fc071c978639",
+  "qe74": {
+    "input_direct_temperature": {
+      "center_of_mass_max_abs_au": 3.5236570605778894e-19,
+      "center_of_mass_velocity_au": [
+        -1.2874900798265365e-19,
+        -3.5236570605778894e-19,
+        -2.744386749103933e-19
+      ],
+      "ekin_Ry": 0.019950912849770814,
+      "ndof": 21,
+      "temperature_K": 300.0000000000004
+    },
+    "lexical_caimd_hits": [],
+    "mass_amu": 12.0107,
+    "nat": 8,
+    "path": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/diamond8_ordinary_nose_qe74_vs_af7ebfc_completed_20260723T185307Z/inputs/qe74.in",
+    "pseudo": "C.UPF",
+    "sha256": "fb36b256662bc48b4486ab0f71e71e6c66324e91de590229c6cb1c8cf2ef35d6",
+    "structured_caimd_hits": []
+  },
+  "qe75_af7ebfc": {
+    "input_direct_temperature": {
+      "center_of_mass_max_abs_au": 3.5236570605778894e-19,
+      "center_of_mass_velocity_au": [
+        -1.2874900798265365e-19,
+        -3.5236570605778894e-19,
+        -2.744386749103933e-19
+      ],
+      "ekin_Ry": 0.019950912849770814,
+      "ndof": 21,
+      "temperature_K": 300.0000000000004
+    },
+    "lexical_caimd_hits": [],
+    "mass_amu": 12.0107,
+    "nat": 8,
+    "path": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/diamond8_ordinary_nose_qe74_vs_af7ebfc_completed_20260723T185307Z/inputs/qe75_af7ebfc.in",
+    "pseudo": "C.UPF",
+    "sha256": "33b584fc5ecccae84138d4bdce6de85872a218a8693deb2544bc80ed293ed51d",
+    "structured_caimd_hits": []
+  }
+}

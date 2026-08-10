@@ -1,0 +1,20 @@
+{
+  "A": {
+    "ATOMIC_POSITIONS": true,
+    "ATOMIC_VELOCITIES": true,
+    "CELL_PARAMETERS": true,
+    "non_caimd_namelist_settings": true
+  },
+  "B": {
+    "ATOMIC_POSITIONS": true,
+    "ATOMIC_VELOCITIES": true,
+    "CELL_PARAMETERS": true,
+    "non_caimd_namelist_settings": true
+  },
+  "C": {
+    "ATOMIC_POSITIONS": true,
+    "ATOMIC_VELOCITIES": true,
+    "CELL_PARAMETERS": true,
+    "non_caimd_namelist_settings": true
+  }
+}

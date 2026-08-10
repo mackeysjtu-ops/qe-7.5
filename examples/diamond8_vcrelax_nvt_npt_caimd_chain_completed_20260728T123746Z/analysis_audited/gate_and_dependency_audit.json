@@ -1,0 +1,17 @@
+{
+  "audit_utc": "2026-07-28T12:39:17Z",
+  "order": [
+    "vc-relax",
+    "fixed-cell NVT",
+    "free-cell NPT",
+    "CAIMD zero",
+    "CAIMD nonzero"
+  ],
+  "earliest_failed_scientific_stage": "vc-relax (JOB1)",
+  "job1_exit_reflected_gate": true,
+  "job1_gate_note": "QE returned 1 and the workflow gate script (extract_final_structure vcrelax_gate) also returned 1; the Slurm job exited nonzero, correctly failing the afterok.",
+  "downstream_blocked_correctly": true,
+  "downstream_note": "JOB2/3/4 CANCELLED (afterok never satisfied); no downstream job ran despite the upstream failure.",
+  "dependency_or_gate_failure": false,
+  "verdict": "gates_and_dependencies_correct"
+}

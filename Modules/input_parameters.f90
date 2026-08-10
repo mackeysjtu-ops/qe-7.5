@@ -1347,12 +1347,21 @@ MODULE input_parameters
         !! Enable constrained AIMD small-strain driving for PW vc-md with
         !! Parrinello-Rahman cell dynamics.
 
+        CHARACTER(len=80) :: caimd_loading_mode = 'legacy_strain'
+        !! Selects the CAIMD loading definition.  The default
+        !! 'legacy_strain' preserves the original symmetric-strain protocol;
+        !! 'linear_defgrad' applies linear deformation-gradient increments.
+
         INTEGER :: caimd_stride = 1
         !! Positive interval, in ionic MD steps, between imposed CAIMD events.
 
         REAL(DP) :: caimd_step_strain(6) = 0.0_DP
         !! Nominal symmetric tensor-strain increment associated with one ionic
         !! MD step, ordered as (xx, yy, zz, yz, xz, xy).
+
+        REAL(DP) :: caimd_step_defgrad(3,3) = 0.0_DP
+        !! Dimensionless deformation-gradient increment associated with one
+        !! ionic MD step in CAIMD linear_defgrad mode.
 
         LOGICAL :: caimd_mask(6) = .FALSE.
         !! Selects CAIMD-controlled symmetric strain components, ordered as
@@ -1366,7 +1375,8 @@ MODULE input_parameters
                           press, wmass, cell_temperature, temph, fnoseh,   &
                           cell_dofree, greash, cell_factor, cell_nstepe,   &
                           cell_damping, press_conv_thr, caimd, caimd_stride,&
-                          caimd_step_strain, caimd_mask, treinit_gvecs
+                          caimd_loading_mode, caimd_step_strain,           &
+                          caimd_step_defgrad, caimd_mask, treinit_gvecs
 
 !
 !=----------------------------------------------------------------------------=!!

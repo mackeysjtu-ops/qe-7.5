@@ -1,0 +1,19 @@
+--- qe74_no_velocity.in (comments stripped)
++++ qe75_caimd_false_no_velocity.in (comments stripped)
+@@ -1,7 +1,7 @@
+ &CONTROL
+   calculation = 'vc-md',
+   restart_mode = 'from_scratch',
+-  prefix = 'diamond8_qe74_novel',
++  prefix = 'diamond8_qe75_novel',
+   pseudo_dir = '../pseudo',
+   outdir = './tmp',
+   nstep = 1000,
+@@ -40,6 +40,7 @@
+   press = 0.0,
+   wmass = 2000000.00000000,
+   cell_temperature = 'not_controlled',
++  caimd = .false.
+ /
+ ATOMIC_SPECIES
+ C 12.01070000 C.UPF

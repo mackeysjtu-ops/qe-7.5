@@ -1,0 +1,203 @@
+{
+  "atom_labels": [
+    "C",
+    "C",
+    "C",
+    "C",
+    "C",
+    "C",
+    "C",
+    "C"
+  ],
+  "atom_order": [
+    "C 0 0 0",
+    "C 0 1/2 1/2",
+    "C 1/2 0 1/2",
+    "C 1/2 1/2 0",
+    "C 1/4 1/4 1/4",
+    "C 1/4 3/4 3/4",
+    "C 3/4 1/4 3/4",
+    "C 3/4 3/4 1/4"
+  ],
+  "cartesian_velocities_au": [
+    [
+      -0.00028202028827145013,
+      -0.00046386126061951586,
+      -0.0004023026994635085
+    ],
+    [
+      -0.00042359273740683913,
+      4.046871120020816e-07,
+      1.3437006190831419e-05
+    ],
+    [
+      -0.00036340362584427944,
+      0.000223691778384215,
+      0.0011515879963662932
+    ],
+    [
+      0.00014831350041571805,
+      -0.0004054637050116951,
+      -0.0008665166046231305
+    ],
+    [
+      -8.707572014253428e-05,
+      0.0004938788363169497,
+      -0.0007779572613310879
+    ],
+    [
+      0.0009575161924318244,
+      -9.24763426012234e-07,
+      0.00026552549083521965
+    ],
+    [
+      5.830030406035449e-05,
+      0.00043094530900690775,
+      0.0005143098478460102
+    ],
+    [
+      -8.037625242794008e-06,
+      -0.0002786708817628511,
+      0.00010191622417937236
+    ]
+  ],
+  "cell_matrix_bohr_columns": [
+    [
+      3.891717875741369,
+      3.891717875741369,
+      3.891717875741369
+    ],
+    [
+      4.7663615092172105,
+      -4.7663615092172105,
+      0.0
+    ],
+    [
+      2.7518601004016277,
+      2.7518601004016277,
+      -5.503720200803255
+    ]
+  ],
+  "cell_parameters_bohr_rows_for_qe": [
+    [
+      3.891717875741369,
+      4.7663615092172105,
+      2.7518601004016277
+    ],
+    [
+      3.891717875741369,
+      -4.7663615092172105,
+      2.7518601004016277
+    ],
+    [
+      3.891717875741369,
+      0.0,
+      -5.503720200803255
+    ]
+  ],
+  "condition_number_inf": 2.9318516525781364,
+  "determinant_bohr3": 306.2710374914433,
+  "ecut_choice": "25/120 Ry matches the bundled QE pioud_diamond test-suite carbon setup for local Diamond+C.UPF runs; 12/48 Ry was retained only as archived failed screen evidence.",
+  "ecutrho_Ry": 120.0,
+  "ecutwfc_Ry": 25.0,
+  "equilibration_steps": 500,
+  "equilibration_steps_choice": "Final candidate returns to the requested initial 500-step screen after archived 1500-step single-chain Nose evidence showed stable but cold ionic-only temperature.",
+  "expected_stdout_time_increment_ps": 0.002,
+  "fnosep_THz": 50.0,
+  "fnosep_choice": "50 THz with a four-link Nose-Hoover chain gives about 19 QE steps per Nose oscillation at the required 2 fs timestep. This is stronger than the archived 10/20 THz single-chain attempts that stayed cold, while avoiding the overly hard 100 THz screen setting that QE reported as only 9 steps per Nose oscillation.",
+  "fractional_positions_crystal_order": [
+    [
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.5,
+      0.5
+    ],
+    [
+      0.5,
+      0.0,
+      0.5
+    ],
+    [
+      0.5,
+      0.5,
+      0.0
+    ],
+    [
+      0.25,
+      0.25,
+      0.25
+    ],
+    [
+      0.25,
+      0.75,
+      0.75
+    ],
+    [
+      0.75,
+      0.25,
+      0.75
+    ],
+    [
+      0.75,
+      0.75,
+      0.25
+    ]
+  ],
+  "initial_velocity_temperature_3N_minus_3_K": 450.0,
+  "initial_velocity_temperature_choice": "450 K warm start with tempw=300 K, used because archived zero-displacement Diamond8 starts with 300 K velocities equilibrated to a cold ~180 K ionic kinetic temperature over 500-1500 local Nose+PR steps.",
+  "ionic_degrees_of_freedom_convention": "3N-3 for explicit velocities and CAIMD ionic temperature",
+  "lattice_constant_angstrom": 3.567,
+  "lattice_constant_bohr": 6.740653089508073,
+  "literature_rate_ps^-1_not_used": 0.001,
+  "minimum_periodic_C_C_distance_angstrom": 1.5445563076495463,
+  "minimum_periodic_C_C_distance_bohr": 2.9187884068060264,
+  "nhpcl": 4,
+  "nose_target_temperature_K": 300.0,
+  "positive_determinant": true,
+  "pressure_target_GPa": 0.0,
+  "pseudopotential_path": "/Users/mengqicheng/Downloads/Learning/qe-7.5/pseudo/C.UPF",
+  "pseudopotential_sha256": "9c06aa642d22981491b32a18ec129086fe8366164984930389e4fc071c978639",
+  "qe_dt": 41.341381006,
+  "qe_dt_units": "QE PW vc-md time units; validated against stdout time in ps",
+  "rate_acceleration_factor": 50.0,
+  "rotation_matrix_lab_from_crystal": [
+    [
+      0.5773502691896258,
+      0.5773502691896258,
+      0.5773502691896258
+    ],
+    [
+      0.7071067811865475,
+      -0.7071067811865475,
+      0.0
+    ],
+    [
+      0.4082482904638631,
+      0.4082482904638631,
+      -0.8164965809277261
+    ]
+  ],
+  "strain_rate_ps^-1": 0.05,
+  "timestep_fs": 2.0,
+  "velocity_seed": 20260723,
+  "velocity_temperature": {
+    "center_of_mass_max_abs_au": 3.3881317890172014e-20,
+    "center_of_mass_velocity_au": [
+      3.1763735522036263e-21,
+      3.3881317890172014e-20,
+      -5.082197683525802e-21
+    ],
+    "ekin_Ry": 0.029926369274656178,
+    "temperature_3N_minus_3_K": 450.0,
+    "temperature_PR_nat_plus_1_K": 350.0
+  },
+  "wmass": 2000000.0,
+  "wmass_baseline": 2000.0,
+  "wmass_baseline_dt_qe": 5.0,
+  "wmass_choice": "Started from the dt-scaled local CAIMD+Nose harness estimate 136728.78267866 AMU, then increased to 2.0e6 AMU after archived 2 fs Diamond8 attempts showed PR cell kinetic modes draining the ionic 3N-3 temperature below target during the short local equilibration. This keeps cell_dynamics='pr' active but slows the barostat for local functional validation; it is not a quantitative barostat calibration.",
+  "wmass_dt_scaled_estimate": 136728.78267866056
+}

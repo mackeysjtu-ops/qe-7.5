@@ -1,0 +1,33 @@
+{
+  "audit_utc": "2026-07-28T23:52:24Z",
+  "both_cases": {
+    "n_carbon": 8,
+    "H_or_O": 0,
+    "calculation": "vc-relax",
+    "ibrav": 1,
+    "cell_dofree": "ibrav",
+    "cell_dofree_volume_present": false,
+    "caimd_present": false,
+    "explicit_velocities_present": false,
+    "ecutwfc": 80.0,
+    "ecutrho": 320.0,
+    "kpoints": "automatic 2 2 2 0 0 0",
+    "press_kbar": 0.0,
+    "conv_thr": "1.0d-8",
+    "celldm1_initial_bohr": 6.7406530895,
+    "pseudo": "C.UPF"
+  },
+  "input_sha256": {
+    "qe75": "5e1e6e944e3a988dc68124421b38695c15f240a6ca67585c2762206b1f023660",
+    "qe74": "11925e5a575d991cc5772e2b20c5708bc0c0de867208df0141d9b359a5698571"
+  },
+  "pseudo_sha256": "9c06aa642d22981491b32a18ec129086fe8366164984930389e4fc071c978639",
+  "normalized_physical_input_identical": true,
+  "normalized_ignored": [
+    "comments",
+    "prefix",
+    "outdir"
+  ],
+  "same_initial_structure_and_ordering": true,
+  "cell_dofree_ibrav_avoided_previous_volume_error": true
+}

@@ -1,0 +1,12 @@
+{
+  "command": [
+    "/private/tmp/qe_diamond8_af7ebfc_build/bin/pw.x",
+    "-inp",
+    "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/01_common_equilibration/qe.in"
+  ],
+  "completed_utc": "2026-07-23T12:16:11Z",
+  "cwd": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/01_common_equilibration",
+  "elapsed_s": 327.92113494873047,
+  "output": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/01_common_equilibration/qe.out",
+  "returncode": 0
+}

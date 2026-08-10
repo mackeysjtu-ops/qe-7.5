@@ -1,0 +1,6 @@
+{
+  "ran": false,
+  "classification": "CAIMD_ZERO_INCOMPLETE",
+  "reason": "JOB4 CANCELLED by unsatisfied afterok dependency; neither Stage 4A nor 4B executed",
+  "note": "Stage 4B skip is moot: the whole JOB4 never ran"
+}

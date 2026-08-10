@@ -1,0 +1,18 @@
+{
+  "policy": "QE 7.5 input must contain only caimd=.false.; QE 7.4.1 input must contain no CAIMD keyword at all.",
+  "runs": {
+    "qe74": {
+      "caimd_lines": [],
+      "forbidden_caimd_parameters": [],
+      "active_caimd_lines": []
+    },
+    "qe75": {
+      "caimd_lines": [
+        "caimd = .false."
+      ],
+      "forbidden_caimd_parameters": [],
+      "active_caimd_lines": []
+    }
+  },
+  "all_checks_passed": true
+}

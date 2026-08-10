@@ -1,0 +1,37 @@
+{
+  "initial_state": {
+    "first_step_eka": [
+      0.019951,
+      0.019951
+    ],
+    "first_step_eka_abs_diff": 0.0,
+    "first_step_T_K": [
+      300.001310468147,
+      300.001310468147
+    ],
+    "first_eka_divergence_step": 701,
+    "classification": "IDENTICAL"
+  },
+  "eka_first_divergence_step": 701,
+  "mean_T_delta_K": 10.777205815987145,
+  "final5ps_T_delta_K": 60.93923867785634,
+  "block1000_A": [
+    169.93170264990027,
+    221.34538921743666,
+    4062.901688254568,
+    5031.083176758013,
+    4737.602590478221
+  ],
+  "block1000_B": [
+    170.04875894790388,
+    221.3130373143004,
+    3831.833764962648,
+    4999.240272887888,
+    4946.542684165459
+  ],
+  "caimd_B_present": true,
+  "caimd_B_any_event": false,
+  "caimd_B_max_abs_actual_strain": 0.10096005298848232,
+  "classification": "LONG_TIME_STATISTICAL_NOOP",
+  "note": "A and B start from the identical native realization and are bit-identical until chaotic divergence (step 701); thereafter they are statistically equivalent (both heat to ~5000 K). Exact late-step equality is not expected after chaotic divergence."
+}

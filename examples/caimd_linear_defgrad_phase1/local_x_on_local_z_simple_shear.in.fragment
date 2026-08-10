@@ -1,0 +1,14 @@
+! Non-production fragment only.  Not executed in Phase 1.
+! Pre-orient the structure externally so local x is parallel to [11-2]
+! and local z is parallel to [111].
+! With dt=2 fs and shear rate 0.001 ps^-1:
+!   dgamma = 0.001 ps^-1 * 0.002 ps = 2.0d-6 per MD step.
+! With caimd_stride=10, 10000 events correspond to 100000 MD steps and
+! gamma=0.20 via F_load(1,3)=0.20.
+! This is not equivalent to a symmetric caimd_step_strain xz component.
+&CELL
+  caimd = .true.
+  caimd_loading_mode = 'linear_defgrad'
+  caimd_stride = 10
+  caimd_step_defgrad(1,3) = 2.0d-6
+/

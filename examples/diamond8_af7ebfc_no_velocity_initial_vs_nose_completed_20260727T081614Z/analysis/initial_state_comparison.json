@@ -1,0 +1,30 @@
+{
+  "note": "Both runs omit explicit velocities and use the same af7ebfc executable, so vcinit->ranv(temp=tempw) should generate the SAME deterministic Maxwell realization (QE randy is seeded with idum=0). ranv also zeroes the total linear momentum, so the initial COM velocity is zero by construction. tmp/*.md holds only the TERMINAL state, so the first committed ratd cannot be read back; step-1 kinetic energy and the step-2 positions are used as the equivalent evidence.",
+  "first_step_eka_Ry": {
+    "control": 0.019951,
+    "nose": 0.019951
+  },
+  "first_step_eka_abs_diff_Ry": 0.0,
+  "first_step_T_K": {
+    "control": 300.001310468147,
+    "nose": 300.001310468147
+  },
+  "first_step_T_abs_diff_K": 0.0,
+  "identical_initial_kinetic_energy": true,
+  "step2_position_max_abs_diff_bohr": 2.9993368899638995e-15,
+  "identical_step2_positions": false,
+  "terminal_COM_velocity_au": {
+    "control": [
+      -4.780111853217028e-16,
+      -2.5386424462158635e-17,
+      -1.392183352107168e-16
+    ],
+    "nose": [
+      1.2770546339163635e-16,
+      6.663608196049581e-17,
+      2.173757593197656e-16
+    ]
+  },
+  "strict_single_factor": false,
+  "interpretation": "Initial realizations differ: the random realization is an additional uncontrolled difference; compare statistically."
+}

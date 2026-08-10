@@ -1,0 +1,661 @@
+{
+  "job_id": "50434898",
+  "slurm_states": {
+    "top": "COMPLETED 0:0",
+    "50434898.0 (A)": "COMPLETED 0:0",
+    "50434898.1 (B)": "COMPLETED 0:0",
+    "50434898.2 (C)": "COMPLETED 0:0"
+  },
+  "remote_workdir": "/leonardo/home/userexternal/mcheng00/workspace/Diamond/diamond8_native_nose_caimd_zero_strain_5000_20260727T151734Z",
+  "overall_status": "ACTIVE_CAIMD_CHANGES_TEMPERATURE_RESPONSE",
+  "headline": "All three cases COMPLETE 5000 steps. CASE A (control) and CASE B (no-op) are statistically identical: both sit ~170 K for ~2-3 ps then run away to ~5000 K as the free Parrinello-Rahman cell contracts ~9%. CASE C (active zero-strain) holds the cell perfectly rigid (V=306.27 bohr^3, cond=1.0 constant) and heats far less (final-5 ps ~520 K). The ionic Nose thermostat is active every step with the correct target (ndega=3N-3=21) but does NOT hold 300 K in any case; the earlier '~170 K bounded' picture was an artifact of the 2 ps window - the heating onset is at ~3-4 ps.",
+  "dof_convention": {
+    "ndega": 21,
+    "get_ndof": "3N-3=21",
+    "measurement_divisor": 21,
+    "no_factor_of_two_artifact": true
+  },
+  "executable": {
+    "path": "/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-thermostat-af7ebfc/install-current-gpu/bin/pw.x",
+    "sha256_runtime": "89d4fda827d2cc22a3b4c1670e90dc40ce629af42096c785b55c70c355a10e7d",
+    "expected_sha256": "89d4fda827d2cc22a3b4c1670e90dc40ce629af42096c785b55c70c355a10e7d",
+    "version": {
+      "A": "7.5",
+      "B": "7.5",
+      "C": "7.5"
+    }
+  },
+  "run_completeness": {
+    "A": {
+      "return_code": 0,
+      "slurm_step": "50434898.0",
+      "slurm_step_state": "COMPLETED 0:0",
+      "job_done": true,
+      "runtime_version": "7.5",
+      "first_error": null,
+      "scf_failure_count": 0,
+      "completed_ionic_steps": 5000,
+      "requested_steps": 5000,
+      "final_valid_nst": 4999,
+      "completed_time_ps": 9.998,
+      "requested_time_ps": 10.0,
+      "nose_active_in_stdout": true,
+      "classification": "COMPLETE_5000"
+    },
+    "B": {
+      "return_code": 0,
+      "slurm_step": "50434898.1",
+      "slurm_step_state": "COMPLETED 0:0",
+      "job_done": true,
+      "runtime_version": "7.5",
+      "first_error": null,
+      "scf_failure_count": 0,
+      "completed_ionic_steps": 5000,
+      "requested_steps": 5000,
+      "final_valid_nst": 4999,
+      "completed_time_ps": 9.998,
+      "requested_time_ps": 10.0,
+      "nose_active_in_stdout": true,
+      "classification": "COMPLETE_5000"
+    },
+    "C": {
+      "return_code": 0,
+      "slurm_step": "50434898.2",
+      "slurm_step_state": "COMPLETED 0:0",
+      "job_done": true,
+      "runtime_version": "7.5",
+      "first_error": null,
+      "scf_failure_count": 0,
+      "completed_ionic_steps": 5000,
+      "requested_steps": 5000,
+      "final_valid_nst": 4999,
+      "completed_time_ps": 9.998,
+      "requested_time_ps": 10.0,
+      "nose_active_in_stdout": true,
+      "classification": "COMPLETE_5000"
+    }
+  },
+  "input_contract": {
+    "valid_single_factor": true,
+    "explicit_velocities_absent": true,
+    "caimd_contract": {
+      "cases": {
+        "A": {
+          "caimd": ".false.",
+          "caimd_stride": "<absent>",
+          "mask": [
+            "<absent>",
+            "<absent>",
+            "<absent>",
+            "<absent>",
+            "<absent>",
+            "<absent>"
+          ],
+          "step_strain": [
+            "<absent>",
+            "<absent>",
+            "<absent>",
+            "<absent>",
+            "<absent>",
+            "<absent>"
+          ]
+        },
+        "B": {
+          "caimd": ".true.",
+          "caimd_stride": 1.0,
+          "mask": [
+            ".false.",
+            ".false.",
+            ".false.",
+            ".false.",
+            ".false.",
+            ".false."
+          ],
+          "step_strain": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "C": {
+          "caimd": ".true.",
+          "caimd_stride": 1.0,
+          "mask": [
+            ".true.",
+            ".true.",
+            ".true.",
+            ".true.",
+            ".true.",
+            ".true."
+          ],
+          "step_strain": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "A_caimd_false": true,
+      "B_all_masks_false": true,
+      "C_all_masks_true": true,
+      "all_step_strain_zero": true
+    }
+  },
+  "initial_state": {
+    "note": "All three cases omit explicit velocities + same executable/tempw -> vcinit->ranv(300 K) should give the same deterministic Maxwell realization (randy idum=0; total momentum zeroed). .md holds only the terminal state, so the initial realization identity is read from the early bit-identical .eal rows.",
+    "pairs": {
+      "A_vs_B": {
+        "first_step_eka": [
+          0.019951,
+          0.019951
+        ],
+        "first_step_eka_abs_diff": 0.0,
+        "first_step_T_K": [
+          300.001310468147,
+          300.001310468147
+        ],
+        "first_eka_divergence_step": 701,
+        "classification": "IDENTICAL"
+      },
+      "A_vs_C": {
+        "first_step_eka": [
+          0.019951,
+          0.019951
+        ],
+        "first_step_eka_abs_diff": 0.0,
+        "first_step_T_K": [
+          300.001310468147,
+          300.001310468147
+        ],
+        "first_eka_divergence_step": 10,
+        "classification": "NUMERICALLY_EQUIVALENT"
+      },
+      "B_vs_C": {
+        "first_step_eka": [
+          0.019951,
+          0.019951
+        ],
+        "first_step_eka_abs_diff": 0.0,
+        "first_step_T_K": [
+          300.001310468147,
+          300.001310468147
+        ],
+        "first_eka_divergence_step": 10,
+        "classification": "NUMERICALLY_EQUIVALENT"
+      }
+    },
+    "all_identical": false
+  },
+  "runs": {
+    "A": {
+      "label": "CASE A caimd=.false.",
+      "rc": 0,
+      "job_done": true,
+      "version": "7.5",
+      "completed_steps": 5000,
+      "nose_active_in_stdout": true,
+      "temperature_classification": "SUSTAINED_HEATING",
+      "temperature": {
+        "n": 5000,
+        "initial": 300.001310468147,
+        "final": 4131.089169711493,
+        "mean": 2844.572909471627,
+        "std": 2472.2252378194416,
+        "median": 3430.9708290069216,
+        "min": 55.0756753973075,
+        "max": 8981.69428879399,
+        "first500_mean": 170.16680918539035,
+        "final500_mean": 4838.215310061727,
+        "final1000_mean": 4737.602590478221,
+        "final2500_mean": 4905.973039754185,
+        "final1250_mean": 4786.374049073702
+      },
+      "final_5ps_mean_K": 4905.973039754185,
+      "final_2p5ps_mean_K": 4786.374049073702,
+      "block_uncertainty_1000": {
+        "n_blocks": 3,
+        "block_mean": 4894.680084805442,
+        "block_std": 127.27037376095991,
+        "sem": 73.4795845507545
+      },
+      "compatible_with_300K": false,
+      "drift_full_K_per_ps": 687.5302316082453,
+      "drift_final_half_K_per_ps": -76.94641979090193,
+      "drift_final_quarter_K_per_ps": -64.67373633517705,
+      "block1000_means_K": [
+        169.93170264990027,
+        221.34538921743666,
+        4062.901688254568,
+        5031.083176758013,
+        4737.602590478221
+      ],
+      "block500_means_K": [
+        170.16680918539035,
+        169.6965961144102,
+        181.32423249102777,
+        261.36654594384555,
+        3133.3097122106788,
+        4992.493664298456,
+        5088.333790230911,
+        4973.832563285114,
+        4636.989870894715,
+        4838.215310061727
+      ],
+      "crossings": {
+        "first_above_600K": {
+          "nst": 2045,
+          "time_ps": 4.09,
+          "value": 601.2807579414463
+        },
+        "first_above_1000K": {
+          "nst": 2175,
+          "time_ps": 4.35,
+          "value": 1115.1670185423648
+        },
+        "first_above_2000K": {
+          "nst": 2177,
+          "time_ps": 4.354,
+          "value": 2144.563525586042
+        }
+      },
+      "fraction_above": {
+        "600K": 0.5662,
+        "1000K": 0.565,
+        "2000K": 0.5616
+      },
+      "longest_run_above": {
+        "600K": 2828,
+        "1000K": 2825,
+        "2000K": 680
+      },
+      "direct_terminal_T_K": 4131.578479636427,
+      "direct_confirms_reported": true,
+      "pressure_kbar": {
+        "n": 5000,
+        "initial": -714.3569692758001,
+        "final": 387.4159334208,
+        "mean": 383.1884195690357,
+        "std": 898.3623900156043,
+        "median": 450.88441932390003,
+        "min": -793.1611595604,
+        "max": 2081.831063856,
+        "first500_mean": -744.0870232236624,
+        "final500_mean": 395.6534041293207,
+        "final1000_mean": 663.729255327674,
+        "final2500_mean": 1134.4140834061864,
+        "final1250_mean": 793.9118890251577
+      },
+      "pressure_final1000_mean_kbar": 663.729255327674,
+      "cell": {
+        "volume_initial_bohr3": 306.27101880388557,
+        "volume_final_bohr3": 279.54396758183907,
+        "volume_change_percent": -8.726601467689186,
+        "volume_min": 226.34627326105337,
+        "volume_max": 306.27101880388557,
+        "condition_number_max": 1.1299354790829075,
+        "strain6_final": [
+          -0.08204794892255407,
+          0.005484223236861041,
+          -0.009746924956562819,
+          0.022722374401404653,
+          0.017381815783889316,
+          0.022380191012408596
+        ],
+        "min_CC_bohr": 2.2156310317052665,
+        "mean_NN_CC_bohr": 2.6517300191141127,
+        "max_CC_bohr": 19.92831564605398,
+        "classification": "STABLE_PR_CELL"
+      },
+      "stress_mean_kbar": {
+        "sxx": 126.69361400000005,
+        "syy": 411.45366200000007,
+        "szz": 380.50773599999997,
+        "syz": 61.997352,
+        "sxz": 18.849026000000006,
+        "sxy": 40.32509399999999
+      },
+      "energy_partial": {
+        "drift_eV_per_atom_per_ps": 0.02020662482980764,
+        "note": "PARTIAL; Nose chain energy not written by QE"
+      }
+    },
+    "B": {
+      "label": "CASE B no-op (masks .false.)",
+      "rc": 0,
+      "job_done": true,
+      "version": "7.5",
+      "completed_steps": 5000,
+      "nose_active_in_stdout": true,
+      "temperature_classification": "SUSTAINED_HEATING",
+      "temperature": {
+        "n": 5000,
+        "initial": 300.001310468147,
+        "final": 2620.782336799826,
+        "mean": 2833.79570365564,
+        "std": 2498.044773196353,
+        "median": 3463.0746231951575,
+        "min": 48.677471918574774,
+        "max": 8384.428384739314,
+        "first500_mean": 170.16680918539035,
+        "final500_mean": 4853.494911666614,
+        "final1000_mean": 4946.542684165459,
+        "final2500_mean": 4966.912278432042,
+        "final1250_mean": 4957.478785267284
+      },
+      "final_5ps_mean_K": 4966.912278432042,
+      "final_2p5ps_mean_K": 4957.478785267284,
+      "block_uncertainty_1000": {
+        "n_blocks": 3,
+        "block_mean": 4948.009383971136,
+        "block_std": 83.18475600385372,
+        "sem": 48.026741271298285
+      },
+      "compatible_with_300K": false,
+      "drift_full_K_per_ps": 706.4910191782467,
+      "drift_final_half_K_per_ps": -19.48337668469723,
+      "drift_final_quarter_K_per_ps": -105.73904518211296,
+      "block1000_means_K": [
+        170.04875894790388,
+        221.3130373143004,
+        3831.833764962648,
+        4999.240272887888,
+        4946.542684165459
+      ],
+      "block500_means_K": [
+        170.16680918539035,
+        169.93070871041743,
+        178.64788277200634,
+        263.9781918565945,
+        2720.6720518717816,
+        4942.995478053514,
+        5077.200164332619,
+        4921.280381443155,
+        5039.590456664306,
+        4853.494911666614
+      ],
+      "crossings": {
+        "first_above_600K": {
+          "nst": 2085,
+          "time_ps": 4.17,
+          "value": 612.5885112105578
+        },
+        "first_above_1000K": {
+          "nst": 2232,
+          "time_ps": 4.464,
+          "value": 1394.8985797993912
+        },
+        "first_above_2000K": {
+          "nst": 2233,
+          "time_ps": 4.466,
+          "value": 2074.6419129512424
+        }
+      },
+      "fraction_above": {
+        "600K": 0.5576,
+        "1000K": 0.5536,
+        "2000K": 0.5522
+      },
+      "longest_run_above": {
+        "600K": 2770,
+        "1000K": 2768,
+        "2000K": 812
+      },
+      "direct_terminal_T_K": 2621.0237021929897,
+      "direct_confirms_reported": true,
+      "pressure_kbar": {
+        "n": 5000,
+        "initial": -714.3569692758001,
+        "final": 156.0931982658,
+        "mean": 387.85856918766416,
+        "std": 911.3981916796484,
+        "median": 402.86196661080004,
+        "min": -793.1611595604,
+        "max": 2105.9562966480003,
+        "first500_mean": -744.087052644678,
+        "final500_mean": 400.9297967227794,
+        "final1000_mean": 700.0865098408683,
+        "final2500_mean": 1162.0911620692414,
+        "final1250_mean": 836.2661352402823
+      },
+      "pressure_final1000_mean_kbar": 700.0865098408683,
+      "cell": {
+        "volume_initial_bohr3": 306.27101880388557,
+        "volume_final_bohr3": 276.9924167413727,
+        "volume_change_percent": -9.559703747634314,
+        "volume_min": 224.90245245939718,
+        "volume_max": 306.27101880388557,
+        "condition_number_max": 1.1314783483762796,
+        "strain6_final": [
+          -0.012687056405970676,
+          -0.04902381185567717,
+          -0.033398515992600686,
+          0.011989637561974121,
+          0.026584081328919394,
+          -0.048830446687037926
+        ],
+        "min_CC_bohr": 2.210638233140519,
+        "mean_NN_CC_bohr": 2.6512438426126237,
+        "max_CC_bohr": 19.946056068030945,
+        "classification": "STABLE_PR_CELL"
+      },
+      "stress_mean_kbar": {
+        "sxx": 398.57502600000004,
+        "syy": 228.28548199999997,
+        "szz": 305.2061499999999,
+        "syz": 58.32192,
+        "sxz": 73.133838,
+        "sxy": -121.16738799999999
+      },
+      "energy_partial": {
+        "drift_eV_per_atom_per_ps": 0.01853108875682441,
+        "note": "PARTIAL; Nose chain energy not written by QE"
+      }
+    },
+    "C": {
+      "label": "CASE C active zero-strain",
+      "rc": 0,
+      "job_done": true,
+      "version": "7.5",
+      "completed_steps": 5000,
+      "nose_active_in_stdout": true,
+      "temperature_classification": "SUSTAINED_HEATING",
+      "temperature": {
+        "n": 5000,
+        "initial": 300.001310468147,
+        "final": 564.2598955098599,
+        "mean": 384.12911908669037,
+        "std": 190.78026728201516,
+        "median": 350.4877221716607,
+        "min": 40.613179261361246,
+        "max": 1185.1337418949927,
+        "first500_mean": 172.75627566187336,
+        "final500_mean": 667.6924259172263,
+        "final1000_mean": 618.9414205212091,
+        "final2500_mean": 522.9658734167842,
+        "final1250_mean": 599.7423597623281
+      },
+      "final_5ps_mean_K": 522.9658734167842,
+      "final_2p5ps_mean_K": 599.7423597623281,
+      "block_uncertainty_1000": {
+        "n_blocks": 3,
+        "block_mean": 547.0869655001912,
+        "block_std": 118.1072724509146,
+        "sem": 68.18926554278802
+      },
+      "compatible_with_300K": false,
+      "drift_full_K_per_ps": 54.93512430989076,
+      "drift_final_half_K_per_ps": 65.16997867365393,
+      "drift_final_quarter_K_per_ps": 87.23875820311449,
+      "block1000_means_K": [
+        184.66530668154527,
+        261.91412239221165,
+        364.9267246457617,
+        490.1980211927238,
+        618.9414205212091
+      ],
+      "block500_means_K": [
+        172.75627566187336,
+        196.57433770121716,
+        235.7967114285767,
+        288.03153335584665,
+        333.30296563546796,
+        396.55048365605546,
+        466.7443274434276,
+        513.6517149420199,
+        570.1904151251921,
+        667.6924259172263
+      ],
+      "crossings": {
+        "first_above_600K": {
+          "nst": 2623,
+          "time_ps": 5.246,
+          "value": 601.0852781641877
+        },
+        "first_above_1000K": {
+          "nst": 4757,
+          "time_ps": 9.514,
+          "value": 1035.3511217970924
+        },
+        "first_above_2000K": null
+      },
+      "fraction_above": {
+        "600K": 0.1566,
+        "1000K": 0.0018,
+        "2000K": 0.0
+      },
+      "longest_run_above": {
+        "600K": 24,
+        "1000K": 3,
+        "2000K": 0
+      },
+      "direct_terminal_T_K": 564.2587889619468,
+      "direct_confirms_reported": true,
+      "pressure_kbar": {
+        "n": 5000,
+        "initial": -714.3569692758001,
+        "final": -819.3605739522001,
+        "mean": -794.8985411420175,
+        "std": 44.94834067456011,
+        "median": -787.0636540773,
+        "min": -946.1210196648001,
+        "max": -695.4539667528,
+        "first500_mean": -757.1751385394161,
+        "final500_mean": -788.9393909268782,
+        "final1000_mean": -794.3578152384066,
+        "final2500_mean": -807.962331162073,
+        "final1250_mean": -798.387555845209
+      },
+      "pressure_final1000_mean_kbar": -794.3578152384066,
+      "cell": {
+        "volume_initial_bohr3": 306.27103783218973,
+        "volume_final_bohr3": 306.27103783218973,
+        "volume_change_percent": 0.0,
+        "volume_min": 306.27103783218973,
+        "volume_max": 306.27103783218973,
+        "condition_number_max": 1.0000000012402281,
+        "strain6_final": [
+          0.0,
+          0.0,
+          2.220446049250313e-16,
+          -4.79500799350209e-18,
+          -4.997016321090504e-17,
+          -1.0340561135061387e-16
+        ],
+        "min_CC_bohr": 2.7550136769840914,
+        "mean_NN_CC_bohr": 2.886901999961792,
+        "max_CC_bohr": 19.214246918781164,
+        "classification": "STABLE_PR_CELL"
+      },
+      "stress_mean_kbar": {
+        "sxx": -804.9285060000001,
+        "syy": -807.339044,
+        "szz": -796.967204,
+        "syz": 12.221672,
+        "sxz": 7.674694000000001,
+        "sxy": 6.059864
+      },
+      "energy_partial": {
+        "drift_eV_per_atom_per_ps": 0.01270413564209947,
+        "note": "PARTIAL; Nose chain energy not written by QE"
+      }
+    }
+  },
+  "nose_activation": "CONFIRMED_ACTIVE_BUT_INEFFECTIVE",
+  "case_A_vs_B": "LONG_TIME_STATISTICAL_NOOP",
+  "case_C_zero_strain": "ACTIVE_ZERO_STRAIN_STABLE",
+  "case_C_max_strain_error": 2.220446049250313e-16,
+  "case_C_max_velocity_jump": 0.0,
+  "active_caimd_changes_temperature": true,
+  "temperature_reasonableness": {
+    "A": {
+      "A_instantaneous_fluctuations_reasonable_for_8_atoms": true,
+      "instantaneous_std_K": 2472.2252378194416,
+      "B_late_time_mean_compatible_with_300K": false,
+      "final_half_block_mean_K": 4894.680084805442,
+      "final_half_block_sem_K": 73.4795845507545,
+      "final5ps_mean_K": 4905.973039754185,
+      "final2p5ps_mean_K": 4786.374049073702,
+      "C_thermostat_scientifically_validated": false,
+      "plain_language": "The trajectory does NOT stay at 300 K: after ~2-3 ps it heats to a final-5 ps mean of 4906 K (max 8982 K). Numerically it runs, but it is thermodynamically far above the requested 300 K."
+    },
+    "B": {
+      "A_instantaneous_fluctuations_reasonable_for_8_atoms": true,
+      "instantaneous_std_K": 2498.044773196353,
+      "B_late_time_mean_compatible_with_300K": false,
+      "final_half_block_mean_K": 4948.009383971136,
+      "final_half_block_sem_K": 48.026741271298285,
+      "final5ps_mean_K": 4966.912278432042,
+      "final2p5ps_mean_K": 4957.478785267284,
+      "C_thermostat_scientifically_validated": false,
+      "plain_language": "The trajectory does NOT stay at 300 K: after ~2-3 ps it heats to a final-5 ps mean of 4967 K (max 8384 K). Numerically it runs, but it is thermodynamically far above the requested 300 K."
+    },
+    "C": {
+      "A_instantaneous_fluctuations_reasonable_for_8_atoms": true,
+      "instantaneous_std_K": 190.78026728201516,
+      "B_late_time_mean_compatible_with_300K": false,
+      "final_half_block_mean_K": 547.0869655001912,
+      "final_half_block_sem_K": 68.18926554278802,
+      "final5ps_mean_K": 522.9658734167842,
+      "final2p5ps_mean_K": 599.7423597623281,
+      "C_thermostat_scientifically_validated": false,
+      "plain_language": "The trajectory does NOT stay at 300 K: after ~2-3 ps it heats to a final-5 ps mean of 523 K (max 1185 K). Numerically it runs, but it is thermodynamically far above the requested 300 K."
+    }
+  },
+  "factor_of_two_crosscheck": {
+    "ndega_source": "PW/src/input.f90:2019 ndega=0 default -> get_ndof()",
+    "get_ndof_source": "PW/src/dynamics_module.f90:2523 -> 3*nat-3 = 21 (no fixed atoms/constraints)",
+    "nose_target": "gkbt = ndega*tempw*k_B (Modules/ions_nose.f90:161) -> controls <2*eka> to 21*k_B*300",
+    "measurement_divisor": "3N-3 = 21 (same as ndega)",
+    "implication": "Because ndega (21) equals the measurement divisor (21), a correctly equilibrated 300 K Nose gives measured mean ~300 K. No DOF/factor-of-two correction converts 300 K into ~170 K.",
+    "crosscheck_A_final5ps": {
+      "A": {
+        "final5ps_mean_eka_Ry": 0.32626213519999997,
+        "T_with_3Nm3_div21": 4905.973039754184,
+        "T_with_3N_div24": 4292.726409784911,
+        "T_with_3Np1_div27": 3815.756808697699,
+        "note": "None of these divisor choices reconcile a below-target eka with 300 K unless eka itself is at target."
+      },
+      "B": {
+        "final5ps_mean_eka_Ry": 0.33031478000000003,
+        "T_with_3Nm3_div21": 4966.9122784320425,
+        "T_with_3N_div24": 4346.048243628037,
+        "T_with_3Np1_div27": 3863.1539943360326,
+        "note": "None of these divisor choices reconcile a below-target eka with 300 K unless eka itself is at target."
+      },
+      "C": {
+        "final5ps_mean_eka_Ry": 0.03477882188,
+        "T_with_3Nm3_div21": 522.9658734167842,
+        "T_with_3N_div24": 457.5951392396862,
+        "T_with_3Np1_div27": 406.7512348797211,
+        "note": "None of these divisor choices reconcile a below-target eka with 300 K unless eka itself is at target."
+      }
+    }
+  },
+  "reference_1000step_context": "prior 2 ps audit (job 50167241): control 169.9 K, nose 169.7 K - both below the 3-4 ps heating onset"
+}

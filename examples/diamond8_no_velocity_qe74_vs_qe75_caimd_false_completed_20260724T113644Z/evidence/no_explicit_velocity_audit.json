@@ -1,0 +1,23 @@
+{
+  "expected_native_initialization_path": "PW/src/vcsmd.f90 -> PW/src/vcsubs.f90:vcinit -> ranv(temp=tempw) Maxwell distribution; input_velocities_read is FALSE because no ATOMIC_VELOCITIES card and no ion_velocities keyword are present.",
+  "common_initialization_mode": "ion_temperature='initial' with tempw=300.0",
+  "runs": {
+    "qe74": {
+      "forbidden_keyword_hits_complete_text": {},
+      "forbidden_keyword_hits_comments_stripped": {},
+      "has_atomic_velocities_card": false,
+      "restart_mode": "from_scratch",
+      "ion_temperature": "initial",
+      "tempw": 300.0
+    },
+    "qe75": {
+      "forbidden_keyword_hits_complete_text": {},
+      "forbidden_keyword_hits_comments_stripped": {},
+      "has_atomic_velocities_card": false,
+      "restart_mode": "from_scratch",
+      "ion_temperature": "initial",
+      "tempw": 300.0
+    }
+  },
+  "all_checks_passed": true
+}

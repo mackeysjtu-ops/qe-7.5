@@ -1,0 +1,873 @@
+{
+  "cases": {
+    "active_nose_shear_xy": {
+      "code": "pw",
+      "command": [
+        "/private/tmp/qe_diamond8_af7ebfc_build/bin/pw.x",
+        "-inp",
+        "active_nose_shear_xy.in"
+      ],
+      "elapsed_s": 0.09654498100280762,
+      "executable": "/private/tmp/qe_diamond8_af7ebfc_build/bin/pw.x",
+      "executable_sha256": "7f7f5f815f53983c3b41dfab1570d96e8f8816d56cdcc574a3a2e33fcf492303",
+      "expected": "success",
+      "group": "L_thermostat",
+      "input_path": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/evidence/caimd_harness_targeted/targeted_active_nose/inputs/active_nose_shear_xy.in",
+      "job_done": true,
+      "metrics": {
+        "ave_float_count": 24,
+        "ave_path": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/evidence/caimd_harness_targeted/targeted_active_nose/runs/active_nose_shear_xy/active_nose_shear_xy.ave",
+        "avec_float_count": 56,
+        "avec_path": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/evidence/caimd_harness_targeted/targeted_active_nose/runs/active_nose_shear_xy/active_nose_shear_xy.avec",
+        "caimd": {
+          "actual_final": [
+            -4.99569188527893e-06,
+            -5.0258504268319015e-06,
+            -4.449338562917404e-06,
+            -2.8746788583474334e-06,
+            -2.829273349779282e-06,
+            0.0007000000000000001
+          ],
+          "column_counts": [
+            26
+          ],
+          "event_counters": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "event_flags": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          "exists": true,
+          "header_lines": [
+            "# CAIMD_V1 stress-strain output",
+            "# units: time ps; strain dimensionless; stress GPa; volume bohr^3; temperature K",
+            "# shear convention: tensor components yz xz xy; engineering shear is 2*tensor shear",
+            "# columns: ionic_step time_ps imposed_events_done following_move_is_event nominal_xx nominal_yy nominal_zz nominal_yz nominal_xz nominal_xy actual_xx actual_yy actual_zz actual_yz actual_xz actual_xy stress_xx_GPa stress_yy_GPa stress_zz_GPa stress_yz_GPa stress_xz_GPa stress_xy_GPa temperature_K volume_bohr3 velocity_jump_max velocity_jump_rms"
+          ],
+          "nominal_final": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0007000000000000001
+          ],
+          "path": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/evidence/caimd_harness_targeted/targeted_active_nose/runs/active_nose_shear_xy/tmp/active_nose_shear_xy.caimd",
+          "rows": 8,
+          "single_column_count_26": true,
+          "temperature_final_window_mean": 372.4936185786188,
+          "temperature_finite": true,
+          "temperature_first": 300.0,
+          "temperature_last": 553.804896779217,
+          "temperature_values": [
+            300.0,
+            120.30014955863518,
+            164.38378696028232,
+            216.73113476670815,
+            281.88480044238713,
+            359.4891009071668,
+            450.5581599976148,
+            553.804896779217
+          ],
+          "velocity_residual_finite": true,
+          "velocity_residual_max": 1.5570668253389024e-19,
+          "velocity_residual_rms_max": 1.545225841133836e-19,
+          "volume_finite": true
+        },
+        "e_float_count": 40,
+        "e_path": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/evidence/caimd_harness_targeted/targeted_active_nose/runs/active_nose_shear_xy/active_nose_shear_xy.e",
+        "eal_float_count": 56,
+        "eal_path": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/evidence/caimd_harness_targeted/targeted_active_nose/runs/active_nose_shear_xy/active_nose_shear_xy.eal",
+        "energies_Ry": [
+          -20.87653608,
+          -20.87682661,
+          -20.87724893,
+          -20.87776899,
+          -20.87847076,
+          -20.87926038,
+          -20.88015635,
+          -20.88120749
+        ],
+        "input_velocity_card": {
+          "cell_rows_bohr": [
+            [
+              6.74,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              6.74,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              6.74
+            ]
+          ],
+          "ion_velocities_from_input": true,
+          "nat": 2,
+          "position_labels": [
+            "C",
+            "C"
+          ],
+          "species_masses_amu": {
+            "C": 12.011
+          },
+          "velocities_cartesian": [
+            [
+              0.00024,
+              -0.00012,
+              0.00018
+            ],
+            [
+              -0.00024,
+              0.00012,
+              -0.00018
+            ]
+          ],
+          "velocity_all_zero": false,
+          "velocity_card_present": true,
+          "velocity_label_match_positions": true,
+          "velocity_labels": [
+            "C",
+            "C"
+          ],
+          "velocity_max_abs": 0.00024,
+          "velocity_units": "a.u"
+        },
+        "md_float_count": 119,
+        "md_path": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/evidence/caimd_harness_targeted/targeted_active_nose/runs/active_nose_shear_xy/tmp/active_nose_shear_xy.md",
+        "p_float_count": 32,
+        "p_path": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/evidence/caimd_harness_targeted/targeted_active_nose/runs/active_nose_shear_xy/active_nose_shear_xy.p",
+        "pr_velocity_initialization": {
+          "expected_fractional_from_input_cell": {
+            "first_entries": [
+              3.560830860534124e-05,
+              -1.780415430267062e-05,
+              2.6706231454005933e-05,
+              -3.560830860534124e-05,
+              1.780415430267062e-05,
+              -2.6706231454005933e-05
+            ],
+            "ratd_error_max_abs": 4.642217382823053e-05,
+            "ratd_error_rms": 4.5844700965431685e-05
+          },
+          "input": {
+            "cell_rows_bohr": [
+              [
+                6.74,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                6.74,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                6.74
+              ]
+            ],
+            "ion_velocities_from_input": true,
+            "nat": 2,
+            "position_labels": [
+              "C",
+              "C"
+            ],
+            "species_masses_amu": {
+              "C": 12.011
+            },
+            "velocities_cartesian": [
+              [
+                0.00024,
+                -0.00012,
+                0.00018
+              ],
+              [
+                -0.00024,
+                0.00012,
+                -0.00018
+              ]
+            ],
+            "velocity_all_zero": false,
+            "velocity_card_present": true,
+            "velocity_label_match_positions": true,
+            "velocity_labels": [
+              "C",
+              "C"
+            ],
+            "velocity_max_abs": 0.00024,
+            "velocity_units": "a.u"
+          },
+          "md_initial": {
+            "ratd_first_entries": [
+              8.203048243357177e-05,
+              2.7174412402802406e-05,
+              7.282694408959357e-05,
+              -8.203048243354979e-05,
+              -2.717441240278294e-05,
+              -7.282694408959061e-05
+            ],
+            "ratd_max_abs": 8.203048243357177e-05,
+            "rati_first_entries": [
+              0.0020781875341347204,
+              0.00019045853082445965,
+              0.0017627158442867887,
+              0.24792181246586575,
+              0.24980954146917572,
+              0.24823728415571314
+            ]
+          },
+          "md_initial_input_cell": {
+            "cartesian_first_entries": [
+              0.0005528854516022737,
+              0.00018315553959488823,
+              0.0004908536031638606,
+              -0.0005528854516021256,
+              -0.00018315553959475704,
+              -0.0004908536031638408
+            ],
+            "cartesian_max_abs": 0.0005528854516022737,
+            "center_of_mass_max_abs": 7.403273890569245e-17,
+            "center_of_mass_velocity": [
+              7.403273890569245e-17,
+              6.559503496466011e-17,
+              9.89807577698025e-18
+            ],
+            "ekin_Ry": 0.006351279106249912,
+            "input_to_initialized_max_abs": 0.00031288545160227375,
+            "input_to_initialized_rms": 0.00030899328450700956,
+            "temperature_3N_minus_3_K": 668.5251057711904,
+            "temperature_PR_nat_plus_1_K": 222.8417019237301
+          }
+        },
+        "stdout_temperatures_K": [
+          120.3,
+          164.4,
+          216.7,
+          281.9,
+          359.5,
+          450.6,
+          553.8,
+          668.9
+        ],
+        "tv_float_count": 24,
+        "tv_path": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/evidence/caimd_harness_targeted/targeted_active_nose/runs/active_nose_shear_xy/active_nose_shear_xy.tv"
+      },
+      "missing_library": false,
+      "mpi_abort": false,
+      "name": "active_nose_shear_xy",
+      "output_path": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/evidence/caimd_harness_targeted/targeted_active_nose/runs/active_nose_shear_xy/active_nose_shear_xy.out",
+      "ranks": 1,
+      "reason": null,
+      "returncode": 0,
+      "run_dir": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/evidence/caimd_harness_targeted/targeted_active_nose/runs/active_nose_shear_xy",
+      "skipped": false,
+      "success": true,
+      "timeout": false
+    },
+    "active_nose_stride2_xx": {
+      "code": "pw",
+      "command": [
+        "/private/tmp/qe_diamond8_af7ebfc_build/bin/pw.x",
+        "-inp",
+        "active_nose_stride2_xx.in"
+      ],
+      "elapsed_s": 0.1034848690032959,
+      "executable": "/private/tmp/qe_diamond8_af7ebfc_build/bin/pw.x",
+      "executable_sha256": "7f7f5f815f53983c3b41dfab1570d96e8f8816d56cdcc574a3a2e33fcf492303",
+      "expected": "success",
+      "group": "L_thermostat",
+      "input_path": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/evidence/caimd_harness_targeted/targeted_active_nose/inputs/active_nose_stride2_xx.in",
+      "job_done": true,
+      "metrics": {
+        "ave_float_count": 24,
+        "ave_path": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/evidence/caimd_harness_targeted/targeted_active_nose/runs/active_nose_stride2_xx/active_nose_stride2_xx.ave",
+        "avec_float_count": 56,
+        "avec_path": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/evidence/caimd_harness_targeted/targeted_active_nose/runs/active_nose_stride2_xx/active_nose_stride2_xx.avec",
+        "caimd": {
+          "actual_final": [
+            0.0007999999999999119,
+            -4.469399401130225e-06,
+            -4.442385271641314e-06,
+            -2.8632465220506394e-06,
+            -2.8123794382051316e-06,
+            -2.893574383502401e-06
+          ],
+          "column_counts": [
+            26
+          ],
+          "event_counters": [
+            0,
+            1,
+            1,
+            2,
+            2,
+            3,
+            3,
+            4
+          ],
+          "event_flags": [
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false
+          ],
+          "exists": true,
+          "header_lines": [
+            "# CAIMD_V1 stress-strain output",
+            "# units: time ps; strain dimensionless; stress GPa; volume bohr^3; temperature K",
+            "# shear convention: tensor components yz xz xy; engineering shear is 2*tensor shear",
+            "# columns: ionic_step time_ps imposed_events_done following_move_is_event nominal_xx nominal_yy nominal_zz nominal_yz nominal_xz nominal_xy actual_xx actual_yy actual_zz actual_yz actual_xz actual_xy stress_xx_GPa stress_yy_GPa stress_zz_GPa stress_yz_GPa stress_xz_GPa stress_xy_GPa temperature_K volume_bohr3 velocity_jump_max velocity_jump_rms"
+          ],
+          "nominal_final": [
+            0.0008,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "path": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/evidence/caimd_harness_targeted/targeted_active_nose/runs/active_nose_stride2_xx/tmp/active_nose_stride2_xx.caimd",
+          "rows": 8,
+          "single_column_count_26": true,
+          "temperature_final_window_mean": 372.7482239534773,
+          "temperature_finite": true,
+          "temperature_first": 300.0,
+          "temperature_last": 553.9350912627419,
+          "temperature_values": [
+            300.0,
+            120.30017507627217,
+            164.60870644490373,
+            216.70598568174182,
+            282.0730741827152,
+            360.1339224487415,
+            450.89304619144593,
+            553.9350912627419
+          ],
+          "velocity_residual_finite": true,
+          "velocity_residual_max": 1.9545732629329692e-19,
+          "velocity_residual_rms_max": 1.5920614604846627e-19,
+          "volume_finite": true
+        },
+        "e_float_count": 40,
+        "e_path": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/evidence/caimd_harness_targeted/targeted_active_nose/runs/active_nose_stride2_xx/active_nose_stride2_xx.e",
+        "eal_float_count": 56,
+        "eal_path": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/evidence/caimd_harness_targeted/targeted_active_nose/runs/active_nose_stride2_xx/active_nose_stride2_xx.eal",
+        "energies_Ry": [
+          -20.87652843,
+          -20.87675579,
+          -20.87724591,
+          -20.87774714,
+          -20.87849781,
+          -20.87924208,
+          -20.88026533,
+          -20.88124118
+        ],
+        "input_velocity_card": {
+          "cell_rows_bohr": [
+            [
+              6.74,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              6.74,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              6.74
+            ]
+          ],
+          "ion_velocities_from_input": true,
+          "nat": 2,
+          "position_labels": [
+            "C",
+            "C"
+          ],
+          "species_masses_amu": {
+            "C": 12.011
+          },
+          "velocities_cartesian": [
+            [
+              0.00024,
+              -0.00012,
+              0.00018
+            ],
+            [
+              -0.00024,
+              0.00012,
+              -0.00018
+            ]
+          ],
+          "velocity_all_zero": false,
+          "velocity_card_present": true,
+          "velocity_label_match_positions": true,
+          "velocity_labels": [
+            "C",
+            "C"
+          ],
+          "velocity_max_abs": 0.00024,
+          "velocity_units": "a.u"
+        },
+        "md_float_count": 119,
+        "md_path": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/evidence/caimd_harness_targeted/targeted_active_nose/runs/active_nose_stride2_xx/tmp/active_nose_stride2_xx.md",
+        "p_float_count": 32,
+        "p_path": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/evidence/caimd_harness_targeted/targeted_active_nose/runs/active_nose_stride2_xx/active_nose_stride2_xx.p",
+        "pr_velocity_initialization": {
+          "expected_fractional_from_input_cell": {
+            "first_entries": [
+              3.560830860534124e-05,
+              -1.780415430267062e-05,
+              2.6706231454005933e-05,
+              -3.560830860534124e-05,
+              1.780415430267062e-05,
+              -2.6706231454005933e-05
+            ],
+            "ratd_error_max_abs": 4.6464344642602455e-05,
+            "ratd_error_rms": 4.5796817904392184e-05
+          },
+          "input": {
+            "cell_rows_bohr": [
+              [
+                6.74,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                6.74,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                6.74
+              ]
+            ],
+            "ion_velocities_from_input": true,
+            "nat": 2,
+            "position_labels": [
+              "C",
+              "C"
+            ],
+            "species_masses_amu": {
+              "C": 12.011
+            },
+            "velocities_cartesian": [
+              [
+                0.00024,
+                -0.00012,
+                0.00018
+              ],
+              [
+                -0.00024,
+                0.00012,
+                -0.00018
+              ]
+            ],
+            "velocity_all_zero": false,
+            "velocity_card_present": true,
+            "velocity_label_match_positions": true,
+            "velocity_labels": [
+              "C",
+              "C"
+            ],
+            "velocity_max_abs": 0.00024,
+            "velocity_units": "a.u"
+          },
+          "md_initial": {
+            "ratd_first_entries": [
+              8.184943334525384e-05,
+              2.6859798167136586e-05,
+              7.317057609659512e-05,
+              -8.184943334526585e-05,
+              -2.6859798167144115e-05,
+              -7.317057609660838e-05
+            ],
+            "ratd_max_abs": 8.184943334526585e-05,
+            "rati_first_entries": [
+              0.0020749740299077905,
+              0.00018671039821535965,
+              0.0017684173685298262,
+              0.24792502597009217,
+              0.24981328960178506,
+              0.24823158263147005
+            ]
+          },
+          "md_initial_input_cell": {
+            "cartesian_first_entries": [
+              0.0005516651807470109,
+              0.0001810350396465006,
+              0.0004931696828910511,
+              -0.0005516651807470918,
+              -0.00018103503964655133,
+              -0.0004931696828911406
+            ],
+            "cartesian_max_abs": 0.0005516651807470918,
+            "center_of_mass_max_abs": 4.4703604533738673e-17,
+            "center_of_mass_velocity": [
+              -4.0444186678890617e-17,
+              -2.536381917851189e-17,
+              -4.4703604533738673e-17
+            ],
+            "ekin_Ry": 0.006353019290805576,
+            "input_to_initialized_max_abs": 0.0003131696828911405,
+            "input_to_initialized_rms": 0.0003086705526756033,
+            "temperature_3N_minus_3_K": 668.7082747115999,
+            "temperature_PR_nat_plus_1_K": 222.90275823719995
+          }
+        },
+        "stdout_temperatures_K": [
+          120.3,
+          164.6,
+          216.7,
+          282.1,
+          360.1,
+          450.9,
+          553.9,
+          669.3
+        ],
+        "tv_float_count": 24,
+        "tv_path": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/evidence/caimd_harness_targeted/targeted_active_nose/runs/active_nose_stride2_xx/active_nose_stride2_xx.tv"
+      },
+      "missing_library": false,
+      "mpi_abort": false,
+      "name": "active_nose_stride2_xx",
+      "output_path": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/evidence/caimd_harness_targeted/targeted_active_nose/runs/active_nose_stride2_xx/active_nose_stride2_xx.out",
+      "ranks": 1,
+      "reason": null,
+      "returncode": 0,
+      "run_dir": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/evidence/caimd_harness_targeted/targeted_active_nose/runs/active_nose_stride2_xx",
+      "skipped": false,
+      "success": true,
+      "timeout": false
+    },
+    "active_nose_zero": {
+      "code": "pw",
+      "command": [
+        "/private/tmp/qe_diamond8_af7ebfc_build/bin/pw.x",
+        "-inp",
+        "active_nose_zero.in"
+      ],
+      "elapsed_s": 0.13611960411071777,
+      "executable": "/private/tmp/qe_diamond8_af7ebfc_build/bin/pw.x",
+      "executable_sha256": "7f7f5f815f53983c3b41dfab1570d96e8f8816d56cdcc574a3a2e33fcf492303",
+      "expected": "success",
+      "group": "L_thermostat",
+      "input_path": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/evidence/caimd_harness_targeted/targeted_active_nose/inputs/active_nose_zero.in",
+      "job_done": true,
+      "metrics": {
+        "ave_float_count": 24,
+        "ave_path": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/evidence/caimd_harness_targeted/targeted_active_nose/runs/active_nose_zero/active_nose_zero.ave",
+        "avec_float_count": 56,
+        "avec_path": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/evidence/caimd_harness_targeted/targeted_active_nose/runs/active_nose_zero/active_nose_zero.avec",
+        "caimd": {
+          "actual_final": [
+            0.0,
+            -4.4634033139479e-06,
+            -4.44332343796372e-06,
+            -2.8727703796571045e-06,
+            -2.8319373881459883e-06,
+            -2.864176573033547e-06
+          ],
+          "column_counts": [
+            26
+          ],
+          "event_counters": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "event_flags": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          "exists": true,
+          "header_lines": [
+            "# CAIMD_V1 stress-strain output",
+            "# units: time ps; strain dimensionless; stress GPa; volume bohr^3; temperature K",
+            "# shear convention: tensor components yz xz xy; engineering shear is 2*tensor shear",
+            "# columns: ionic_step time_ps imposed_events_done following_move_is_event nominal_xx nominal_yy nominal_zz nominal_yz nominal_xz nominal_xy actual_xx actual_yy actual_zz actual_yz actual_xz actual_xy stress_xx_GPa stress_yy_GPa stress_zz_GPa stress_yz_GPa stress_xz_GPa stress_xy_GPa temperature_K volume_bohr3 velocity_jump_max velocity_jump_rms"
+          ],
+          "nominal_final": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "path": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/evidence/caimd_harness_targeted/targeted_active_nose/runs/active_nose_zero/tmp/active_nose_zero.caimd",
+          "rows": 8,
+          "single_column_count_26": true,
+          "temperature_final_window_mean": 371.6072264084137,
+          "temperature_finite": true,
+          "temperature_first": 300.0,
+          "temperature_last": 552.2151846823165,
+          "temperature_values": [
+            300.0,
+            120.30017524028771,
+            164.46651565691445,
+            216.15108615313184,
+            281.3672965381154,
+            359.13950406140543,
+            449.16306060709917,
+            552.2151846823165
+          ],
+          "velocity_residual_finite": true,
+          "velocity_residual_max": 1.3278710503032405e-19,
+          "velocity_residual_rms_max": 1.3278710503032405e-19,
+          "volume_finite": true
+        },
+        "e_float_count": 40,
+        "e_path": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/evidence/caimd_harness_targeted/targeted_active_nose/runs/active_nose_zero/active_nose_zero.e",
+        "eal_float_count": 56,
+        "eal_path": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/evidence/caimd_harness_targeted/targeted_active_nose/runs/active_nose_zero/active_nose_zero.eal",
+        "energies_Ry": [
+          -20.87651936,
+          -20.87685705,
+          -20.87740142,
+          -20.87801588,
+          -20.87871995,
+          -20.87962555,
+          -20.88060165,
+          -20.88166883
+        ],
+        "input_velocity_card": {
+          "cell_rows_bohr": [
+            [
+              6.74,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              6.74,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              6.74
+            ]
+          ],
+          "ion_velocities_from_input": true,
+          "nat": 2,
+          "position_labels": [
+            "C",
+            "C"
+          ],
+          "species_masses_amu": {
+            "C": 12.011
+          },
+          "velocities_cartesian": [
+            [
+              0.00024,
+              -0.00012,
+              0.00018
+            ],
+            [
+              -0.00024,
+              0.00012,
+              -0.00018
+            ]
+          ],
+          "velocity_all_zero": false,
+          "velocity_card_present": true,
+          "velocity_label_match_positions": true,
+          "velocity_labels": [
+            "C",
+            "C"
+          ],
+          "velocity_max_abs": 0.00024,
+          "velocity_units": "a.u"
+        },
+        "md_float_count": 119,
+        "md_path": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/evidence/caimd_harness_targeted/targeted_active_nose/runs/active_nose_zero/tmp/active_nose_zero.md",
+        "p_float_count": 32,
+        "p_path": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/evidence/caimd_harness_targeted/targeted_active_nose/runs/active_nose_zero/active_nose_zero.p",
+        "pr_velocity_initialization": {
+          "expected_fractional_from_input_cell": {
+            "first_entries": [
+              3.560830860534124e-05,
+              -1.780415430267062e-05,
+              2.6706231454005933e-05,
+              -3.560830860534124e-05,
+              1.780415430267062e-05,
+              -2.6706231454005933e-05
+            ],
+            "ratd_error_max_abs": 4.6334846425114826e-05,
+            "ratd_error_rms": 4.574503120610245e-05
+          },
+          "input": {
+            "cell_rows_bohr": [
+              [
+                6.74,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                6.74,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                6.74
+              ]
+            ],
+            "ion_velocities_from_input": true,
+            "nat": 2,
+            "position_labels": [
+              "C",
+              "C"
+            ],
+            "species_masses_amu": {
+              "C": 12.011
+            },
+            "velocities_cartesian": [
+              [
+                0.00024,
+                -0.00012,
+                0.00018
+              ],
+              [
+                -0.00024,
+                0.00012,
+                -0.00018
+              ]
+            ],
+            "velocity_all_zero": false,
+            "velocity_card_present": true,
+            "velocity_label_match_positions": true,
+            "velocity_labels": [
+              "C",
+              "C"
+            ],
+            "velocity_max_abs": 0.00024,
+            "velocity_units": "a.u"
+          },
+          "md_initial": {
+            "ratd_first_entries": [
+              8.19431550304484e-05,
+              2.701907347929474e-05,
+              7.276905700898219e-05,
+              -8.194315503045607e-05,
+              -2.7019073479312946e-05,
+              -7.276905700898866e-05
+            ],
+            "ratd_max_abs": 8.194315503045607e-05,
+            "rati_first_entries": [
+              0.002076641458623651,
+              0.0001900122259785655,
+              0.0017611495482369984,
+              0.24792335854137632,
+              0.24980998777402103,
+              0.248238850451763
+            ]
+          },
+          "md_initial_input_cell": {
+            "cartesian_first_entries": [
+              0.0005522968649052222,
+              0.00018210855525044656,
+              0.00049046344424054,
+              -0.0005522968649052739,
+              -0.00018210855525056926,
+              -0.0004904634442405836
+            ],
+            "cartesian_max_abs": 0.0005522968649052739,
+            "center_of_mass_max_abs": 6.134575858089502e-17,
+            "center_of_mass_velocity": [
+              -2.5840468319411556e-17,
+              -6.134575858089502e-17,
+              -2.1783879886222928e-17
+            ],
+            "ekin_Ry": 0.006335779937005757,
+            "input_to_initialized_max_abs": 0.0003122968649052739,
+            "input_to_initialized_rms": 0.0003083215103291305,
+            "temperature_3N_minus_3_K": 666.893688920352,
+            "temperature_PR_nat_plus_1_K": 222.29789630678397
+          }
+        },
+        "stdout_temperatures_K": [
+          120.3,
+          164.5,
+          216.2,
+          281.4,
+          359.1,
+          449.2,
+          552.2,
+          666.9
+        ],
+        "tv_float_count": 24,
+        "tv_path": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/evidence/caimd_harness_targeted/targeted_active_nose/runs/active_nose_zero/active_nose_zero.tv"
+      },
+      "missing_library": false,
+      "mpi_abort": false,
+      "name": "active_nose_zero",
+      "output_path": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/evidence/caimd_harness_targeted/targeted_active_nose/runs/active_nose_zero/active_nose_zero.out",
+      "ranks": 1,
+      "reason": null,
+      "returncode": 0,
+      "run_dir": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/evidence/caimd_harness_targeted/targeted_active_nose/runs/active_nose_zero",
+      "skipped": false,
+      "success": true,
+      "timeout": false
+    }
+  },
+  "comparisons": {},
+  "created_utc": "20260723T123654Z",
+  "failures": [],
+  "mode": "local",
+  "platform": "macOS-26.5.2-arm64-arm-64bit",
+  "pseudopotential": {
+    "copied": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/evidence/caimd_harness_targeted/targeted_active_nose/pseudopotentials/C.UPF",
+    "filename": "C.UPF",
+    "policy": "local file copied; no download attempted",
+    "sha256": "9c06aa642d22981491b32a18ec129086fe8366164984930389e4fc071c978639",
+    "source": "/Users/mengqicheng/Downloads/Learning/qe-7.5/pseudo/C.UPF"
+  },
+  "python": "3.12.13 (main, Mar  3 2026, 15:35:03) [Clang 21.1.4 ]",
+  "repo_root": "/Users/mengqicheng/Downloads/Learning/qe-7.5",
+  "run_root": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/evidence/caimd_harness_targeted/targeted_active_nose",
+  "schema": "caimd_validation_v1",
+  "skipped": []
+}

@@ -1,0 +1,72 @@
+&CONTROL
+  calculation = 'vc-md',
+  restart_mode = 'from_scratch',
+  prefix = 'diamond8_equil',
+  pseudo_dir = '/Users/mengqicheng/Downloads/Learning/qe-7.5/pseudo',
+  outdir = '/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_continuation_0p30_20260723T102331Z/01_equilibration/tmp',
+  nstep = 500,
+  dt = 4.1341381005999999d+01,
+  iprint = 1,
+  tstress = .true.,
+  tprnfor = .true.,
+  disk_io = 'low',
+  verbosity = 'high',
+/
+&SYSTEM
+  ibrav = 0,
+  nat = 8,
+  ntyp = 1,
+  ecutwfc = 25.0,
+  ecutrho = 120.0,
+  occupations = 'smearing',
+  smearing = 'gaussian',
+  degauss = 0.01,
+  nosym = .true.,
+/
+&ELECTRONS
+  conv_thr = 1.0000000000000000d-04,
+  electron_maxstep = 40,
+  mixing_beta = 0.300,
+/
+&IONS
+  ion_dynamics = 'beeman',
+  ion_temperature = 'nose',
+  ion_velocities = 'from_input',
+  tempw = 300.0,
+  fnosep(1) = 50.00000000,
+  nhpcl = 4,
+  ndega = 0,
+/
+&CELL
+  cell_dynamics = 'pr',
+  cell_dofree = 'all',
+  press = 0.0,
+  wmass = 2000000.00000000,
+  cell_temperature = 'not_controlled',
+  caimd = .false.,
+/
+ATOMIC_SPECIES
+C 12.01070000 C.UPF
+CELL_PARAMETERS bohr
+  3.89171787574137  4.76636150921721  2.75186010040163
+  3.89171787574137  -4.76636150921721  2.75186010040163
+  3.89171787574137  0.00000000000000  -5.50372020080326
+ATOMIC_POSITIONS crystal
+C  0.00000000000000  0.00000000000000  0.00000000000000
+C  0.00000000000000  0.50000000000000  0.50000000000000
+C  0.50000000000000  0.00000000000000  0.50000000000000
+C  0.50000000000000  0.50000000000000  0.00000000000000
+C  0.25000000000000  0.25000000000000  0.25000000000000
+C  0.25000000000000  0.75000000000000  0.75000000000000
+C  0.75000000000000  0.25000000000000  0.75000000000000
+C  0.75000000000000  0.75000000000000  0.25000000000000
+K_POINTS gamma
+ATOMIC_VELOCITIES { a.u }
+C  -2.82020288271450e-04  -4.63861260619516e-04  -4.02302699463508e-04
+C  -4.23592737406839e-04  4.04687112002082e-07  1.34370061908314e-05
+C  -3.63403625844279e-04  2.23691778384215e-04  1.15158799636629e-03
+C  1.48313500415718e-04  -4.05463705011695e-04  -8.66516604623131e-04
+C  -8.70757201425343e-05  4.93878836316950e-04  -7.77957261331088e-04
+C  9.57516192431824e-04  -9.24763426012234e-07  2.65525490835220e-04
+C  5.83003040603545e-05  4.30945309006908e-04  5.14309847846010e-04
+C  -8.03762524279401e-06  -2.78670881762851e-04  1.01916224179372e-04

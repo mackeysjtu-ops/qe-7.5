@@ -1,0 +1,9 @@
+# Preserve archived scientific evidence byte-for-byte.  These paths contain
+# machine-generated CSV, QE output, environment captures, and historical
+# patches whose original whitespace is part of their provenance.  Source,
+# scripts, inputs, and maintained documentation outside these archives still
+# use Git's normal whitespace checks.
+caimd_linear_defgrad_phase1/evidence/** whitespace=-trailing-space,-blank-at-eof
+examples/caimd_development_progress_html_20260723T205507Z/** whitespace=-trailing-space,-blank-at-eof
+examples/caimd_diamond8_*_20*/** whitespace=-trailing-space,-blank-at-eof
+examples/diamond8_*_20*/** whitespace=-trailing-space,-blank-at-eof

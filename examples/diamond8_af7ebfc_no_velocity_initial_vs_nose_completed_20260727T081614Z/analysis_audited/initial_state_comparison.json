@@ -1,0 +1,19 @@
+{
+  "note": "Both runs omit explicit velocities and use the same af7ebfc executable, so vcinit->ranv(temp=tempw) generates the same deterministic Maxwell realization (randy seeded idum=0; total linear momentum zeroed). tmp/*.md holds only the terminal state, so the FIRST committed ratd cannot be read back; the identity of the initial realization is established from the byte-identical early .eal rows (ionic kinetic energy) instead.",
+  "first_step_eka_Ry": {
+    "control": 0.019951,
+    "nose": 0.019951
+  },
+  "first_step_eka_abs_diff_Ry": 0.0,
+  "first_step_T_K": {
+    "control": 300.001310468147,
+    "nose": 300.001310468147
+  },
+  "first_step_T_abs_diff_K": 0.0,
+  "step1_eka_abs_diff_Ry": 0.0,
+  "first_eka_divergence_step": 529,
+  "com_velocity_note": "ranv zeroes total linear momentum, so initial COM velocity is 0 by construction",
+  "classification": "IDENTICAL",
+  "strict_single_factor": true,
+  "interpretation": "Same native realization: this is a strict single-factor trajectory comparison (thermostat mode is the only variable). Control and Nose are bit-identical in eka until step 529."
+}

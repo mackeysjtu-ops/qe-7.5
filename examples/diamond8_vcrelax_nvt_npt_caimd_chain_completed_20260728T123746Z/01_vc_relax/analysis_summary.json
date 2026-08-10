@@ -1,0 +1,20 @@
+{
+  "stage": "vcrelax",
+  "job_done": false,
+  "converged": false,
+  "final_pressure_kbar": null,
+  "final_max_force": null,
+  "n_atoms": null,
+  "determinant_bohr3": null,
+  "celldm1_bohr": null,
+  "n_pressure_samples": 0,
+  "n_volume_samples": 0,
+  "gate_failures": [
+    "no JOB DONE",
+    "QE error cell_dofree",
+    "BFGS did not converge (hit step limit or incomplete)",
+    "parse error: no CELL_PARAMETERS/ATOMIC_POSITIONS blocks in output",
+    "no pressure parsed"
+  ],
+  "gate_pass": false
+}

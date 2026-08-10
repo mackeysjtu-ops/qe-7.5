@@ -1,0 +1,117 @@
+date_utc=2026-07-24T11:15:02Z
+hostname=lrdn0416.leonardo.local
+executable=/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-thermostat-af7ebfc/install-current-gpu/bin/pw.x
+loader=/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-thermostat-af7ebfc/scripts/load_build_environment.sh
+LD_LIBRARY_PATH=/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-thermostat-af7ebfc/local-libs/lib:/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-thermostat-af7ebfc/local-libs/lib:/leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/gcc-8.5.0/ncurses-6.5-svfl57usncxqo3ghwesofskr5zm5mgay/lib:/leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/gcc-8.5.0/curl-8.7.1-nnr4uzefmawh73htznhvdwzogsjoql7c/lib:/leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/gcc-8.5.0/zlib-ng-2.1.6-jkgunjc2hc2qpkzoodjcn6fu3qpfly73/lib:/leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/gcc-8.5.0/nghttp2-1.57.0-634bffhxsfat5hswvtoukmdfjx5sqlvw/lib:/leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/nvhpc-24.5/netlib-scalapack-2.2.0-mucjnhwe7euvfj27r2ufeblx2vjorube/lib:/leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/nvhpc-24.5/openblas-0.3.26-w3alzpga4fq43or2nu7763np2dpmiipt/lib:/leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/nvhpc-24.5/libxc-7.0.0-2kdm6kko4i6ejcdklt6kijtxwrxzmn3j/lib:/leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/nvhpc-24.5/fftw-3.3.10-ncl5ohbh5nie4oxbsddysah3osrwm3zf/lib:/leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/gcc-8.5.0/nvhpc-24.5-torlmnyzcexnrs6pq4cccabv7ehkv3xy/Linux_x86_64/24.5/comm_libs/12.4/hpcx/hpcx-2.19/ucc/lib:/leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/gcc-8.5.0/nvhpc-24.5-torlmnyzcexnrs6pq4cccabv7ehkv3xy/Linux_x86_64/24.5/comm_libs/12.4/hpcx/hpcx-2.19/ucc/lib/ucc:/leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/gcc-8.5.0/nvhpc-24.5-torlmnyzcexnrs6pq4cccabv7ehkv3xy/Linux_x86_64/24.5/comm_libs/12.4/hpcx/hpcx-2.19/ucx/lib:/leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/gcc-8.5.0/nvhpc-24.5-torlmnyzcexnrs6pq4cccabv7ehkv3xy/Linux_x86_64/24.5/comm_libs/12.4/hpcx/hpcx-2.19/ucx/lib/ucx:/leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/gcc-8.5.0/nvhpc-24.5-torlmnyzcexnrs6pq4cccabv7ehkv3xy/Linux_x86_64/24.5/comm_libs/12.4/hpcx/hpcx-2.19/ompi/lib:/leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/gcc-8.5.0/nvhpc-24.5-torlmnyzcexnrs6pq4cccabv7ehkv3xy/Linux_x86_64/24.5/math_libs/lib64:/leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/gcc-8.5.0/nvhpc-24.5-torlmnyzcexnrs6pq4cccabv7ehkv3xy/Linux_x86_64/24.5/cuda/lib64:/leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/gcc-8.5.0/nvhpc-24.5-torlmnyzcexnrs6pq4cccabv7ehkv3xy/Linux_x86_64/24.5/cuda/12.4/extras/CUPTI/lib64:/leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/gcc-8.5.0/nvhpc-24.5-torlmnyzcexnrs6pq4cccabv7ehkv3xy/Linux_x86_64/24.5/compilers/extras/qd/lib:/leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/gcc-8.5.0/nvhpc-24.5-torlmnyzcexnrs6pq4cccabv7ehkv3xy/Linux_x86_64/24.5/comm_libs/nccl/lib:/leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/gcc-8.5.0/nvhpc-24.5-torlmnyzcexnrs6pq4cccabv7ehkv3xy/Linux_x86_64/24.5/comm_libs/nvshmem/lib:/leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/gcc-8.5.0/nvhpc-24.5-torlmnyzcexnrs6pq4cccabv7ehkv3xy/Linux_x86_64/24.5/compilers/lib
+srun_command=srun --mpi=pmix_v3 -n 1 /leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-thermostat-af7ebfc/install-current-gpu/bin/pw.x -in /leonardo/home/userexternal/mcheng00/workspace/Diamond/diamond8_no_velocity_qe74_vs_qe75_caimd_false_300K_20260724T092828Z/inputs/qe75_caimd_false_no_velocity.in
+--- slurm vars ---
+SLURM_CLUSTER_NAME=leonardo
+SLURM_CONF=/var/spool/slurmd/conf-cache/slurm.conf
+SLURM_CPUS_ON_NODE=8
+SLURM_CPUS_PER_TASK=8
+SLURM_GPUS_ON_NODE=1
+SLURM_GPUS_PER_NODE=1
+SLURM_GTIDS=0
+SLURM_JOBID=50160152
+SLURM_JOB_ACCOUNT=ict26_cmsp_0
+SLURM_JOB_CPUS_PER_NODE=8
+SLURM_JOB_END_TIME=1784905966
+SLURM_JOB_GID=25200
+SLURM_JOB_GPUS=2
+SLURM_JOB_ID=50160152
+SLURM_JOB_NAME=dia8_qe74_qe75_novel
+SLURM_JOB_NODELIST=lrdn0416
+SLURM_JOB_NUM_NODES=1
+SLURM_JOB_PARTITION=boost_usr_prod
+SLURM_JOB_QOS=normal
+SLURM_JOB_START_TIME=1784891565
+SLURM_JOB_UID=132226
+SLURM_JOB_USER=mcheng00
+SLURM_LOCALID=0
+SLURM_MEM_PER_CPU=15400
+SLURM_NNODES=1
+SLURM_NODEID=0
+SLURM_NODELIST=lrdn0416
+SLURM_NPROCS=1
+SLURM_NTASKS=1
+SLURM_PRIO_PROCESS=0
+SLURM_PROCID=0
+SLURM_SCRIPT_CONTEXT=prolog_task
+SLURM_SUBMIT_DIR=/leonardo/home/userexternal/mcheng00/workspace/Diamond/diamond8_no_velocity_qe74_vs_qe75_caimd_false_300K_20260724T092828Z
+SLURM_SUBMIT_HOST=login05.leonardo.local
+SLURM_TASKS_PER_NODE=1
+SLURM_TASK_PID=704987
+SLURM_TOPOLOGY_ADDR=HeadSwitche.isw-L2-CELLG3.isw20202.lrdn0416
+SLURM_TOPOLOGY_ADDR_PATTERN=switch.switch.switch.node
+SLURM_TRES_PER_TASK=cpu:8
+--- module list ---
+Currently Loaded Modulefiles:
+ 1) profile/base(default)                                
+ 2) profile/chem-phys                                    
+ 3) nvhpc/24.5(default)                                  
+ 4) hpcx-mpi/2.19(default)                               
+ 5) glibc/2.28--gcc--12.2.0-gi6mmti <aL>                 
+ 6) fftw/3.3.10--hpcx-mpi--2.19--nvhpc--24.5             
+ 7) libxc/7.0.0--nvhpc--24.5                             
+ 8) openblas/0.3.26--nvhpc--24.5                         
+ 9) netlib-scalapack/2.2.0--hpcx-mpi--2.19--nvhpc--24.5  
+10) nghttp2/1.57.0-634bffh <aL>                          
+11) zlib-ng/2.1.6-jkgunjc <aL>                           
+12) curl/8.7.1(default) <aL>                             
+13) gmake/4.4.1-phqmvks <aL>                             
+14) ncurses/6.5-svfl57u <aL>                             
+15) cmake/3.27.9(default)                                
+
+Key:
+(symbolic-version)  <module-tag>  <aL>=auto-loaded  
+--- pw.x --version ---
+(version probe produced no output / non-zero)
+--- sha256 ---
+89d4fda827d2cc22a3b4c1670e90dc40ce629af42096c785b55c70c355a10e7d  /leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-thermostat-af7ebfc/install-current-gpu/bin/pw.x
+--- ldd ---
+	linux-vdso.so.1 (0x00007ffcc9aa7000)
+	libscalapack.so => /leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-thermostat-af7ebfc/local-libs/lib/libscalapack.so (0x0000150472148000)
+	libfftw3.so.3 => /leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-thermostat-af7ebfc/local-libs/lib/libfftw3.so.3 (0x0000150471e76000)
+	libfftw3_omp.so.3 => /leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-thermostat-af7ebfc/local-libs/lib/libfftw3_omp.so.3 (0x0000150472aa2000)
+	libmpi_usempif08.so.40 => /leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/gcc-8.5.0/nvhpc-24.5-torlmnyzcexnrs6pq4cccabv7ehkv3xy/Linux_x86_64/24.5/comm_libs/12.4/hpcx/hpcx-2.19/ompi/lib/libmpi_usempif08.so.40 (0x0000150471c3d000)
+	libmpi_usempi_ignore_tkr.so.40 => /leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/gcc-8.5.0/nvhpc-24.5-torlmnyzcexnrs6pq4cccabv7ehkv3xy/Linux_x86_64/24.5/comm_libs/12.4/hpcx/hpcx-2.19/ompi/lib/libmpi_usempi_ignore_tkr.so.40 (0x0000150471a34000)
+	libmpi_mpifh.so.40 => /leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/gcc-8.5.0/nvhpc-24.5-torlmnyzcexnrs6pq4cccabv7ehkv3xy/Linux_x86_64/24.5/comm_libs/12.4/hpcx/hpcx-2.19/ompi/lib/libmpi_mpifh.so.40 (0x00001504717be000)
+	libmpi.so.40 => /leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/gcc-8.5.0/nvhpc-24.5-torlmnyzcexnrs6pq4cccabv7ehkv3xy/Linux_x86_64/24.5/comm_libs/12.4/hpcx/hpcx-2.19/ompi/lib/libmpi.so.40 (0x00001504714b2000)
+	libnvhpcwrapcufft.so => /leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/gcc-8.5.0/nvhpc-24.5-torlmnyzcexnrs6pq4cccabv7ehkv3xy/Linux_x86_64/24.5/compilers/lib/libnvhpcwrapcufft.so (0x00001504712b0000)
+	libcufft.so.11 => /leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/gcc-8.5.0/nvhpc-24.5-torlmnyzcexnrs6pq4cccabv7ehkv3xy/Linux_x86_64/24.5/math_libs/12.4/lib64/libcufft.so.11 (0x000015045f6b3000)
+	libcudaforwraprand.so => /leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/gcc-8.5.0/nvhpc-24.5-torlmnyzcexnrs6pq4cccabv7ehkv3xy/Linux_x86_64/24.5/compilers/lib/libcudaforwraprand.so (0x000015045f4b0000)
+	libcurand.so.10 => /leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/gcc-8.5.0/nvhpc-24.5-torlmnyzcexnrs6pq4cccabv7ehkv3xy/Linux_x86_64/24.5/math_libs/12.4/lib64/libcurand.so.10 (0x000015045906a000)
+	libcusolver.so.11 => /leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/gcc-8.5.0/nvhpc-24.5-torlmnyzcexnrs6pq4cccabv7ehkv3xy/Linux_x86_64/24.5/math_libs/12.4/lib64/libcusolver.so.11 (0x0000150451bd0000)
+	libnvJitLink.so.12 => /leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/gcc-8.5.0/nvhpc-24.5-torlmnyzcexnrs6pq4cccabv7ehkv3xy/Linux_x86_64/24.5/cuda/12.4/lib64/libnvJitLink.so.12 (0x000015044e63d000)
+	libcublas.so.12 => /leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/gcc-8.5.0/nvhpc-24.5-torlmnyzcexnrs6pq4cccabv7ehkv3xy/Linux_x86_64/24.5/math_libs/12.4/lib64/libcublas.so.12 (0x0000150447b85000)
+	libcublasLt.so.12 => /leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/gcc-8.5.0/nvhpc-24.5-torlmnyzcexnrs6pq4cccabv7ehkv3xy/Linux_x86_64/24.5/math_libs/12.4/lib64/libcublasLt.so.12 (0x0000150429cee000)
+	libcudaforwrapblas.so => /leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/gcc-8.5.0/nvhpc-24.5-torlmnyzcexnrs6pq4cccabv7ehkv3xy/Linux_x86_64/24.5/compilers/lib/libcudaforwrapblas.so (0x0000150429aad000)
+	libcudaforwrapblas117.so => /leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/gcc-8.5.0/nvhpc-24.5-torlmnyzcexnrs6pq4cccabv7ehkv3xy/Linux_x86_64/24.5/compilers/lib/libcudaforwrapblas117.so (0x000015042989c000)
+	libcudart.so.12 => /leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/gcc-8.5.0/nvhpc-24.5-torlmnyzcexnrs6pq4cccabv7ehkv3xy/Linux_x86_64/24.5/cuda/12.4/lib64/libcudart.so.12 (0x00001504295ed000)
+	libcudafor_120.so => /leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/gcc-8.5.0/nvhpc-24.5-torlmnyzcexnrs6pq4cccabv7ehkv3xy/Linux_x86_64/24.5/compilers/lib/libcudafor_120.so (0x0000150422deb000)
+	libcudafor.so => /leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/gcc-8.5.0/nvhpc-24.5-torlmnyzcexnrs6pq4cccabv7ehkv3xy/Linux_x86_64/24.5/compilers/lib/libcudafor.so (0x0000150422bd6000)
+	libacchost.so => /leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/gcc-8.5.0/nvhpc-24.5-torlmnyzcexnrs6pq4cccabv7ehkv3xy/Linux_x86_64/24.5/compilers/lib/libacchost.so (0x0000150422971000)
+	libaccdevaux.so => /leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/gcc-8.5.0/nvhpc-24.5-torlmnyzcexnrs6pq4cccabv7ehkv3xy/Linux_x86_64/24.5/compilers/lib/libaccdevaux.so (0x0000150422754000)
+	libacccuda.so => /leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/gcc-8.5.0/nvhpc-24.5-torlmnyzcexnrs6pq4cccabv7ehkv3xy/Linux_x86_64/24.5/compilers/lib/libacccuda.so (0x0000150422423000)
+	libdl.so.2 => /lib64/libdl.so.2 (0x000015042221f000)
+	libcudadevice.so => /leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/gcc-8.5.0/nvhpc-24.5-torlmnyzcexnrs6pq4cccabv7ehkv3xy/Linux_x86_64/24.5/compilers/lib/libcudadevice.so (0x0000150422008000)
+	libcudafor2.so => /leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/gcc-8.5.0/nvhpc-24.5-torlmnyzcexnrs6pq4cccabv7ehkv3xy/Linux_x86_64/24.5/compilers/lib/libcudafor2.so (0x0000150421e05000)
+	libnvf.so => /leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/gcc-8.5.0/nvhpc-24.5-torlmnyzcexnrs6pq4cccabv7ehkv3xy/Linux_x86_64/24.5/compilers/lib/libnvf.so (0x00001504216e5000)
+	libnvomp.so => /leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/gcc-8.5.0/nvhpc-24.5-torlmnyzcexnrs6pq4cccabv7ehkv3xy/Linux_x86_64/24.5/compilers/lib/libnvomp.so (0x00001504206e4000)
+	libnvhpcatm.so => /leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/gcc-8.5.0/nvhpc-24.5-torlmnyzcexnrs6pq4cccabv7ehkv3xy/Linux_x86_64/24.5/compilers/lib/libnvhpcatm.so (0x00001504204d9000)
+	libpthread.so.0 => /lib64/libpthread.so.0 (0x00001504202b9000)
+	libnvcpumath.so => /leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/gcc-8.5.0/nvhpc-24.5-torlmnyzcexnrs6pq4cccabv7ehkv3xy/Linux_x86_64/24.5/compilers/lib/libnvcpumath.so (0x000015041fe4c000)
+	libnvc.so => /leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/gcc-8.5.0/nvhpc-24.5-torlmnyzcexnrs6pq4cccabv7ehkv3xy/Linux_x86_64/24.5/compilers/lib/libnvc.so (0x000015041fbe8000)
+	librt.so.1 => /lib64/librt.so.1 (0x000015041f9e0000)
+	libc.so.6 => /lib64/libc.so.6 (0x000015041f61b000)
+	libgcc_s.so.1 => /lib64/libgcc_s.so.1 (0x000015041f403000)
+	libm.so.6 => /lib64/libm.so.6 (0x000015041f081000)
+	libopenblas.so.0 => /leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/nvhpc-24.5/openblas-0.3.26-w3alzpga4fq43or2nu7763np2dpmiipt/lib/libopenblas.so.0 (0x000015041c703000)
+	libnvcpumath-avx512.so => /leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/gcc-8.5.0/nvhpc-24.5-torlmnyzcexnrs6pq4cccabv7ehkv3xy/Linux_x86_64/24.5/compilers/lib/libnvcpumath-avx512.so (0x000015041c296000)
+	libopen-rte.so.40 => /leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/gcc-8.5.0/nvhpc-24.5-torlmnyzcexnrs6pq4cccabv7ehkv3xy/Linux_x86_64/24.5/comm_libs/12.4/hpcx/hpcx-2.19/ompi/lib/libopen-rte.so.40 (0x000015041bfd6000)
+	libopen-pal.so.40 => /leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/gcc-8.5.0/nvhpc-24.5-torlmnyzcexnrs6pq4cccabv7ehkv3xy/Linux_x86_64/24.5/comm_libs/12.4/hpcx/hpcx-2.19/ompi/lib/libopen-pal.so.40 (0x000015041bcb4000)
+	libutil.so.1 => /lib64/libutil.so.1 (0x000015041bab0000)
+	libz.so.1 => /leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/gcc-8.5.0/zlib-ng-2.1.6-jkgunjc2hc2qpkzoodjcn6fu3qpfly73/lib/libz.so.1 (0x000015041b88b000)
+	libatomic.so.1 => /lib64/libatomic.so.1 (0x000015041b683000)
+	/lib64/ld-linux-x86-64.so.2 (0x0000150472881000)
+	libcusparse.so.12 => /leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/gcc-8.5.0/nvhpc-24.5-torlmnyzcexnrs6pq4cccabv7ehkv3xy/Linux_x86_64/24.5/math_libs/lib64/libcusparse.so.12 (0x000015040a83a000)

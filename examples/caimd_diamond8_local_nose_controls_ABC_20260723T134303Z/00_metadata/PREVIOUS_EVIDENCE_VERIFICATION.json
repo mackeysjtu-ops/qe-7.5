@@ -1,0 +1,56 @@
+{
+  "common_eal_final_500_mean_K": 296.67145982585964,
+  "common_eal_mean_K": 215.59478242367328,
+  "common_eal_rows": 2000,
+  "common_raw_terminal_step": 2000,
+  "common_terminal_velocity_temperature_K_raw": 559.0892396663107,
+  "continuation_final_report_exists": false,
+  "continuation_safety_report_excerpt": "# Safety Stop Report\n\nGenerated: 2026-07-23T11:21:26Z local macOS run.\n\n## Status\n\nThe workflow stopped during the active continuous CAIMD loading stage. Segmented\ncontinuation runs and final analysis plots/CSVs were not executed because the\ncontinuous trajectory became numerically and physically invalid.\n\n## Last Valid Prerequisite\n\nThe ordinary Nose+Parrinello-Rahman equilibration passed with:\n\n- `nstep=500`.\n- `dt=41.341381006`, observed as `0.002 ps` per step.\n- `ecutwfc/ecutrho=25/120 Ry`.\n- `ion_temperature='nose'`, `tempw=300 K`, `fnosep=50 THz`, `nhpcl=4`.\n- Initial velocity warm start: 450 K under the 3N-3 ionic convention.\n- `cell_dynamics='pr'`, `cell_dofree='all'`, `press=0`, `wmass=2.0e6 AMU`.\n- Validation source for equilibration temperature: `.eal` ionic kinetic energy.\n- Equilibration validation: `valid=true`, temperature classification `PASS`,\n  ionic 3N-3 mean `251.672 K`, final 200-step mean `252.092 K`.\n- Extracted terminal velocity temperature: `317.176 K` under the 3N-3\n  convention.\n\n## Failed Stage\n\nContinuous active CAIMD run:\n\n- Directory: `02_continuous_0p00_to_0p30`.\n- Input: `qe.in`.\n- Output: `qe.out`.\n- QE return code: `1`.\n- `JOB DONE`: absent.\n- Completed trajectory blocks: 264 cell/position/velocity blocks.\n- CAIMD diagnostic rows: 265.\n- Last CAIMD event count: 53.\n- Last nominal `xx` strain: `-0.0265`.\n- Last actual `xx` strain: `-0.0265` within numerical tolerance.\n- CAIMD `xx_abs_error_max`: about `2.26e-16`.\n- CAIMD velocity residual max: about `1.64e-14`.\n\nThe constrained `xx` projection itself stayed accurate, but the unconstrained\ncell degrees of freedom became unstable:\n\n- Last reported actual strains from `.caimd` were approximately\n  `xx=-0.0265`, `yy=0.5581`, `zz=0.8005`, `yz=-0.4742`,\n  `xz=1.0797`, `xy=-0.4621`.\n- Last CAIMD temperature: about `7.00e10 K`.\n- Last pressure from validation: `11776.88 kbar`.\n- Minimum periodic C-C distance reported by the local trajectory validator:\n  `0.2563 bohr`.\n- QE stopped with:\n  `Error in routine caimd_inverse3 (1): caimd projected cell is singular`.\n\n## Interpretation\n\nThis is a genuine safety stop for the requested local validation conditions.\nThe active CAIMD projection maintained the imposed lab `xx` strain accurately,\nbut the remaining unconstrained PR cell degrees of freedom evolved into a\nsingular projected cell under the local high-rate loading and large residual\ns",
+  "continuation_safety_report_exists": true,
+  "four_dof_final_report_exists": false,
+  "previous_0p30_dir": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_continuation_0p30_20260723T102331Z",
+  "previous_four_dof_dir": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z",
+  "previous_tests": {
+    "test1": {
+      "caimd_rows": 3576,
+      "first_step_above_2000K": 33,
+      "first_step_above_600K": 7,
+      "nominal_actual_abs_error_max_by_component": {
+        "xx": 2.220446049250313e-16,
+        "xy": 0.035901360627613704,
+        "xz": 0.019004612211846662,
+        "yy": 0.1091366886055527,
+        "yz": 0.04763572576259241,
+        "zz": 0.05991607863704407
+      },
+      "safety_report_excerpt": "# Safety Stop Report\n\nGenerated: 2026-07-23T12:34:21Z\n\nStatus: FAIL\n\nRun directory: `/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/02_test1_zero_load_full_pr`\n\nPrefix: `diamond8_test1_zero_load_full_pr`\n\nExpected steps: `5000`\n\nCompleted trajectory blocks: `{'cel': 3576, 'pos': 3576, 'vel': 3576}`\n\nReturn code: `None`\n\nJOB DONE: `False`\n\nFirst failing observable:\n\n```json\n{\n  \"observable\": \"temperature_K\",\n  \"reason\": \"sustained above 600 K\",\n  \"step_index\": 26,\n  \"value\": 606.8279664883704\n}\n```\n\nQE error lines:\n\n```json\n[]\n```\n\nTemperature classification: `FAIL`\n\nCell determinant stats:\n\n```json\n{\n  \"count\": 3576,\n  \"final_500_mean\": 291.3128822205318,\n  \"finite\": true,\n  \"first_500_mean\": 257.8805625613096,\n  \"max\": 298.3777184010486,\n  \"mean\": 269.42298923750747,\n  \"min\": 257.81512173868316,\n  \"std\": 11.749476265696863\n}\n```\n\nCell condition stats:\n\n```json\n{\n  \"count\": 3576,\n  \"final_500_mean\": 1.1354275883588507,\n  \"finite\": true,\n  \"first_500_mean\": 1.0030654239357482,\n  \"max\": 1.158303384975943,\n  \"mean\": 1.0617766572254488,\n  \"min\": 1.0025927740818137,\n  \"std\": 0.04703654555555345\n}\n```\n\nThe partial outputs are preserved in this directory. This test must not be\ntreated as successful unless it is rerun and validated from a clean input state.\n",
+      "safety_report_exists": true,
+      "temperature_final_K": 3092.7037923310645,
+      "temperature_max_K": 8503.57805468553,
+      "temperature_min_K": 293.9665490613399,
+      "velocity_jump_max": 2.6200929389626925e-18,
+      "velocity_jump_rms_max": 1.1153593994001165e-18
+    },
+    "test2": {
+      "caimd_rows": 779,
+      "first_step_above_2000K": 33,
+      "first_step_above_600K": 7,
+      "nominal_actual_abs_error_max_by_component": {
+        "xx": 1.6479873021779667e-16,
+        "xy": 7.631903735878202e-17,
+        "xz": 8.880721378626797e-17,
+        "yy": 0.0,
+        "yz": 3.009901331079395e-17,
+        "zz": 0.0
+      },
+      "safety_report_excerpt": "# Safety Stop Report\n\nGenerated: 2026-07-23T12:36:03Z\n\nStatus: FAIL\n\nRun directory: `/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/03_test2_load_all_components_constrained`\n\nPrefix: `diamond8_test2_all_components_constrained`\n\nExpected steps: `5000`\n\nCompleted trajectory blocks: `{'cel': 779, 'pos': 779, 'vel': 779}`\n\nReturn code: `None`\n\nJOB DONE: `False`\n\nFirst failing observable:\n\n```json\n{\n  \"observable\": \"temperature_K\",\n  \"reason\": \"sustained above 600 K\",\n  \"step_index\": 26,\n  \"value\": 603.2009759377513\n}\n```\n\nQE error lines:\n\n```json\n[]\n```\n\nTemperature classification: `FAIL`\n\nCell determinant stats:\n\n```json\n{\n  \"count\": 779,\n  \"final_500_mean\": 257.0101515768595,\n  \"finite\": true,\n  \"first_500_mean\": 257.44176949817535,\n  \"max\": 257.82078881694946,\n  \"mean\": 257.22595159932246,\n  \"min\": 256.6295854657888,\n  \"std\": 0.34787682826051464\n}\n```\n\nCell condition stats:\n\n```json\n{\n  \"count\": 779,\n  \"final_500_mean\": 1.0047143644382828,\n  \"finite\": true,\n  \"first_500_mean\": 1.0036350697026046,\n  \"max\": 1.0059271412368667,\n  \"mean\": 1.0042062765134734,\n  \"min\": 1.003137206809314,\n  \"std\": 0.0008747801018310189\n}\n```\n\nThe partial outputs are preserved in this directory. This test must not be\ntreated as successful unless it is rerun and validated from a clean input state.\n",
+      "safety_report_exists": true,
+      "temperature_final_K": 5347.551122259995,
+      "temperature_max_K": 9657.714403976866,
+      "temperature_min_K": 293.90169645347527,
+      "velocity_jump_max": 1.734723475976807e-18,
+      "velocity_jump_rms_max": 7.670925687697244e-19
+    }
+  },
+  "verified_utc": "2026-07-23T13:53:34Z"
+}

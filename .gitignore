@@ -1,0 +1,66 @@
+# Local operating-system and editor artifacts
+.DS_Store
+**/.DS_Store
+*~
+*.swp
+*.swo
+
+# Python caches
+__pycache__/
+*.py[cod]
+
+# Local Quantum ESPRESSO build products and machine configuration
+/bin/
+/build/
+/build-*/
+/cmake-build-*/
+/CMakeCache.txt
+/CMakeFiles/
+/make.inc
+*.o
+*.mod
+*.a
+*.so
+*.dylib
+
+# Timestamped CAIMD campaigns: keep inputs, scripts, compact analyses,
+# figures, reports, and small harness outputs; leave bulky reproducible
+# runtime products local. These patterns do not delete any existing data.
+/examples/caimd_diamond8_*_20*/**/tmp/
+/examples/diamond8_*_20*/**/tmp/
+/examples/caimd_diamond8_*_20*/**/*.save/
+/examples/diamond8_*_20*/**/*.save/
+/examples/caimd_diamond8_*_20*/**/qe.out
+/examples/diamond8_*_20*/**/qe.out
+/examples/caimd_diamond8_*_20*/**/qe.err
+/examples/diamond8_*_20*/**/qe.err
+/examples/caimd_diamond8_*_20*/**/slurm-*.out
+/examples/diamond8_*_20*/**/slurm-*.out
+/examples/caimd_diamond8_*_20*/**/slurm-*.err
+/examples/diamond8_*_20*/**/slurm-*.err
+/examples/caimd_diamond8_*_20*/**/*.UPF
+/examples/diamond8_*_20*/**/*.UPF
+/examples/caimd_diamond8_*_20*/**/*.ave
+/examples/diamond8_*_20*/**/*.ave
+/examples/caimd_diamond8_*_20*/**/*.avec
+/examples/diamond8_*_20*/**/*.avec
+/examples/caimd_diamond8_*_20*/**/*.caimd
+/examples/diamond8_*_20*/**/*.caimd
+/examples/caimd_diamond8_*_20*/**/*.cel
+/examples/diamond8_*_20*/**/*.cel
+/examples/caimd_diamond8_*_20*/**/*.e
+/examples/diamond8_*_20*/**/*.e
+/examples/caimd_diamond8_*_20*/**/*.eal
+/examples/diamond8_*_20*/**/*.eal
+/examples/caimd_diamond8_*_20*/**/*.for
+/examples/diamond8_*_20*/**/*.for
+/examples/caimd_diamond8_*_20*/**/*.mdtrj
+/examples/diamond8_*_20*/**/*.mdtrj
+/examples/caimd_diamond8_*_20*/**/*.p
+/examples/diamond8_*_20*/**/*.p
+/examples/caimd_diamond8_*_20*/**/*.pos
+/examples/diamond8_*_20*/**/*.pos
+/examples/caimd_diamond8_*_20*/**/*.tv
+/examples/diamond8_*_20*/**/*.tv
+/examples/caimd_diamond8_*_20*/**/*.vel
+/examples/diamond8_*_20*/**/*.vel

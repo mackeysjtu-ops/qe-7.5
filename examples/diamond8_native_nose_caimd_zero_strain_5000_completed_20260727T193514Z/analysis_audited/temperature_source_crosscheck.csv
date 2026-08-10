@@ -1,0 +1,37 @@
+case,comparison,step_or_lag,value_or_diff_K
+A,T_running_avg(2avk/3(N+1)) vs reported .tv,0,233.33
+A,direct .md ratd x terminal .cel (3N-3),4999,4131.57848
+A,eal instantaneous terminal (3N-3),4999,4131.08917
+A,direct-vs-eal terminal abs diff,0,0.4893099249
+A,eal instantaneous at step 0 (3N-3),0,300.0013105
+A,eal instantaneous at step 10 (3N-3),10,142.9754128
+A,eal instantaneous at step 100 (3N-3),100,221.0575543
+A,eal instantaneous at step 500 (3N-3),500,133.6660643
+A,eal instantaneous at step 1000 (3N-3),1000,178.0068926
+A,eal instantaneous at step 2000 (3N-3),2000,260.5294324
+A,eal instantaneous at step 3000 (3N-3),3000,6338.206224
+A,eal instantaneous at step 4000 (3N-3),4000,3457.886891
+B,T_running_avg(2avk/3(N+1)) vs reported .tv,0,233.33
+B,direct .md ratd x terminal .cel (3N-3),4999,2621.023702
+B,eal instantaneous terminal (3N-3),4999,2620.782337
+B,direct-vs-eal terminal abs diff,0,0.2413653932
+B,eal instantaneous at step 0 (3N-3),0,300.0013105
+B,eal instantaneous at step 10 (3N-3),10,142.9754128
+B,eal instantaneous at step 100 (3N-3),100,221.0575543
+B,eal instantaneous at step 500 (3N-3),500,133.6660643
+B,eal instantaneous at step 1000 (3N-3),1000,140.3364358
+B,eal instantaneous at step 2000 (3N-3),2000,515.1794345
+B,eal instantaneous at step 3000 (3N-3),3000,3672.012431
+B,eal instantaneous at step 4000 (3N-3),4000,4096.654655
+C,T_running_avg(2avk/3(N+1)) vs reported .tv,0,895.0197059
+C,direct .md ratd x terminal .cel (3N-3),4999,564.258789
+C,eal instantaneous terminal (3N-3),4999,564.2598955
+C,direct-vs-eal terminal abs diff,0,0.001106547913
+C,eal instantaneous at step 0 (3N-3),0,300.0013105
+C,eal instantaneous at step 10 (3N-3),10,142.9724054
+C,eal instantaneous at step 100 (3N-3),100,221.0124435
+C,eal instantaneous at step 500 (3N-3),500,222.2003591
+C,eal instantaneous at step 1000 (3N-3),1000,249.0412362
+C,eal instantaneous at step 2000 (3N-3),2000,337.5935753
+C,eal instantaneous at step 3000 (3N-3),3000,332.6464333
+C,eal instantaneous at step 4000 (3N-3),4000,768.7467794

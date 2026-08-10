@@ -1,0 +1,25 @@
+{
+  "asynchronous_rule": "sbatch accepted only; no result inspection performed",
+  "expected_final_report": "/leonardo/home/userexternal/mcheng00/workspace/Diamond/diamond8_ordinary_nose_qe74_vs_qe75_af7ebfc_20260723T175625Z/FINAL_COMPARISON_REPORT.md",
+  "expected_summary": "/leonardo/home/userexternal/mcheng00/workspace/Diamond/diamond8_ordinary_nose_qe74_vs_qe75_af7ebfc_20260723T175625Z/analysis/comparison_summary.json",
+  "future_inspection_commands": [
+    "sacct -j 50127909 --format=JobID,JobName%32,State,ExitCode,Elapsed,NodeList%30",
+    "cat /leonardo/home/userexternal/mcheng00/workspace/Diamond/diamond8_ordinary_nose_qe74_vs_qe75_af7ebfc_20260723T175625Z/FINAL_COMPARISON_REPORT.md",
+    "cat /leonardo/home/userexternal/mcheng00/workspace/Diamond/diamond8_ordinary_nose_qe74_vs_qe75_af7ebfc_20260723T175625Z/analysis/comparison_summary.json"
+  ],
+  "input_checksums": [
+    "fb36b256662bc48b4486ab0f71e71e6c66324e91de590229c6cb1c8cf2ef35d6  inputs/qe74.in",
+    "33b584fc5ecccae84138d4bdce6de85872a218a8693deb2544bc80ed293ed51d  inputs/qe75_af7ebfc.in",
+    "9c06aa642d22981491b32a18ec129086fe8366164984930389e4fc071c978639  pseudo/C.UPF"
+  ],
+  "job_id": "50127909",
+  "pseudo_sha256": "9c06aa642d22981491b32a18ec129086fe8366164984930389e4fc071c978639",
+  "qe74_executable": "/leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/nvhpc-24.5/quantum-espresso-7.4.1-jfm6pcx2dqkcfcwywdgoyao3m3ncvc5a/bin/pw.x",
+  "qe74_executable_sha256": "beb956cce572605941b791c37bc4dd30ac6cee714e18be7b93fd4ff0e47f4aca",
+  "qe74_module": "quantum-espresso/7.4.1--hpcx-mpi--2.19--nvhpc--24.5-openblas",
+  "qe75_af7ebfc_executable": "/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-thermostat-af7ebfc/install-current-gpu/bin/pw.x",
+  "qe75_af7ebfc_executable_sha256": "89d4fda827d2cc22a3b4c1670e90dc40ce629af42096c785b55c70c355a10e7d",
+  "slurm_script": "/leonardo/home/userexternal/mcheng00/workspace/Diamond/diamond8_ordinary_nose_qe74_vs_qe75_af7ebfc_20260723T175625Z/scripts/run_comparison.slurm",
+  "status": "SUBMITTED",
+  "workdir": "/leonardo/home/userexternal/mcheng00/workspace/Diamond/diamond8_ordinary_nose_qe74_vs_qe75_af7ebfc_20260723T175625Z"
+}

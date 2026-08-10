@@ -1,0 +1,102 @@
+{
+  "utc": "2026-07-28T21:01:32Z",
+  "overall": "PASS",
+  "task": "SUBMIT_TWO_DIAMOND8_VCRELAX_REFERENCE_JOBS_QE75_AND_QE74",
+  "remote_root": "/leonardo/home/userexternal/mcheng00/workspace/Diamond/diamond8_vcrelax_qe75_vs_qe74_ibrav_20260728T205518Z",
+  "local_repo": {
+    "path": "/Users/mengqicheng/Downloads/Learning/qe-7.5",
+    "branch": "main",
+    "head": "af7ebfc757c32e0b4f050ed9f2208e01020b2ee3",
+    "head_matches_expected": true,
+    "git_status_short_tracked_changes": "none (only untracked examples/ dirs)",
+    "git_diff_check": "clean"
+  },
+  "executables": {
+    "qe75": {
+      "path": "/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-thermostat-af7ebfc/install-current-gpu/bin/pw.x",
+      "sha256_actual": "89d4fda827d2cc22a3b4c1670e90dc40ce629af42096c785b55c70c355a10e7d",
+      "sha256_expected": "89d4fda827d2cc22a3b4c1670e90dc40ce629af42096c785b55c70c355a10e7d",
+      "matches": true,
+      "source_commit_expected": "af7ebfc757c32e0b4f050ed9f2208e01020b2ee3"
+    },
+    "qe74": {
+      "module": "quantum-espresso/7.4.1--hpcx-mpi--2.19--nvhpc--24.5-openblas",
+      "load_sequence": [
+        "module purge",
+        "module load profile/chem-phys",
+        "module load <QE74_MODULE>"
+      ],
+      "resolved_path": "/leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/nvhpc-24.5/quantum-espresso-7.4.1-jfm6pcx2dqkcfcwywdgoyao3m3ncvc5a/bin/pw.x",
+      "resolved_via": "command -v pw.x",
+      "sha256_actual": "beb956cce572605941b791c37bc4dd30ac6cee714e18be7b93fd4ff0e47f4aca",
+      "sha256_expected": "beb956cce572605941b791c37bc4dd30ac6cee714e18be7b93fd4ff0e47f4aca",
+      "matches": true
+    }
+  },
+  "pseudopotential": {
+    "file": "pseudo/C.UPF",
+    "sha256_actual": "9c06aa642d22981491b32a18ec129086fe8366164984930389e4fc071c978639",
+    "sha256_expected": "9c06aa642d22981491b32a18ec129086fe8366164984930389e4fc071c978639",
+    "matches": true
+  },
+  "inputs": {
+    "qe75": {
+      "file": "inputs/diamond8_vcrelax_qe75.in",
+      "sha256": "5e1e6e944e3a988dc68124421b38695c15f240a6ca67585c2762206b1f023660",
+      "n_carbon": 8,
+      "ecutwfc": 80.0,
+      "ecutrho": 320.0,
+      "kpoints": "2 2 2 0 0 0",
+      "ibrav": 1,
+      "cell_dofree": "ibrav",
+      "conv_thr": "1.0d-8",
+      "press": 0.0,
+      "calculation": "vc-relax",
+      "prefix": "diamond8_vcrelax_qe75",
+      "outdir": "./tmp"
+    },
+    "qe74": {
+      "file": "inputs/diamond8_vcrelax_qe74.in",
+      "sha256": "11925e5a575d991cc5772e2b20c5708bc0c0de867208df0141d9b359a5698571",
+      "n_carbon": 8,
+      "ecutwfc": 80.0,
+      "ecutrho": 320.0,
+      "kpoints": "2 2 2 0 0 0",
+      "ibrav": 1,
+      "cell_dofree": "ibrav",
+      "conv_thr": "1.0d-8",
+      "press": 0.0,
+      "calculation": "vc-relax",
+      "prefix": "diamond8_vcrelax_qe74",
+      "outdir": "./tmp"
+    }
+  },
+  "forbidden_tokens_absent": {
+    "cell_dofree_volume": true,
+    "caimd": true,
+    "ATOMIC_VELOCITIES": true,
+    "ion_velocities": true,
+    "from_input": true,
+    "note": "verified case-insensitive on both inputs (whole file incl. comments): zero matches"
+  },
+  "normalized_physical_input_identical": true,
+  "normalized_ignored_fields": [
+    "comments (!)",
+    "prefix",
+    "outdir"
+  ],
+  "static_checks": {
+    "bash_n_run_qe75_vcrelax_slurm": "ok",
+    "bash_n_run_qe74_vcrelax_slurm": "ok",
+    "py_compile_analyze_vcrelax": "ok"
+  },
+  "remote_transfer_verified": {
+    "input_hashes_match_local": true,
+    "cupf_hash_matches": true
+  },
+  "cell_dofree_ibrav_safe": {
+    "verified_source": "Modules/cell_base.f90 init_dofree",
+    "note": "cell_dofree='ibrav' takes the early enforce_ibrav branch (cell_dofree_='default' -> CASE 'all'/'default'); it does NOT reach the 'volume' IF(ibrav/=1) guard that crashed the previous chain."
+  },
+  "decision": "PROCEED_TO_SUBMISSION"
+}

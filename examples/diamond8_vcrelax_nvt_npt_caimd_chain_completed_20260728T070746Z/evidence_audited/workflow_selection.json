@@ -1,0 +1,20 @@
+{
+  "task": "LOCATE_AND_AUDIT_DIAMOND8_CAIMD_DEPENDENCY_CHAIN_ONLY",
+  "audit_utc": "2026-07-28T07:08:28Z",
+  "search_scope": "/leonardo/home/userexternal/mcheng00/workspace/Diamond/",
+  "expected_pattern": "diamond8_vcrelax_nvt_npt_caimd_chain_*",
+  "singlephase_excluded": true,
+  "singlephase_exclusion_note": "The unrelated SinglePhase H/O lambda-integration workflow (1152 atoms, 3000 K, fixed-O, jobs 50468684/85/86/91) was NOT inspected, cited, or used. Search was confined to Diamond/.",
+  "candidates": [],
+  "n_candidates_matching_pattern": 0,
+  "other_diamond_dirs_present_but_rejected": [
+    {"path": "diamond8_af7ebfc_no_velocity_initial_vs_nose_300K_20260724T120726Z", "reason": "different workflow (initial-vs-nose 1000-step), not the vc-relax/NVT/NPT/CAIMD chain"},
+    {"path": "diamond8_native_nose_caimd_zero_strain_5000_20260727T151734Z", "reason": "different workflow (3-case 5000-step zero-strain), not the four-job chain"},
+    {"path": "diamond8_no_velocity_qe74_vs_qe75_caimd_false_300K_20260724T092828Z", "reason": "different workflow (qe74 vs qe75 comparison)"},
+    {"path": "diamond8_ordinary_nose_qe74_vs_qe75_af7ebfc_20260723T175625Z", "reason": "different workflow (ordinary nose comparison)"},
+    {"path": "diamond111_* (several)", "reason": "diamond 111 workflows, wrong system/name"}
+  ],
+  "decision": "NO_MATCHING_WORKFLOW",
+  "overall_status": "DIAMOND_CHAIN_NOT_SUBMITTED",
+  "reason": "No directory matching diamond8_vcrelax_nvt_npt_caimd_chain_* exists under Diamond/. No DEPENDENCY_CHAIN.json, no 01_vc_relax.slurm/04_caimd_zero_nonzero.slurm, and no sacct record for job names d8_vcrelax/d8_fixed_nvt/d8_free_npt/d8_caimd_zn were found. The chain was never transferred to Leonardo or submitted."
+}

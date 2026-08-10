@@ -1,0 +1,8 @@
+{
+  "caimd_step_strain_1": -0.0001,
+  "caimd_stride": 5,
+  "expected_events": 600,
+  "expected_nominal_final_xx": -0.3,
+  "source_state": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_continuation_0p30_20260723T102331Z/01_equilibration/equilibrated_state.json",
+  "target_global_xx_strain": -0.3
+}

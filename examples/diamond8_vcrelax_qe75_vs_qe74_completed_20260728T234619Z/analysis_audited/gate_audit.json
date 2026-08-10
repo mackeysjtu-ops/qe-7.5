@@ -1,0 +1,16 @@
+{
+  "qe75": {
+    "script_exit_gate": 0,
+    "valid": true,
+    "expected_exit": 0,
+    "correct": true
+  },
+  "qe74": {
+    "script_exit_gate": 0,
+    "valid": true,
+    "expected_exit": 0,
+    "correct": true
+  },
+  "note": "Both scripts exited 0 (evidence/gate_return_codes.txt GATE_qe75=0, GATE_qe74=0). Both calculations are genuinely VALID (COMPLETED 0:0, RC 0, JOB DONE, explicit BFGS convergence, 8 C, det>0, max force<=1e-4, |P|<=5 kbar, cubic). Exit 0 correctly reflects a valid converged vc-relax, so each gate behaved correctly for the observed result.",
+  "verdict": "GATES_CORRECT"
+}

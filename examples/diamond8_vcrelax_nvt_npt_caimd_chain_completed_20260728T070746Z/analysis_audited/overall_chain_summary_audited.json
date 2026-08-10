@@ -1,0 +1,21 @@
+{
+  "overall_status": "DIAMOND_CHAIN_NOT_SUBMITTED",
+  "audit_utc": "2026-07-28T07:08:28Z",
+  "selected_remote_workdir": null,
+  "local_mirror": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/diamond8_vcrelax_nvt_npt_caimd_chain_completed_20260728T070746Z",
+  "job_ids": {"JOB1": null, "JOB2": null, "JOB3": null, "JOB4": null},
+  "dependency_expressions_intended": {
+    "JOB2": "afterok:JOB1", "JOB3": "afterok:JOB2", "JOB4": "afterok:JOB3"
+  },
+  "dependency_chain_behaved_correctly": "not_applicable_never_submitted",
+  "stages": {
+    "job1_vcrelax": "NOT_SUBMITTED",
+    "job2_nvt": "NOT_SUBMITTED",
+    "job3_npt": "NOT_SUBMITTED",
+    "job4a_caimd_zero": "NOT_SUBMITTED",
+    "job4b_caimd_nonzero": "NOT_SUBMITTED"
+  },
+  "earliest_failed_scientific_stage": "none_ran",
+  "ready_for_larger_cell_test": false,
+  "singlephase_workflow_excluded": true
+}

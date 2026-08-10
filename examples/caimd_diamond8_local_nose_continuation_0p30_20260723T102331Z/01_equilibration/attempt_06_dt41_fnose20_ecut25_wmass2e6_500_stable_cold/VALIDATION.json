@@ -1,0 +1,89 @@
+{
+  "caimd": {
+    "exists": false
+  },
+  "caimd_temperature_K": null,
+  "cell_condition_number_final": 2.9321225538292452,
+  "cell_condition_sane": true,
+  "cell_condition_sanity_max": 1000000.0,
+  "completed_expected_steps": true,
+  "dynamics_time_blocks": 500,
+  "eal_ionic_temperature_3N_minus_3_K": {
+    "count": 500,
+    "drift_per_step": 0.030855547953158688,
+    "final_200_mean": 181.94955425519322,
+    "finite": true,
+    "first_200_mean": 172.54196216087163,
+    "max": 300.0013104697996,
+    "mean": 177.81487727970097,
+    "min": 34.20595363925117,
+    "std": 44.66701326689987
+  },
+  "expected_steps": 500,
+  "expected_time_increment_ps": 0.002,
+  "geometry_error": null,
+  "geometry_finite": true,
+  "job_done": true,
+  "minimum_periodic_C_C_distance_bohr_final": 1.5382747424403718,
+  "minimum_periodic_C_C_distance_sane": true,
+  "minimum_periodic_C_C_distance_sanity_bounds_bohr": [
+    0.8,
+    20.0
+  ],
+  "observed_time_increment_ps": 0.002,
+  "prefix": "diamond8_equil",
+  "pressure_kbar_final": -707.03,
+  "pressure_kbar_stats": {
+    "count": 500,
+    "drift_per_step": 0.05485737942951768,
+    "final_200_mean": -732.8642500000001,
+    "finite": true,
+    "first_200_mean": -749.8909499999999,
+    "max": -696.33,
+    "mean": -741.8194400000006,
+    "min": -779.5,
+    "std": 17.03491512413255
+  },
+  "returncode": 0,
+  "run_dir": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_continuation_0p30_20260723T102331Z/01_equilibration",
+  "stdout_temperature_K": {
+    "count": 500,
+    "drift_per_step": 0.15888842115368462,
+    "final_200_mean": 184.2795,
+    "finite": true,
+    "first_200_mean": 136.14099999999993,
+    "max": 233.3,
+    "mean": 158.8812,
+    "min": 116.5,
+    "std": 24.439928121007235
+  },
+  "stress_block_count": 500,
+  "temperature_analysis_K": {
+    "count": 500,
+    "drift_per_step": 0.030855547953158688,
+    "final_200_mean": 181.94955425519322,
+    "finite": true,
+    "first_200_mean": 172.54196216087163,
+    "max": 300.0013104697996,
+    "mean": 177.81487727970097,
+    "min": 34.20595363925117,
+    "std": 44.66701326689987
+  },
+  "temperature_analysis_source": "eal_ionic_3N_minus_3_K",
+  "temperature_classification": "FAIL",
+  "time_increment_sane": true,
+  "trajectory_blocks": {
+    "cel": 500,
+    "pos": 500,
+    "vel": 500
+  },
+  "valid": false,
+  "validated_utc": "2026-07-23T11:06:29Z",
+  "volume_bohr3_final": 302.62344637604946,
+  "volume_positive": true,
+  "volume_sane": true,
+  "volume_sanity_bounds_bohr3": [
+    10.0,
+    5000.0
+  ]
+}

@@ -1,0 +1,72 @@
+&CONTROL
+  calculation = 'vc-md',
+  restart_mode = 'from_scratch',
+  prefix = 'diamond8_smoke',
+  pseudo_dir = '/Users/mengqicheng/Downloads/Learning/qe-7.5/pseudo',
+  outdir = '/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_continuation_0p30_20260723T102331Z/evidence/pw_smoke/tmp',
+  nstep = 1,
+  dt = 4.1341381005999999d+01,
+  iprint = 1,
+  tstress = .true.,
+  tprnfor = .true.,
+  disk_io = 'low',
+  verbosity = 'high',
+/
+&SYSTEM
+  ibrav = 0,
+  nat = 8,
+  ntyp = 1,
+  ecutwfc = 12.0,
+  ecutrho = 48.0,
+  occupations = 'smearing',
+  smearing = 'gaussian',
+  degauss = 0.01,
+  nosym = .true.,
+/
+&ELECTRONS
+  conv_thr = 1.0000000000000000d-04,
+  electron_maxstep = 40,
+  mixing_beta = 0.300,
+/
+&IONS
+  ion_dynamics = 'beeman',
+  ion_temperature = 'nose',
+  ion_velocities = 'from_input',
+  tempw = 300.0,
+  fnosep(1) = 100.00000000,
+  nhpcl = 1,
+  ndega = 0,
+/
+&CELL
+  cell_dynamics = 'pr',
+  cell_dofree = 'all',
+  press = 0.0,
+  wmass = 136728.78267866,
+  cell_temperature = 'not_controlled',
+  caimd = .false.,
+/
+ATOMIC_SPECIES
+C 12.01070000 C.UPF
+CELL_PARAMETERS bohr
+  3.89171787574137  4.76636150921721  2.75186010040163
+  3.89171787574137  -4.76636150921721  2.75186010040163
+  3.89171787574137  0.00000000000000  -5.50372020080326
+ATOMIC_POSITIONS crystal
+C  0.00000000000000  0.00000000000000  0.00000000000000
+C  0.00000000000000  0.50000000000000  0.50000000000000
+C  0.50000000000000  0.00000000000000  0.50000000000000
+C  0.50000000000000  0.50000000000000  0.00000000000000
+C  0.25000000000000  0.25000000000000  0.25000000000000
+C  0.25000000000000  0.75000000000000  0.75000000000000
+C  0.75000000000000  0.25000000000000  0.75000000000000
+C  0.75000000000000  0.75000000000000  0.25000000000000
+K_POINTS gamma
+ATOMIC_VELOCITIES { a.u }
+C  -2.30268601125891e-04  -3.78741133320660e-04  -3.28478778609949e-04
+C  -3.45862021798500e-04  3.30425643295215e-07  1.09712696127185e-05
+C  -2.96717817998593e-04  1.82643572232354e-04  9.40267661670489e-04
+C  1.21097465994857e-04  -3.31059728832337e-04  -7.07507844991888e-04
+C  -7.10970277781988e-05  4.03250381245354e-04  -6.35199443984731e-04
+C  7.81808697303519e-04  -7.55066175505999e-07  2.16800655416113e-04
+C  4.76019989323263e-05  3.51865371370983e-04  4.19932232303726e-04
+C  -6.56269352951969e-06  -2.27533822163483e-04  8.32142485835212e-05

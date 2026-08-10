@@ -1,0 +1,23 @@
+--- control_initial (normalized)
++++ test_nose (normalized)
+@@ -1,7 +1,7 @@
+ &CONTROL
+   calculation = 'vc-md',
+   restart_mode = 'from_scratch',
+-  prefix = 'diamond8_control_initial',
++  prefix = 'diamond8_test_nose',
+   pseudo_dir = '../pseudo',
+   outdir = './tmp',
+   nstep = 1000,
+@@ -31,8 +31,10 @@
+ /
+ &IONS
+   ion_dynamics = 'beeman',
+-  ion_temperature = 'initial',
++  ion_temperature = 'nose',
+   tempw = 300.0,
++  fnosep(1) = 50.0,
++  nhpcl = 4,
+ /
+ &CELL
+   cell_dynamics = 'pr',

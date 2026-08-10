@@ -1,0 +1,5 @@
+RC_A=0
+RC_B=0
+RC_C=0
+analysis_python=/leonardo/home/userexternal/mcheng00/venvs/mace_py311/bin/python
+RC_ANALYSIS=0

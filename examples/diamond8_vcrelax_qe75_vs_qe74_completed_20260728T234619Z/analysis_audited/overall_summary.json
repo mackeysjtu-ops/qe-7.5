@@ -1,0 +1,11 @@
+{
+  "overall_status": "BOTH_VCRELAX_VALID_AND_CONSISTENT",
+  "downstream_decision": "DOWNSTREAM_READY_USING_QE75_STRUCTURE",
+  "recommended_downstream_structure": "qe75 final relaxed structure (qe75/analysis/final_structure.json)",
+  "qe75_classification": "QE75_VCRELAX_VALID",
+  "qe74_classification": "QE74_VCRELAX_VALID",
+  "consistency_verdict": "CONSISTENT",
+  "gate_verdict": "GATES_CORRECT",
+  "cell_dofree_ibrav_avoided_previous_error": true,
+  "singlephase_excluded": true
+}

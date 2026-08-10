@@ -1,0 +1,20 @@
+{
+  "note": "checks run on the COMPLETE input text, case-insensitive",
+  "runs": {
+    "qe74": {
+      "forbidden_keyword_hits": {},
+      "atomic_velocities_card": false,
+      "restart_mode": "from_scratch",
+      "ion_temperature": "initial",
+      "tempw": 300.0
+    },
+    "qe75": {
+      "forbidden_keyword_hits": {},
+      "atomic_velocities_card": false,
+      "restart_mode": "from_scratch",
+      "ion_temperature": "initial",
+      "tempw": 300.0
+    }
+  },
+  "explicit_velocities_absent_in_both": true
+}

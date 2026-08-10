@@ -1,0 +1,137 @@
+{
+  "input_identity": {
+    "all_physical_differences_zero": true,
+    "cell_difference_max_abs": 0.0,
+    "electronic_parameter_difference": {},
+    "normalized_diff": {},
+    "position_difference_max_abs": 0.0,
+    "pr_parameter_difference": {},
+    "pseudo_sha256": "9c06aa642d22981491b32a18ec129086fe8366164984930389e4fc071c978639",
+    "qe74": {
+      "center_of_mass_velocity_au": [
+        -1.2874900798265365e-19,
+        -3.5236570605778894e-19,
+        -2.744386749103933e-19
+      ],
+      "ekin_Ry": 0.01995091284977081,
+      "forbidden_hits": [],
+      "nat_from_positions": 8,
+      "nat_from_velocities": 8,
+      "path": "/leonardo/home/userexternal/mcheng00/workspace/Diamond/diamond8_ordinary_nose_qe74_vs_qe75_af7ebfc_20260723T175625Z/inputs/qe74.in",
+      "sha256": "fb36b256662bc48b4486ab0f71e71e6c66324e91de590229c6cb1c8cf2ef35d6",
+      "temperature_K": 300.00000000000034
+    },
+    "qe75_af7ebfc": {
+      "center_of_mass_velocity_au": [
+        -1.2874900798265365e-19,
+        -3.5236570605778894e-19,
+        -2.744386749103933e-19
+      ],
+      "ekin_Ry": 0.01995091284977081,
+      "forbidden_hits": [],
+      "nat_from_positions": 8,
+      "nat_from_velocities": 8,
+      "path": "/leonardo/home/userexternal/mcheng00/workspace/Diamond/diamond8_ordinary_nose_qe74_vs_qe75_af7ebfc_20260723T175625Z/inputs/qe75_af7ebfc.in",
+      "sha256": "33b584fc5ecccae84138d4bdce6de85872a218a8693deb2544bc80ed293ed51d",
+      "temperature_K": 300.00000000000034
+    },
+    "thermostat_parameter_difference": {},
+    "velocity_difference_max_abs": 0.0
+  },
+  "overall_interpretation": "At least one run is incomplete or numerically failed; inspect output before drawing a thermostat conclusion.",
+  "runs": {
+    "qe74": {
+      "cell_condition_number_max": null,
+      "cell_determinant_min": null,
+      "classification": "INCOMPLETE",
+      "eal_exists": false,
+      "eal_rows": 0,
+      "final_temperature_K": null,
+      "first_clear_numerical_instability": null,
+      "first_step_above_2000K": null,
+      "first_step_above_600K": null,
+      "initial_temperature_K": null,
+      "ionic_ekin_final_Ry": null,
+      "ionic_ekin_initial_Ry": null,
+      "job_done": false,
+      "key": "qe74",
+      "label": "QE 7.4.1 official",
+      "maximum_temperature_K": null,
+      "md_exists": false,
+      "md_record_count": 0,
+      "mean_temperature_K": null,
+      "qe_error_lines": [
+        "Error in routine iosys (1):"
+      ],
+      "return_code": 1,
+      "run_dir": "/leonardo/home/userexternal/mcheng00/workspace/Diamond/diamond8_ordinary_nose_qe74_vs_qe75_af7ebfc_20260723T175625Z/qe74_official",
+      "simulated_time_ps": 0.0,
+      "temperature_drift_K_per_ps": null,
+      "temperature_stats": {
+        "count": 0,
+        "drift_per_ps": null,
+        "final": null,
+        "finite": true,
+        "initial": null,
+        "max": null,
+        "mean": null,
+        "min": null,
+        "std": null
+      },
+      "terminal_direct_ekin_Ry": null,
+      "terminal_direct_temperature_K": null,
+      "terminal_eal_direct_abs_diff_K": null,
+      "trajectory_records": 0,
+      "volume_range": null
+    },
+    "qe75_af7ebfc": {
+      "cell_condition_number_max": 2.9503548028678943,
+      "cell_determinant_min": 257.39428826984624,
+      "classification": "PHYSICAL_HEATING",
+      "eal_exists": true,
+      "eal_rows": 1000,
+      "final_temperature_K": 4231.686070493259,
+      "first_clear_numerical_instability": {
+        "observable": "temperature_K",
+        "step": 130,
+        "threshold": 2000.0
+      },
+      "first_step_above_2000K": 130,
+      "first_step_above_600K": 26,
+      "initial_temperature_K": 300.0013104697996,
+      "ionic_ekin_final_Ry": 0.28142,
+      "ionic_ekin_initial_Ry": 0.019951,
+      "job_done": true,
+      "key": "qe75_af7ebfc",
+      "label": "QE 7.5 af7ebfc ordinary",
+      "maximum_temperature_K": 8123.838804792438,
+      "md_exists": true,
+      "md_record_count": 1,
+      "mean_temperature_K": 4201.452280964831,
+      "qe_error_lines": [],
+      "return_code": 0,
+      "run_dir": "/leonardo/home/userexternal/mcheng00/workspace/Diamond/diamond8_ordinary_nose_qe74_vs_qe75_af7ebfc_20260723T175625Z/qe75_af7ebfc_no_caimd",
+      "simulated_time_ps": 2.0,
+      "temperature_drift_K_per_ps": 1778.7076099702474,
+      "temperature_stats": {
+        "count": 1000,
+        "drift_per_ps": 1778.7076099702474,
+        "final": 4231.686070493259,
+        "finite": true,
+        "initial": 300.0013104697996,
+        "max": 8123.838804792438,
+        "mean": 4201.452280964831,
+        "min": 184.5780204509443,
+        "std": 1835.4411346932802
+      },
+      "terminal_direct_ekin_Ry": 0.2814237811513229,
+      "terminal_direct_temperature_K": 4231.742927310057,
+      "terminal_eal_direct_abs_diff_K": 0.056856816798244836,
+      "trajectory_records": 1000,
+      "volume_range": [
+        257.39428826984624,
+        258.6161656234765
+      ]
+    }
+  }
+}

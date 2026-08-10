@@ -1,0 +1,211 @@
+{
+  "comparison": "Diamond8 native from-scratch 300 K, no explicit velocities",
+  "scope_note": "This comparison tests native 300 K initialization (ion_temperature='initial') followed by ordinary variable-cell Parrinello-Rahman dynamics. It is NOT a continuing Nose-thermostat test: QE 7.4.1 does not accept ion_temperature='nose' in PW vc-md.",
+  "random_velocity_note": "No explicit velocities are supplied, so each executable generates its own Maxwell realization via vcinit->ranv. QE's randy() is seeded deterministically (idum=0), so the realizations MAY coincide, but this is not assumed: statistical comparison is used.",
+  "conventions": {
+    "temperature_eal": "T = 2*eka/((3N-3)*k_B), ionic only, 21 DOF",
+    "temperature_stdout": "QE-native vc-md T (3*(N+1) denominator, includes cell DOF)",
+    "pressure": "QE stdout 'P=' in kbar; GPa = kbar/10"
+  },
+  "return_codes": {
+    "qe74": 0,
+    "qe75": 0
+  },
+  "runs": {
+    "qe74": {
+      "label": "Official QE 7.4.1 (Leonardo module)",
+      "return_code": 0,
+      "job_done": true,
+      "runtime_version": "7.4.1",
+      "first_error": null,
+      "completed_ionic_steps_eal": 1000,
+      "completed_stress_blocks": 1000,
+      "completed_cell_frames": 1000,
+      "simulated_time_ps": 1.998,
+      "temperature_eal_3Nm3": {
+        "n": 1000,
+        "mean": 170.08952700729645,
+        "std": 40.964020111242775,
+        "min": 55.0756753973075,
+        "max": 300.001310468147,
+        "initial": 300.001310468147,
+        "final": 121.24106892755361,
+        "final200_mean": 175.20273514807639
+      },
+      "temperature_stdout_native": {
+        "n": 1000,
+        "mean": 226.2452999999997,
+        "std": 83.10170105304707,
+        "min": 0.0,
+        "max": 406.4,
+        "initial": 0.0,
+        "final": 406.4,
+        "final200_mean": 358.3959999999999
+      },
+      "temperature_first_above_600K": null,
+      "temperature_first_above_1000K": null,
+      "temperature_first_above_2000K": null,
+      "temperature_drift_K_per_ps": 1.7553180104438633,
+      "pressure_kbar": {
+        "n": 1000,
+        "mean": -712.4477499999989,
+        "std": 48.43757765245388,
+        "min": -794.92,
+        "max": -545.13,
+        "initial": -720.74,
+        "final": -640.84,
+        "final200_mean": -642.1747
+      },
+      "pressure_GPa": {
+        "n": 1000,
+        "mean": -71.24477499999999,
+        "std": 4.843757765245391,
+        "min": -79.49199999999999,
+        "max": -54.513,
+        "initial": -72.074,
+        "final": -64.084,
+        "final200_mean": -64.21747
+      },
+      "cell": {
+        "volume_initial_bohr3": 306.2710188038857,
+        "volume_mean_bohr3": 301.45105286554286,
+        "volume_final_bohr3": 292.113704109496,
+        "volume_max_abs_change_percent": 4.622479381065775,
+        "volume_final_change_percent": -4.622479381065775,
+        "determinant_min_bohr3": 292.113704109496,
+        "condition_number_max": 1.0012363624582623
+      },
+      "temperature_classification": "STABLE_NEAR_300K",
+      "cell_classification": "STABLE_PR_CELL",
+      "block100_temperature_means_K": [
+        172.0963660076603,
+        168.17041030882282,
+        168.54929522786773,
+        171.9753189148194,
+        170.04265546778169,
+        164.19920856000283,
+        166.93908319187096,
+        168.5174620979864,
+        176.566191557549,
+        173.83927873860372
+      ],
+      "block100_pressure_means_kbar": [
+        -751.9954000000005,
+        -752.2427999999996,
+        -750.8400999999998,
+        -744.9447,
+        -738.6027000000004,
+        -723.637,
+        -699.6746999999997,
+        -678.1907000000001,
+        -660.2746999999998,
+        -624.0747
+      ]
+    },
+    "qe75": {
+      "label": "QE 7.5 af7ebfc, caimd=.false.",
+      "return_code": 0,
+      "job_done": true,
+      "runtime_version": "7.5",
+      "first_error": null,
+      "completed_ionic_steps_eal": 1000,
+      "completed_stress_blocks": 1000,
+      "completed_cell_frames": 1000,
+      "simulated_time_ps": 1.998,
+      "temperature_eal_3Nm3": {
+        "n": 1000,
+        "mean": 170.01436653663123,
+        "std": 40.487420947668895,
+        "min": 55.0756753973075,
+        "max": 300.001310468147,
+        "initial": 300.001310468147,
+        "final": 141.7739639926759,
+        "final200_mean": 174.82712827452696
+      },
+      "temperature_stdout_native": {
+        "n": 1000,
+        "mean": 226.47799999999964,
+        "std": 82.79190791375686,
+        "min": 117.8,
+        "max": 406.4,
+        "initial": 233.3,
+        "final": 406.4,
+        "final200_mean": 358.39299999999986
+      },
+      "temperature_first_above_600K": null,
+      "temperature_first_above_1000K": null,
+      "temperature_first_above_2000K": null,
+      "temperature_drift_K_per_ps": 1.5298390705900828,
+      "pressure_kbar": {
+        "n": 1000,
+        "mean": -712.3793099999992,
+        "std": 48.28103858891085,
+        "min": -794.92,
+        "max": -560.34,
+        "initial": -720.74,
+        "final": -663.88,
+        "final200_mean": -641.8328500000002
+      },
+      "pressure_GPa": {
+        "n": 1000,
+        "mean": -71.23793100000005,
+        "std": 4.828103858891088,
+        "min": -79.49199999999999,
+        "max": -56.034000000000006,
+        "initial": -72.074,
+        "final": -66.388,
+        "final200_mean": -64.18328499999998
+      },
+      "cell": {
+        "volume_initial_bohr3": 306.2710188038857,
+        "volume_mean_bohr3": 301.45105723756654,
+        "volume_final_bohr3": 292.1139609604413,
+        "volume_max_abs_change_percent": 4.622395517125159,
+        "volume_final_change_percent": -4.622395517125159,
+        "determinant_min_bohr3": 292.1139609604413,
+        "condition_number_max": 1.001234751176367
+      },
+      "temperature_classification": "STABLE_NEAR_300K",
+      "cell_classification": "STABLE_PR_CELL",
+      "block100_temperature_means_K": [
+        172.0963660076603,
+        168.17041030882282,
+        168.54929522786773,
+        171.9753189148194,
+        170.04265546778169,
+        164.19920856000283,
+        166.93908319187096,
+        168.51707113843193,
+        176.6187756176315,
+        173.03548093142243
+      ],
+      "block100_pressure_means_kbar": [
+        -751.9954000000005,
+        -752.2427999999996,
+        -750.8400999999998,
+        -744.9447,
+        -738.6027000000004,
+        -723.637,
+        -699.6746999999997,
+        -678.1899999999998,
+        -660.1771999999999,
+        -623.4884999999998
+      ]
+    }
+  },
+  "comparison_metrics": {
+    "both_produced_trajectories": true,
+    "initial_temperature_delta_K": 0.0,
+    "mean_temperature_delta_K": 0.07516047066522447,
+    "final200_temperature_delta_K": 0.37560687354942957,
+    "temperature_fluctuation_scale_K": 40.72641770809238,
+    "mean_pressure_delta_kbar": 0.06843999999966854,
+    "pressure_fluctuation_scale_kbar": 48.35937146025266,
+    "same_temperature_class": true,
+    "same_cell_class": true,
+    "trajectories_bitwise_identical_temperature": false,
+    "temperature_broadly_similar": true,
+    "pressure_broadly_similar": true
+  },
+  "overall_status": "BOTH_COMPARABLE"
+}

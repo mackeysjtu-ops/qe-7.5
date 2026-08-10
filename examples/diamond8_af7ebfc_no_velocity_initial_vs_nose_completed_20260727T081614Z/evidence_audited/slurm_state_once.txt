@@ -1,0 +1,10 @@
+# Single Slurm query performed during this audit (no repeats, no polling):
+# sacct -j 50167241 --format=JobID,JobName%34,State,ExitCode,Elapsed,NodeList%28,Start,End
+JobID                                   JobName      State ExitCode    Elapsed                     NodeList               Start                 End 
+------------ ---------------------------------- ---------- -------- ---------- ---------------------------- ------------------- ------------------- 
+50167241                      dia8_init_vs_nose  COMPLETED      0:0   00:03:44                     lrdn0558 2026-07-24T17:43:41 2026-07-24T17:47:25 
+50167241.ba+                              batch  COMPLETED      0:0   00:03:44                     lrdn0558 2026-07-24T17:43:41 2026-07-24T17:47:25 
+50167241.ex+                             extern  COMPLETED      0:0   00:03:44                     lrdn0558 2026-07-24T17:43:41 2026-07-24T17:47:25 
+50167241.0                                 pw.x  COMPLETED      0:0   00:01:47                     lrdn0558 2026-07-24T17:43:50 2026-07-24T17:45:37 
+50167241.1                                 pw.x  COMPLETED      0:0   00:01:45                     lrdn0558 2026-07-24T17:45:37 2026-07-24T17:47:22 
+# step .0 = CONTROL (ion_temperature='initial'); step .1 = TEST (ion_temperature='nose')

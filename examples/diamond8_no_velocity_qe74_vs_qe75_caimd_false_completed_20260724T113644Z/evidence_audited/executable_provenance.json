@@ -1,0 +1,54 @@
+{
+  "job_id": "50160152",
+  "node": "lrdn0416",
+  "mpi_launcher": "srun --mpi=pmix_v3 -n 1",
+  "ranks": 1,
+  "omp_threads": 8,
+  "runs": {
+    "qe74": {
+      "executable_path": "/leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/nvhpc-24.5/quantum-espresso-7.4.1-jfm6pcx2dqkcfcwywdgoyao3m3ncvc5a/bin/pw.x",
+      "sha256_runtime": "beb956cce572605941b791c37bc4dd30ac6cee714e18be7b93fd4ff0e47f4aca",
+      "version_banner": "7.4.1",
+      "version_probe": "no output (pw.x --version not supported in this build/launch)",
+      "slurm_step": "50160152.0",
+      "hostname": "lrdn0416.leonardo.local",
+      "module_list": [
+        "profile/base(default)",
+        "profile/chem-phys",
+        "glibc/2.28--gcc--12.2.0-gi6mmti",
+        "hpcx-mpi/2.19(default)",
+        "fftw/3.3.10--hpcx-mpi--2.19--nvhpc--24.5",
+        "libxc/7.0.0--nvhpc--24.5",
+        "openblas/0.3.26--nvhpc--24.5",
+        "quantum-espresso/7.4.1--hpcx-mpi--2.19--nvhpc--24.5-openblas(default)"
+      ]
+    },
+    "qe75": {
+      "executable_path": "/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-thermostat-af7ebfc/install-current-gpu/bin/pw.x",
+      "sha256_runtime": "89d4fda827d2cc22a3b4c1670e90dc40ce629af42096c785b55c70c355a10e7d",
+      "version_banner": "7.5",
+      "version_probe": "no output (pw.x --version not supported in this build/launch)",
+      "slurm_step": "50160152.1",
+      "hostname": "lrdn0416.leonardo.local",
+      "module_list": [
+        "profile/base(default)",
+        "profile/chem-phys",
+        "nvhpc/24.5(default)",
+        "hpcx-mpi/2.19(default)",
+        "glibc/2.28--gcc--12.2.0-gi6mmti",
+        "fftw/3.3.10--hpcx-mpi--2.19--nvhpc--24.5",
+        "libxc/7.0.0--nvhpc--24.5",
+        "openblas/0.3.26--nvhpc--24.5",
+        "netlib-scalapack/2.2.0--hpcx-mpi--2.19--nvhpc--24.5",
+        "nghttp2/1.57.0-634bffh",
+        "zlib-ng/2.1.6-jkgunjc",
+        "curl/8.7.1(default)",
+        "gmake/4.4.1-phqmvks",
+        "ncurses/6.5-svfl57u",
+        "cmake/3.27.9(default)"
+      ],
+      "expected_sha256": "89d4fda827d2cc22a3b4c1670e90dc40ce629af42096c785b55c70c355a10e7d",
+      "sha256_matches_expected": true
+    }
+  }
+}

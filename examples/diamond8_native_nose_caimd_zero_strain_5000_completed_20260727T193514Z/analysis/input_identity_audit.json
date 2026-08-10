@@ -1,0 +1,161 @@
+{
+  "reference_case": "A",
+  "caimd_settings": {
+    "A": {
+      "caimd": ".false.",
+      "caimd_stride": "<absent>",
+      "mask": [
+        "<absent>",
+        "<absent>",
+        "<absent>",
+        "<absent>",
+        "<absent>",
+        "<absent>"
+      ],
+      "step_strain": [
+        "<absent>",
+        "<absent>",
+        "<absent>",
+        "<absent>",
+        "<absent>",
+        "<absent>"
+      ]
+    },
+    "B": {
+      "caimd": ".true.",
+      "caimd_stride": 1.0,
+      "mask": [
+        ".false.",
+        ".false.",
+        ".false.",
+        ".false.",
+        ".false.",
+        ".false."
+      ],
+      "step_strain": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "C": {
+      "caimd": ".true.",
+      "caimd_stride": 1.0,
+      "mask": [
+        ".true.",
+        ".true.",
+        ".true.",
+        ".true.",
+        ".true.",
+        ".true."
+      ],
+      "step_strain": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    }
+  },
+  "non_caimd_differences": {},
+  "allowed_keys": [
+    "CELL.caimd",
+    "CELL.caimd_mask(1)",
+    "CELL.caimd_mask(2)",
+    "CELL.caimd_mask(3)",
+    "CELL.caimd_mask(4)",
+    "CELL.caimd_mask(5)",
+    "CELL.caimd_mask(6)",
+    "CELL.caimd_step_strain(1)",
+    "CELL.caimd_step_strain(2)",
+    "CELL.caimd_step_strain(3)",
+    "CELL.caimd_step_strain(4)",
+    "CELL.caimd_step_strain(5)",
+    "CELL.caimd_step_strain(6)",
+    "CELL.caimd_stride",
+    "CONTROL.outdir",
+    "CONTROL.prefix"
+  ],
+  "shared_physical": {
+    "nstep": [
+      5000.0,
+      5000.0,
+      5000.0
+    ],
+    "dt": [
+      41.34137333665,
+      41.34137333665,
+      41.34137333665
+    ],
+    "ecutwfc": [
+      25.0,
+      25.0,
+      25.0
+    ],
+    "ecutrho": [
+      120.0,
+      120.0,
+      120.0
+    ],
+    "fnosep(1)": [
+      50.0,
+      50.0,
+      50.0
+    ],
+    "nhpcl": [
+      4.0,
+      4.0,
+      4.0
+    ],
+    "tempw": [
+      300.0,
+      300.0,
+      300.0
+    ],
+    "press": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "wmass": [
+      2000000.0,
+      2000000.0,
+      2000000.0
+    ],
+    "cell_dynamics": [
+      "pr",
+      "pr",
+      "pr"
+    ],
+    "cell_dofree": [
+      "all",
+      "all",
+      "all"
+    ]
+  },
+  "structure": {
+    "n_atoms": [
+      8,
+      8,
+      8
+    ],
+    "determinant_bohr3": 306.2710374914435,
+    "min_CC_bohr": 2.9187884068060264,
+    "min_CC_angstrom": 1.5445563083296239,
+    "duplicate_atoms": false,
+    "undeformed_ideal": true
+  },
+  "checksums": {
+    "A": "d5bcf664401a8c913a89137a35dafa2ae842349658cda39055bd20ce9ed012f1",
+    "B": "22a771a676f7f8bd9e75201fecdf560d34fb6e8775958cbe73fca042d5a49f3d",
+    "C": "fbb05826b8e787b9c9feb31e1b0950a0d3b25ca62d555c79f5ae0c5be2a7175d",
+    "pseudo": "9c06aa642d22981491b32a18ec129086fe8366164984930389e4fc071c978639",
+    "pseudo_matches": true
+  },
+  "all_checks_passed": true
+}

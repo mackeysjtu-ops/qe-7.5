@@ -1,0 +1,72 @@
+{
+  "utc_submitted": "2026-07-28T21:02:33Z",
+  "status": "TWO_VCRELAX_JOBS_SUBMITTED",
+  "remote_root": "/leonardo/home/userexternal/mcheng00/workspace/Diamond/diamond8_vcrelax_qe75_vs_qe74_ibrav_20260728T205518Z",
+  "jobs": {
+    "JOB75": {
+      "job_id": 50605866,
+      "job_name": "d8_vcr75_ibrav",
+      "script": "scripts/run_qe75_vcrelax.slurm",
+      "input": "inputs/diamond8_vcrelax_qe75.in",
+      "input_sha256": "5e1e6e944e3a988dc68124421b38695c15f240a6ca67585c2762206b1f023660",
+      "executable": "/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-thermostat-af7ebfc/install-current-gpu/bin/pw.x",
+      "executable_sha256": "89d4fda827d2cc22a3b4c1670e90dc40ce629af42096c785b55c70c355a10e7d",
+      "qe_source_commit": "af7ebfc757c32e0b4f050ed9f2208e01020b2ee3",
+      "dependency": null,
+      "expected_report": "qe75/FINAL_VCRELAX_REPORT.md",
+      "expected_outputs": [
+        "qe75/qe.out",
+        "qe75/qe.err",
+        "qe75/QE_RETURN_CODE.txt",
+        "qe75/FINAL_VCRELAX_REPORT.md",
+        "qe75/analysis/analysis_summary.json",
+        "qe75/analysis/final_structure.json",
+        "qe75/analysis/final_structure.in.fragment",
+        "qe75/analysis/pressure_history.csv",
+        "qe75/analysis/volume_history.csv",
+        "qe75/analysis/force_history.csv"
+      ]
+    },
+    "JOB74": {
+      "job_id": 50605867,
+      "job_name": "d8_vcr74_ibrav",
+      "script": "scripts/run_qe74_vcrelax.slurm",
+      "input": "inputs/diamond8_vcrelax_qe74.in",
+      "input_sha256": "11925e5a575d991cc5772e2b20c5708bc0c0de867208df0141d9b359a5698571",
+      "module": "quantum-espresso/7.4.1--hpcx-mpi--2.19--nvhpc--24.5-openblas",
+      "executable": "/leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/nvhpc-24.5/quantum-espresso-7.4.1-jfm6pcx2dqkcfcwywdgoyao3m3ncvc5a/bin/pw.x",
+      "executable_sha256": "beb956cce572605941b791c37bc4dd30ac6cee714e18be7b93fd4ff0e47f4aca",
+      "dependency": null,
+      "expected_report": "qe74/FINAL_VCRELAX_REPORT.md",
+      "expected_outputs": [
+        "qe74/qe.out",
+        "qe74/qe.err",
+        "qe74/QE_RETURN_CODE.txt",
+        "qe74/FINAL_VCRELAX_REPORT.md",
+        "qe74/analysis/analysis_summary.json",
+        "qe74/analysis/final_structure.json",
+        "qe74/analysis/final_structure.in.fragment",
+        "qe74/analysis/pressure_history.csv",
+        "qe74/analysis/volume_history.csv",
+        "qe74/analysis/force_history.csv"
+      ]
+    }
+  },
+  "independent_no_dependency": true,
+  "dependency_confirmation": "Neither sbatch used --dependency; JOB74 does not depend on JOB75 and vice versa. Both submitted as standalone jobs.",
+  "pseudopotential": {
+    "file": "pseudo/C.UPF",
+    "sha256": "9c06aa642d22981491b32a18ec129086fe8366164984930389e4fc071c978639"
+  },
+  "submit_commands": [
+    "sbatch --parsable --chdir=<ROOT> scripts/run_qe75_vcrelax.slurm  -> 50605866",
+    "sbatch --parsable --chdir=<ROOT> scripts/run_qe74_vcrelax.slurm  -> 50605867"
+  ],
+  "post_submit_state": {
+    "JOB75": "PENDING (Priority)",
+    "JOB74": "PENDING (Priority)",
+    "checked_via": "one non-waiting squeue -j 50605866,50605867"
+  },
+  "future_grouped_sacct": "sacct -j 50605866,50605867 --format=JobID,JobName%18,State,ExitCode,Elapsed,NodeList -X",
+  "downstream": "NVT/NPT/CAIMD chain NOT submitted (see DOWNSTREAM_NOT_SUBMITTED.txt)."
+}

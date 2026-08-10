@@ -1,0 +1,64 @@
+! CONTROL: native 300 K initialization only, no continuing ionic thermostat.
+! Single-factor thermostat isolation, QE 7.5 af7ebfc, CAIMD disabled.
+! Explicit velocity input is deliberately omitted so that QE generates
+! its own Maxwell distribution at tempw via the native vcinit path.
+&CONTROL
+  calculation = 'vc-md',
+  restart_mode = 'from_scratch',
+  prefix = 'diamond8_control_initial',
+  pseudo_dir = '../pseudo',
+  outdir = './tmp',
+  nstep = 1000,
+  dt = 41.34137333665,
+  iprint = 1,
+  tstress = .true.,
+  tprnfor = .true.,
+  disk_io = 'low',
+  verbosity = 'high',
+/
+&SYSTEM
+  ibrav = 0,
+  nat = 8,
+  ntyp = 1,
+  ecutwfc = 25.0,
+  ecutrho = 120.0,
+  occupations = 'smearing',
+  smearing = 'gaussian',
+  degauss = 0.01,
+  nosym = .true.,
+  noinv = .true.,
+/
+&ELECTRONS
+  conv_thr = 1.0000000000000000e-04,
+  electron_maxstep = 40,
+  mixing_beta = 0.300,
+/
+&IONS
+  ion_dynamics = 'beeman',
+  ion_temperature = 'initial',
+  tempw = 300.0,
+/
+&CELL
+  cell_dynamics = 'pr',
+  cell_dofree = 'all',
+  press = 0.0,
+  wmass = 2000000.00000000,
+  cell_temperature = 'not_controlled',
+  caimd = .false.
+/
+ATOMIC_SPECIES
+C 12.01070000 C.UPF
+CELL_PARAMETERS bohr
+  3.89171787574137  4.76636150921721  2.75186010040163
+  3.89171787574137  -4.76636150921721  2.75186010040163
+  3.89171787574137  0.00000000000000  -5.50372020080326
+ATOMIC_POSITIONS crystal
+C  0.00000000000000  0.00000000000000  0.00000000000000
+C  0.00000000000000  0.50000000000000  0.50000000000000
+C  0.50000000000000  0.00000000000000  0.50000000000000
+C  0.50000000000000  0.50000000000000  0.00000000000000
+C  0.25000000000000  0.25000000000000  0.25000000000000
+C  0.25000000000000  0.75000000000000  0.75000000000000
+C  0.75000000000000  0.25000000000000  0.75000000000000
+C  0.75000000000000  0.75000000000000  0.25000000000000
+K_POINTS gamma

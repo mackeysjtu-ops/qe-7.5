@@ -1,0 +1,33 @@
+{
+  "note": "All three cases omit explicit velocities and use the same executable + tempw, so vcinit->ranv(300 K) should yield the same deterministic Maxwell realization (randy idum=0; total momentum zeroed). .md holds only the terminal state, so the identity of the initial realization is read from the early bit-identical .eal rows.",
+  "pairs": {
+    "A_vs_B": {
+      "first_step_eka": [
+        0.019951,
+        0.019951
+      ],
+      "first_step_eka_abs_diff": 0.0,
+      "first_eka_divergence_step": 701,
+      "classification": "IDENTICAL"
+    },
+    "A_vs_C": {
+      "first_step_eka": [
+        0.019951,
+        0.019951
+      ],
+      "first_step_eka_abs_diff": 0.0,
+      "first_eka_divergence_step": 10,
+      "classification": "NUMERICALLY_EQUIVALENT"
+    },
+    "B_vs_C": {
+      "first_step_eka": [
+        0.019951,
+        0.019951
+      ],
+      "first_step_eka_abs_diff": 0.0,
+      "first_eka_divergence_step": 10,
+      "classification": "NUMERICALLY_EQUIVALENT"
+    }
+  },
+  "all_identical_initialization": false
+}

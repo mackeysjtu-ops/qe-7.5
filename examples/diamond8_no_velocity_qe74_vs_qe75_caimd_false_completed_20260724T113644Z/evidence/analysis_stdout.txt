@@ -1,0 +1,5 @@
+{
+  "overall_status": "BOTH_COMPARABLE",
+  "qe74_class": "STABLE_NEAR_300K",
+  "qe75_class": "STABLE_NEAR_300K"
+}

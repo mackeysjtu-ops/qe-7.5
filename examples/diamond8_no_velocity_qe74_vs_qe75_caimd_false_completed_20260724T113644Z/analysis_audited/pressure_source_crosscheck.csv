@@ -1,0 +1,5 @@
+run,comparison,lag_steps,max_abs_diff_kbar
+qe74,.p(Ry/bohr3->kbar) vs stdout P,0,6.383030724
+qe74,.p(Ry/bohr3->kbar) vs stdout P,1,17.31329062
+qe75,.p(Ry/bohr3->kbar) vs stdout P,0,6.383030724
+qe75,.p(Ry/bohr3->kbar) vs stdout P,1,17.31858714

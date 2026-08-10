@@ -1,0 +1,60 @@
+&CONTROL
+ calculation='vc-md',
+ prefix='active_shear_xy',
+ outdir='./tmp',
+ pseudo_dir='/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_controls_ABC_20260723T134303Z/evidence/caimd_harness_targeted_controls_ABC/pseudopotentials',
+ tstress=.true.,
+ tprnfor=.true.,
+ nstep=4,
+ dt=5.0,
+ verbosity='high',
+ 
+/
+&SYSTEM
+ ibrav=0,
+ nat=2,
+ ntyp=1,
+ ecutwfc=12,
+ ecutrho=48,
+ occupations='smearing',
+ smearing='gaussian',
+ degauss=0.01,
+ nosym=.true., noinv=.true.,
+/
+&ELECTRONS
+ conv_thr=1.0d-4,
+ electron_maxstep=30,
+ mixing_beta=0.30,
+/
+
+&IONS
+ ion_dynamics='beeman',
+ ion_temperature='not_controlled',
+ ion_velocities='from_input',
+ 
+/
+
+
+&CELL
+ cell_dynamics='pr',
+ press=0.0,
+ wmass=20.0,
+ cell_dofree='all',
+ 
+ caimd=.true., caimd_stride=1, caimd_step_strain(6)=1.0d-4, caimd_mask(6)=.true.,
+/
+
+
+ATOMIC_SPECIES
+ C 12.011 C.UPF
+CELL_PARAMETERS bohr
+     6.74000000     0.00000000     0.00000000
+     0.00000000     6.74000000     0.00000000
+     0.00000000     0.00000000     6.74000000
+ATOMIC_POSITIONS crystal
+ C   0.000000   0.000000   0.000000
+ C   0.250000   0.250000   0.250000
+K_POINTS gamma
+ATOMIC_VELOCITIES { a.u }
+ C  2.00000000e-04  1.00000000e-04 -1.50000000e-04
+ C -1.60000000e-04  1.30000000e-04  1.10000000e-04

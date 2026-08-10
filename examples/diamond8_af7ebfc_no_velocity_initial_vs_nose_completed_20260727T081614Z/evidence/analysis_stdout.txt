@@ -1,0 +1,10 @@
+{
+  "overall_status": "NOSE_STABLE_WITH_NATIVE_INITIALIZATION",
+  "control": "CONTROL_BOUNDED",
+  "nose": "BOUNDED_BUT_OFFSET",
+  "control_mean_K": 169.85804135875745,
+  "nose_mean_K": 169.6964036420141,
+  "nose_max_K": 300.001310468147,
+  "nose_final200_K": 173.23724613536513,
+  "strict_single_factor": false
+}

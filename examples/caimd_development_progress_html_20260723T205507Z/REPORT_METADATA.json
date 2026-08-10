@@ -1,0 +1,78 @@
+{
+  "report": "CAIMD_DEVELOPMENT_PROGRESS.html",
+  "creation_timestamp_utc": "2026-07-24T06:12:26Z",
+  "report_directory": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_development_progress_html_20260723T205507Z",
+  "repository_root": "/Users/mengqicheng/Downloads/Learning/qe-7.5",
+  "repository_branch": "main",
+  "repository_head": "af7ebfc757c32e0b4f050ed9f2208e01020b2ee3",
+  "baseline_commit": "a11913ac6cd37f39cf31056e8e4823ec7a5de49c",
+  "current_implementation_commit": "af7ebfc757c32e0b4f050ed9f2208e01020b2ee3",
+  "source_files_inspected": [
+    "Modules/input_parameters.f90",
+    "Modules/read_namelists.f90",
+    "PW/src/input.f90",
+    "PW/src/run_pwscf.f90",
+    "PW/src/move_ions.f90",
+    "PW/src/vcsmd.f90",
+    "PW/src/vcsubs.f90",
+    "PW/src/caimd_module.f90",
+    "PW/src/stress.f90 (diff-verified unchanged)",
+    "PW/CMakeLists.txt",
+    "PW/src/Makefile"
+  ],
+  "documentation_files_inspected": [
+    "AGENTS.md",
+    "CAIMD_IMPLEMENTATION.md",
+    "CAIMD_V1_IMPLEMENTATION_REPORT.md",
+    "CAIMD_LEONARDO_GPU_VALIDATION_REPORT.md",
+    "THERMOSTAT_CAIMD_AUDIT.md",
+    "LEONARDO_BUILD.md"
+  ],
+  "workflows_inspected": [
+    "examples/caimd_diamond8_local_nose_continuation_0p30_20260723T102331Z",
+    "examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z",
+    "examples/caimd_diamond8_local_nose_controls_ABC_20260723T134303Z",
+    "examples/diamond8_ordinary_nose_qe74_vs_af7ebfc_completed_20260723T185307Z",
+    "examples/diamond8_ordinary_nose_qe74_vs_qe75_af7ebfc_20260723T175625Z (submission-side, PENDING placeholder)"
+  ],
+  "figure_data_sources": {
+    "fig01_architecture.svg": "hand-drawn; verified against af7ebfc source (run_pwscf.f90, move_ions.f90, vcsmd.f90, vcsubs.f90, caimd_module.f90)",
+    "fig02_strain_and_hold.svg": "hand-drawn; formulas verified against caimd_module.f90",
+    "fig03_timeline.png": "assets/data/git_log.txt + workflow report timestamps",
+    "fig04_strain_tracking.png": "assets/data/cont_0p30_diamond8_continuous.caimd",
+    "fig05_temperature_comparison.png": "assets/data/{leonardo_af7ebfc,control_A,test1,test2}.eal",
+    "fig06_leonardo_temp_cell.png": "assets/data/leonardo_af7ebfc.eal + assets/data/leonardo_af7ebfc.cel",
+    "fig07_status_matrix.png": "documented scalar metrics from sections 9/10 (no time series)",
+    "fig08_decision_tree.svg": "hand-drawn; logic from sections 10-12 evidence",
+    "fig09_unmasked_strain_components.png": "assets/data/cont_0p30_diamond8_continuous.caimd",
+    "fig10_velocity_jump.png": "assets/data/cont_0p30_diamond8_continuous.caimd",
+    "fig11_nose_extended_energy.png": "assets/data/controls_ABC_nose_extended_energy_timeseries.csv"
+  },
+  "scripts_generated": [
+    "scripts/recompute_metrics.py",
+    "scripts/make_figures.py"
+  ],
+  "figure_sha256": {
+    "assets/figures/fig03_timeline.png": "ccc2de75b63c73cac80e87de271fc3f0d8c6032eb2c61330f6edffe2945f7fa5",
+    "assets/figures/fig04_strain_tracking.png": "0bb08d0e788d9ca120a610664fad3db79d8d16135fc29d4a38e61a1bbff1f5f1",
+    "assets/figures/fig05_temperature_comparison.png": "4c2f9393470bd34040fa9fde7675e3536c7948509d37d122848b348a48621d83",
+    "assets/figures/fig06_leonardo_temp_cell.png": "175ab2ae1ccd2176299882439bbdc1fdc46b9d1296027b863ca2d03644260dbf",
+    "assets/figures/fig07_status_matrix.png": "8255f9caf2bbfa422204dbdbc6387c4a3a40824210c363724d957d094f85d4eb",
+    "assets/figures/fig09_unmasked_strain_components.png": "6db1b785329ef7e8e09457b37e01fb07d070bf6ea782337bd12c8d58e863c62b",
+    "assets/figures/fig10_velocity_jump.png": "a7c1dad2d9628d4912fd7a52bde27f066678fd92fe6843dedc4cd682f09ea0d7",
+    "assets/figures/fig11_nose_extended_energy.png": "a12625edca80a52ce7e62581a85985c495dec3f98fd41098607a88f096c542c2",
+    "assets/architecture/fig01_architecture.svg": "085f1320b2fba5938082bf0e564e565431ce9488a216f099023971a4c1be8752",
+    "assets/architecture/fig02_strain_and_hold.svg": "c5d117ab23e92bfd30dfac70494322060820d64f4942493317a3592297fa1286",
+    "assets/architecture/fig08_decision_tree.svg": "ffc0f00de1c0005ce67b4c21cc44ffedfe39cc63e84b6003041b5db53089756b"
+  },
+  "no_tracked_source_modified": true,
+  "no_remote_operations": true,
+  "no_git_commit_or_push": true,
+  "notes": [
+    "All figures drawn from raw local evidence copies under assets/data; no fabricated data.",
+    "Recomputed metrics cross-checked against previously reported values: assets/data/recomputed_metrics.json.",
+    "No 64-atom Diamond workflow evidence exists in this repository; all long-time thermostat tests use the 8-atom Diamond8 cell.",
+    "report_sha256 covers CAIMD_DEVELOPMENT_PROGRESS.html and is appended as the final step."
+  ],
+  "report_sha256": "1296582fd95dc58c1fe8c85f42b61099d42d0a240fdd4b474abdc7bdb52a4007"
+}

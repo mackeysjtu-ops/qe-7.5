@@ -1,0 +1,74 @@
+{
+  "caimd": {
+    "exists": false
+  },
+  "caimd_temperature_K": null,
+  "cell_condition_number_final": 5.986938651128268,
+  "cell_condition_sane": true,
+  "cell_condition_sanity_max": 1000000.0,
+  "completed_expected_steps": true,
+  "expected_steps": 500,
+  "geometry_error": null,
+  "geometry_finite": true,
+  "job_done": true,
+  "minimum_periodic_C_C_distance_bohr_final": 36.40807066573568,
+  "minimum_periodic_C_C_distance_sane": false,
+  "minimum_periodic_C_C_distance_sanity_bounds_bohr": [
+    0.8,
+    20.0
+  ],
+  "prefix": "diamond8_equil",
+  "pressure_kbar_final": 0.04,
+  "pressure_kbar_stats": {
+    "count": 500,
+    "drift_per_step": -2.0560607984831942,
+    "final_200_mean": 0.13429999999999984,
+    "finite": true,
+    "first_200_mean": 504.25949999999983,
+    "max": 8284.58,
+    "mean": 201.96937999999986,
+    "min": -975.37,
+    "std": 1035.3559394132137
+  },
+  "returncode": 0,
+  "run_dir": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_continuation_0p30_20260723T102331Z/01_equilibration",
+  "stdout_temperature_K": {
+    "count": 21,
+    "drift_per_step": 560.1331168831168,
+    "final_200_mean": 4621.166666666667,
+    "finite": true,
+    "first_200_mean": 4621.166666666667,
+    "max": 9888.0,
+    "mean": 4621.166666666667,
+    "min": 216.5,
+    "std": 3429.407837171134
+  },
+  "stress_block_count": 500,
+  "temperature_analysis_K": {
+    "count": 21,
+    "drift_per_step": 560.1331168831168,
+    "final_200_mean": 4621.166666666667,
+    "finite": true,
+    "first_200_mean": 4621.166666666667,
+    "max": 9888.0,
+    "mean": 4621.166666666667,
+    "min": 216.5,
+    "std": 3429.407837171134
+  },
+  "temperature_analysis_source": "stdout_T_K",
+  "temperature_classification": "FAIL",
+  "trajectory_blocks": {
+    "cel": 500,
+    "pos": 500,
+    "vel": 500
+  },
+  "valid": false,
+  "validated_utc": "2026-07-23T10:47:28Z",
+  "volume_bohr3_final": 10181335.385172607,
+  "volume_positive": true,
+  "volume_sane": false,
+  "volume_sanity_bounds_bohr3": [
+    10.0,
+    5000.0
+  ]
+}

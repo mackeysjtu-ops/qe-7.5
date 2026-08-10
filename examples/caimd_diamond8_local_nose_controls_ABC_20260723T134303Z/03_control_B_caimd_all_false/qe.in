@@ -1,0 +1,85 @@
+&CONTROL
+  calculation = 'vc-md',
+  restart_mode = 'from_scratch',
+  prefix = 'diamond8_control_B_caimd_all_false',
+  pseudo_dir = '/Users/mengqicheng/Downloads/Learning/qe-7.5/pseudo',
+  outdir = '/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_controls_ABC_20260723T134303Z/03_control_B_caimd_all_false/tmp',
+  nstep = 5000,
+  dt = 4.1341381005999999d+01,
+  iprint = 1,
+  tstress = .true.,
+  tprnfor = .true.,
+  disk_io = 'low',
+  verbosity = 'high',
+/
+&SYSTEM
+  ibrav = 0,
+  nat = 8,
+  ntyp = 1,
+  ecutwfc = 25.0,
+  ecutrho = 120.0,
+  occupations = 'smearing',
+  smearing = 'gaussian',
+  degauss = 0.01,
+  nosym = .true.,
+/
+&ELECTRONS
+  conv_thr = 1.0000000000000000d-04,
+  electron_maxstep = 40,
+  mixing_beta = 0.300,
+/
+&IONS
+  ion_dynamics = 'beeman',
+  ion_temperature = 'nose',
+  ion_velocities = 'from_input',
+  tempw = 300.0,
+  fnosep(1) = 50.00000000,
+  nhpcl = 4,
+  ndega = 0,
+/
+&CELL
+  cell_dynamics = 'pr',
+  cell_dofree = 'all',
+  press = 0.0,
+  wmass = 2000000.00000000,
+  cell_temperature = 'not_controlled',
+  caimd = .true.,
+  caimd_stride = 10,
+  caimd_step_strain(1) = 0.0000000000000000d+00,
+  caimd_step_strain(2) = 0.0000000000000000d+00,
+  caimd_step_strain(3) = 0.0000000000000000d+00,
+  caimd_step_strain(4) = 0.0000000000000000d+00,
+  caimd_step_strain(5) = 0.0000000000000000d+00,
+  caimd_step_strain(6) = 0.0000000000000000d+00,
+  caimd_mask(1) = .false.,
+  caimd_mask(2) = .false.,
+  caimd_mask(3) = .false.,
+  caimd_mask(4) = .false.,
+  caimd_mask(5) = .false.,
+  caimd_mask(6) = .false.,
+/
+ATOMIC_SPECIES
+C 12.01070000 C.UPF
+CELL_PARAMETERS bohr
+  3.68070792000000  4.50271099000000  2.60719452000000
+  3.67710499000000  -4.49567944000000  2.60011085000000
+  3.66838126000000  -0.00261887000000  -5.19242049000000
+ATOMIC_POSITIONS crystal
+C  0.99369621681843  0.96418748892490  0.98408885535030
+C  0.99170089264666  0.53383416935420  0.58125074202199
+C  0.51125880827040  0.03566366923431  0.42059337175010
+C  0.49988346258920  0.45697658749627  0.03128855388913
+C  0.17612037886003  0.28299887937149  0.23652115566093
+C  0.34318656421492  0.78461177417672  0.75051797574478
+C  0.72794690728668  0.21698378965468  0.74267108381853
+C  0.75620676670359  0.72474364317734  0.25306826366153
+K_POINTS gamma
+ATOMIC_VELOCITIES { a.u }
+C  2.19063034832976e-04  -1.02307190103078e-03  -3.60258674162393e-04
+C  -6.21965102551279e-04  1.51060350939472e-05  2.04601107823145e-04
+C  1.68423358507305e-04  9.05054355822736e-04  1.63243229758983e-04
+C  -1.40868205372291e-04  1.89940177819163e-05  -3.66655069520810e-04
+C  3.53897995853791e-04  -1.43439456587003e-04  4.36096809397898e-04
+C  3.50706310111313e-04  5.72731464904533e-04  -9.23119247353372e-05
+C  -1.45349797067121e-04  -9.27344565896795e-05  1.48681552609351e-04
+C  -1.83907594314695e-04  -2.52640059395673e-04  -1.33397031170839e-04

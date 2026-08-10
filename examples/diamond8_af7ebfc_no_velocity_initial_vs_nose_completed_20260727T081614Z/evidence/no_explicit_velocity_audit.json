@@ -1,0 +1,22 @@
+{
+  "native_initialization_path": "PW/src/vcsmd.f90 -> PW/src/vcsubs.f90:vcinit -> ranv(temp=tempw); ranv builds a Maxwell distribution with zero total linear momentum. input_velocities_read is FALSE because no velocity card/keyword is present.",
+  "runs": {
+    "control": {
+      "forbidden_hits_complete_text": {},
+      "forbidden_hits_comments_stripped": {},
+      "atomic_velocities_header": false,
+      "velocity_rows": 0,
+      "restart_mode": "from_scratch",
+      "restart_state_input": false
+    },
+    "nose": {
+      "forbidden_hits_complete_text": {},
+      "forbidden_hits_comments_stripped": {},
+      "atomic_velocities_header": false,
+      "velocity_rows": 0,
+      "restart_mode": "from_scratch",
+      "restart_state_input": false
+    }
+  },
+  "explicit_velocities_absent_in_both": true
+}

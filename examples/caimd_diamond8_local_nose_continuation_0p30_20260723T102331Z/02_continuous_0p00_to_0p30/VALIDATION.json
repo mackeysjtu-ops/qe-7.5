@@ -1,0 +1,120 @@
+{
+  "caimd": {
+    "actual_xx_last": -0.026499999999999968,
+    "column_count": 26,
+    "event_count_last": 53,
+    "exists": true,
+    "finite": true,
+    "nominal_xx_last": -0.02650000000000002,
+    "path": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_continuation_0p30_20260723T102331Z/02_continuous_0p00_to_0p30/tmp/diamond8_continuous.caimd",
+    "row_count": 265,
+    "temperature_K": {
+      "count": 265,
+      "drift_per_step": 7341205.969719395,
+      "final_200_mean": 475666037.4748706,
+      "finite": true,
+      "first_200_mean": 35659851.36794006,
+      "max": 70017846364.13759,
+      "mean": 359007632.25212324,
+      "min": 300.0,
+      "std": 4289249282.2968726
+    },
+    "velocity_residual_max": 1.640126728885195e-14,
+    "velocity_residual_rms_max": 8.431712992366468e-15,
+    "xx_abs_error_max": 2.255140518769849e-16
+  },
+  "caimd_temperature_K": {
+    "count": 265,
+    "drift_per_step": 7341205.969719395,
+    "final_200_mean": 475666037.4748706,
+    "finite": true,
+    "first_200_mean": 35659851.36794006,
+    "max": 70017846364.13759,
+    "mean": 359007632.25212324,
+    "min": 300.0,
+    "std": 4289249282.2968726
+  },
+  "cell_condition_number_final": 21.70235921298617,
+  "cell_condition_sane": true,
+  "cell_condition_sanity_max": 1000000.0,
+  "completed_expected_steps": false,
+  "dynamics_time_blocks": 265,
+  "eal_ionic_temperature_3N_minus_3_K": {
+    "count": 264,
+    "drift_per_step": 7393924.426283119,
+    "final_200_mean": 475666218.93739706,
+    "finite": true,
+    "first_200_mean": 37335500.583275706,
+    "max": 70017848833.22014,
+    "mean": 360367645.9758906,
+    "min": 317.17345705676325,
+    "std": 4297308311.43189
+  },
+  "expected_steps": 3000,
+  "expected_time_increment_ps": 0.002,
+  "geometry_error": null,
+  "geometry_finite": true,
+  "job_done": false,
+  "minimum_periodic_C_C_distance_bohr_final": 0.2563430531864452,
+  "minimum_periodic_C_C_distance_sane": false,
+  "minimum_periodic_C_C_distance_sanity_bounds_bohr": [
+    0.8,
+    20.0
+  ],
+  "observed_time_increment_ps": 0.002,
+  "prefix": "diamond8_continuous",
+  "pressure_kbar_final": 11776.88,
+  "pressure_kbar_stats": {
+    "count": 265,
+    "drift_per_step": 11.622853299629858,
+    "final_200_mean": 2176.2257,
+    "finite": true,
+    "first_200_mean": 1748.5177000000008,
+    "max": 16784.77,
+    "mean": 1794.3374716981136,
+    "min": -577.08,
+    "std": 2877.7568859200746
+  },
+  "returncode": 1,
+  "run_dir": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_continuation_0p30_20260723T102331Z/02_continuous_0p00_to_0p30",
+  "stdout_temperature_K": {
+    "count": 1,
+    "drift_per_step": null,
+    "final_200_mean": 317.2,
+    "finite": true,
+    "first_200_mean": 317.2,
+    "max": 317.2,
+    "mean": 317.2,
+    "min": 317.2,
+    "std": 0.0
+  },
+  "stress_block_count": 265,
+  "temperature_analysis_K": {
+    "count": 265,
+    "drift_per_step": 7341205.969719395,
+    "final_200_mean": 475666037.4748706,
+    "finite": true,
+    "first_200_mean": 35659851.36794006,
+    "max": 70017846364.13759,
+    "mean": 359007632.25212324,
+    "min": 300.0,
+    "std": 4289249282.2968726
+  },
+  "temperature_analysis_source": "caimd_temperature_K",
+  "temperature_classification": "FAIL",
+  "time_increment_sane": true,
+  "trajectory_blocks": {
+    "cel": 264,
+    "pos": 264,
+    "vel": 264
+  },
+  "valid": false,
+  "validated_utc": "2026-07-23T11:21:26Z",
+  "volume_bohr3_final": 237.3705510674264,
+  "volume_positive": true,
+  "volume_sane": true,
+  "volume_sanity_bounds_bohr3": [
+    10.0,
+    5000.0
+  ]
+}

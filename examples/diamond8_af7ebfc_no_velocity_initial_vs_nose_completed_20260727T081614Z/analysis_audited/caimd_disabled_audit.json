@@ -1,0 +1,21 @@
+{
+  "runs": {
+    "control": {
+      "caimd_lines": [
+        "caimd = .false."
+      ],
+      "forbidden_parameters": [],
+      "active_caimd": [],
+      "exactly_caimd_false": true
+    },
+    "nose": {
+      "caimd_lines": [
+        "caimd = .false."
+      ],
+      "forbidden_parameters": [],
+      "active_caimd": [],
+      "exactly_caimd_false": true
+    }
+  },
+  "both_explicitly_disabled": true
+}

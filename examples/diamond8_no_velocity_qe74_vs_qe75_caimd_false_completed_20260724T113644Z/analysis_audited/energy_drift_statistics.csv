@@ -1,0 +1,3 @@
+run,quantity,initial_Ry,final_Ry,drift_total_Ry,drift_Ry_per_ps,drift_eV_per_atom_per_ps,max_excursion_Ry,classification
+qe74,edyn from .e col3 = ekint + ut (extended PR total, press=0),0.019951,0.022385,0.002434,0.001218218218,0.002071837904,0.002439,GOOD_CONSERVATION
+qe75,edyn from .e col3 = ekint + ut (extended PR total, press=0),0.019951,0.022204,0.002253,0.001127627628,0.001917769432,0.002253,GOOD_CONSERVATION

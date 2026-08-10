@@ -1,0 +1,39 @@
+{
+  "audit_utc": "2026-07-28T23:52:24Z",
+  "single_grouped_sacct": true,
+  "query": "sacct -j 50605866,50605867 --format=JobID,JobName%28,State,ExitCode,Elapsed,NodeList%28,Reason,Start,End",
+  "independent_no_dependency": true,
+  "jobs": {
+    "JOB75": {
+      "id": 50605866,
+      "name": "d8_vcr75_ibrav",
+      "state": "COMPLETED",
+      "exit_code": "0:0",
+      "elapsed": "00:00:37",
+      "node": "lrdn2889",
+      "start": "2026-07-28T23:02:21",
+      "end": "2026-07-28T23:02:58",
+      "pw_x_step": {
+        "state": "COMPLETED",
+        "exit": "0:0",
+        "elapsed": "00:00:03"
+      }
+    },
+    "JOB74": {
+      "id": 50605867,
+      "name": "d8_vcr74_ibrav",
+      "state": "COMPLETED",
+      "exit_code": "0:0",
+      "elapsed": "00:00:36",
+      "node": "lrdn2931",
+      "start": "2026-07-28T23:02:21",
+      "end": "2026-07-28T23:02:57",
+      "pw_x_step": {
+        "state": "COMPLETED",
+        "exit": "0:0",
+        "elapsed": "00:00:03"
+      }
+    }
+  },
+  "still_active": false
+}

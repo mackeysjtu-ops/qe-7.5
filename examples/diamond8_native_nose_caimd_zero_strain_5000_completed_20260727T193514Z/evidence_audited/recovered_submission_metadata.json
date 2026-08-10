@@ -1,0 +1,83 @@
+{
+  "audit_created_utc": "2026-07-27T19:52:39Z",
+  "job_id": "50434898",
+  "remote_workdir": "/leonardo/home/userexternal/mcheng00/workspace/Diamond/diamond8_native_nose_caimd_zero_strain_5000_20260727T151734Z",
+  "local_mirror": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/diamond8_native_nose_caimd_zero_strain_5000_completed_20260727T193514Z",
+  "submission_time_utc": "2026-07-27T15:26:03Z",
+  "slurm_script": "scripts/run_long_zero_strain.slurm",
+  "requested_resources": {
+    "account": "ICT26_CMSP_0",
+    "partition": "boost_usr_prod",
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus_per_task": 8,
+    "gpus_per_node": 1,
+    "time": "04:00:00"
+  },
+  "runtime": {
+    "node": "lrdn1374",
+    "elapsed": "01:12:09",
+    "step_A": "COMPLETED 0:0 (24:20)",
+    "step_B": "COMPLETED 0:0 (24:05)",
+    "step_C": "COMPLETED 0:0 (23:33)"
+  },
+  "executable": {
+    "job_id": "50434898",
+    "node": "lrdn1374",
+    "mpi_launcher": "srun --mpi=pmix_v3 -n 1",
+    "ranks": 1,
+    "omp_threads": 8,
+    "executable_path": "/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-thermostat-af7ebfc/install-current-gpu/bin/pw.x",
+    "executable_sha256_runtime": "89d4fda827d2cc22a3b4c1670e90dc40ce629af42096c785b55c70c355a10e7d",
+    "expected_sha256": "89d4fda827d2cc22a3b4c1670e90dc40ce629af42096c785b55c70c355a10e7d",
+    "version_banner": "7.5",
+    "slurm_steps": {
+      "A": "50434898.0",
+      "B": "50434898.1",
+      "C": "50434898.2"
+    },
+    "module_list": [
+      "profile/base(default)",
+      "profile/chem-phys",
+      "nvhpc/24.5(default)",
+      "hpcx-mpi/2.19(default)",
+      "glibc/2.28--gcc--12.2.0-gi6mmti",
+      "fftw/3.3.10--hpcx-mpi--2.19--nvhpc--24.5",
+      "libxc/7.0.0--nvhpc--24.5",
+      "openblas/0.3.26--nvhpc--24.5",
+      "netlib-scalapack/2.2.0--hpcx-mpi--2.19--nvhpc--24.5",
+      "nghttp2/1.57.0-634bffh",
+      "zlib-ng/2.1.6-jkgunjc",
+      "curl/8.7.1(default)",
+      "gmake/4.4.1-phqmvks",
+      "ncurses/6.5-svfl57u",
+      "cmake/3.27.9(default)"
+    ],
+    "sha256_matches_expected": true
+  },
+  "inputs": {
+    "A": {
+      "path": "inputs/case_A_caimd_false_nose_5000.in",
+      "sha256": "d5bcf664401a8c913a89137a35dafa2ae842349658cda39055bd20ce9ed012f1"
+    },
+    "B": {
+      "path": "inputs/case_B_caimd_true_all_false_nose_5000.in",
+      "sha256": "22a771a676f7f8bd9e75201fecdf560d34fb6e8775958cbe73fca042d5a49f3d"
+    },
+    "C": {
+      "path": "inputs/case_C_caimd_true_all_fixed_zero_strain_nose_5000.in",
+      "sha256": "fbb05826b8e787b9c9feb31e1b0950a0d3b25ca62d555c79f5ae0c5be2a7175d"
+    }
+  },
+  "pseudopotential": {
+    "file": "pseudo/C.UPF",
+    "sha256": "9c06aa642d22981491b32a18ec129086fe8366164984930389e4fc071c978639",
+    "expected": "9c06aa642d22981491b32a18ec129086fe8366164984930389e4fc071c978639"
+  },
+  "requested_steps": 5000,
+  "timestep_fs": 2.0,
+  "requested_time_ps": 10.0,
+  "expected_report": "FINAL_LONG_ZERO_STRAIN_REPORT.md",
+  "expected_json": "analysis/comparison_summary.json",
+  "selection": "exact WorkDir given by task; verified via WORKFLOW_METADATA.json, job name dia8_caimd_zero_5k, slurm-50434898.out, matching input checksums, three case dirs"
+}

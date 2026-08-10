@@ -1,0 +1,51 @@
+{
+  "final_pressure_diff_kbar": 0.0,
+  "final_max_force_diff_Ry_au": 0.0,
+  "final_volume_diff_bohr3": 0.0,
+  "final_volume_rel_diff": 0.0,
+  "final_lattice_const_diff_ang": 0.0,
+  "final_lattice_const_rel_diff": 0.0,
+  "final_energy_per_atom_diff_eV": 0.0,
+  "relaxation_step_count_diff": 0,
+  "scf_iteration_count_diff": 0,
+  "fractional_rms_diff_minimage": 7.071064471698192e-11,
+  "normalized_cartesian_rms_diff_ang": 4.3171240399670293e-10,
+  "max_atom_position_diff_ang": 6.10533875691091e-10,
+  "min_CC_distance_diff_ang": -2.0351120788575372e-10,
+  "both_cells_cubic": true,
+  "shear_or_symmetry_breaking": false,
+  "tolerances": {
+    "pressure_kbar": 5.0,
+    "rel_volume": 0.005,
+    "rel_lattice": 0.002,
+    "cart_rms_ang": 0.001,
+    "max_atom_ang": 0.005
+  },
+  "checks": {
+    "both_valid": true,
+    "both_pressure_ok": true,
+    "rel_volume_ok": true,
+    "rel_lattice_ok": true,
+    "cart_rms_ok": true,
+    "max_atom_ok": true,
+    "both_cubic": true,
+    "no_numerical_failure": true
+  },
+  "verdict": "CONSISTENT",
+  "qe75": {
+    "P_kbar": 0.25,
+    "V_bohr3": 295.5588,
+    "a_ang": 3.524918683143288,
+    "Epa_eV": -155.62536179684153,
+    "maxforce_Ry_au": 3.9837168574084176e-07,
+    "class": "QE75_VCRELAX_VALID"
+  },
+  "qe74": {
+    "P_kbar": 0.25,
+    "V_bohr3": 295.5588,
+    "a_ang": 3.524918683143288,
+    "Epa_eV": -155.62536179684153,
+    "maxforce_Ry_au": 3.9837168574084176e-07,
+    "class": "QE74_VCRELAX_VALID"
+  }
+}

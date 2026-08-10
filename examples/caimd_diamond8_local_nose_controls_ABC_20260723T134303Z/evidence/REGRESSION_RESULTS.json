@@ -1,0 +1,72 @@
+{
+  "bash_n": {
+    "cmd": [
+      "bash",
+      "-n",
+      "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_controls_ABC_20260723T134303Z/scripts/run_controls_abc.sh"
+    ],
+    "cwd": "/Users/mengqicheng/Downloads/Learning/qe-7.5",
+    "elapsed_s": 0.003885984420776367,
+    "returncode": 0,
+    "timeout": false
+  },
+  "bash_n_stdout": "",
+  "finished_utc": "2026-07-23T13:57:09Z",
+  "full_harness": {
+    "reason": "Full harness not run automatically after long ABC controls; targeted Nose/CAIMD cases were run.",
+    "status": "not_run"
+  },
+  "git_diff_check": {
+    "cmd": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "cwd": "/Users/mengqicheng/Downloads/Learning/qe-7.5",
+    "elapsed_s": 0.023358821868896484,
+    "returncode": 0,
+    "timeout": false
+  },
+  "git_diff_check_stdout": "",
+  "py_compile": {
+    "cmd": [
+      "/Users/mengqicheng/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+      "-m",
+      "py_compile",
+      "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_controls_ABC_20260723T134303Z/scripts/controls_abc_workflow.py"
+    ],
+    "cwd": "/Users/mengqicheng/Downloads/Learning/qe-7.5",
+    "elapsed_s": 0.040162086486816406,
+    "returncode": 0,
+    "timeout": false
+  },
+  "py_compile_stdout": "",
+  "started_utc": "2026-07-23T13:57:08Z",
+  "targeted_harness": {
+    "cmd": [
+      "/Users/mengqicheng/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+      "/Users/mengqicheng/Downloads/Learning/qe-7.5/test-suite/caimd/caimd_validation.py",
+      "--mode",
+      "local",
+      "--current-exe",
+      "/private/tmp/qe_diamond8_af7ebfc_build/bin/pw.x",
+      "--pseudo",
+      "/Users/mengqicheng/Downloads/Learning/qe-7.5/pseudo/C.UPF",
+      "--work-root",
+      "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_controls_ABC_20260723T134303Z/evidence",
+      "--run-id",
+      "caimd_harness_targeted_controls_ABC",
+      "--cases",
+      "ordinary_vcmd_nose,vcmd_allfalse_nose,active_nose_zero,active_nose_stride2_xx",
+      "--timeout",
+      "300"
+    ],
+    "cwd": "/Users/mengqicheng/Downloads/Learning/qe-7.5",
+    "elapsed_s": 0.7126450538635254,
+    "returncode": 0,
+    "timeout": false
+  },
+  "targeted_harness_stdout_path": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_controls_ABC_20260723T134303Z/evidence/regression_targeted.out",
+  "tracked_source_diff_empty": true,
+  "tracked_source_diff_stdout": ""
+}

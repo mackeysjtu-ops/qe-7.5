@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 640" font-family="system-ui, -apple-system, 'PingFang SC', 'Hiragino Sans GB', sans-serif">
+  <style>
+    .t { fill: #0b0b0b; font-size: 14px; }
+    .sub { fill: #52514e; font-size: 11.5px; }
+    .code { font-family: ui-monospace, Menlo, monospace; font-size: 12.5px; fill: #0b0b0b; }
+    .cellref { fill: none; stroke: #898781; stroke-width: 2; }
+    .cellpr { fill: #fdeee7; stroke: #eb6834; stroke-width: 2; }
+    .cellproj { fill: #e8f1fb; stroke: #2a78d6; stroke-width: 2.4; }
+    .arrow { stroke: #898781; stroke-width: 1.6; fill: none; marker-end: url(#ah2); }
+    .fbox { fill: #ffffff; stroke: #c3c2b7; stroke-width: 1.3; }
+  </style>
+  <defs>
+    <marker id="ah2" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+      <path d="M0,0 L8,4.5 L0,9 z" fill="#898781"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="900" height="640" fill="#fcfcfb"/>
+  <text x="24" y="34" class="t" font-size="17" font-weight="700">图 2 · CAIMD strain-and-hold 投影概念（掩码分量受控，未掩码分量保留 PR 响应）</text>
+
+  <!-- Reference cell -->
+  <g transform="translate(60,90)">
+    <rect x="0" y="0" width="120" height="120" class="cellref"/>
+    <text x="60" y="145" class="t" text-anchor="middle">参考胞 H_ref</text>
+    <text x="60" y="163" class="sub" text-anchor="middle">运行开始时记录</text>
+  </g>
+
+  <path class="arrow" d="M195,150 L255,150"/>
+  <text x="225" y="140" class="sub" text-anchor="middle">PR 动力学</text>
+
+  <!-- PR candidate cell: sheared parallelogram -->
+  <g transform="translate(270,90)">
+    <polygon points="14,6 148,-4 136,122 -6,126" class="cellpr"/>
+    <text x="72" y="145" class="t" text-anchor="middle">PR 候选胞 H_candidate</text>
+    <text x="72" y="163" class="sub" text-anchor="middle">普通应力/压力驱动 + 可能的转动</text>
+  </g>
+
+  <path class="arrow" d="M440,150 L500,150"/>
+  <text x="470" y="140" class="sub" text-anchor="middle">CAIMD 投影</text>
+
+  <!-- projected cell -->
+  <g transform="translate(516,90)">
+    <polygon points="0,4 112,0 116,120 2,122" class="cellproj"/>
+    <text x="60" y="145" class="t" text-anchor="middle">投影胞 H_projected</text>
+    <text x="60" y="163" class="sub" text-anchor="middle">掩码分量=名义目标；无转动</text>
+  </g>
+
+  <!-- formula pipeline -->
+  <g transform="translate(60,290)">
+    <rect x="0" y="0" width="780" height="212" class="fbox" rx="10"/>
+    <text x="20" y="30" class="t" font-weight="700">六分量小应变流水线（分量顺序 (xx, yy, zz, yz, xz, xy)，张量剪切约定）</text>
+    <text x="20" y="60" class="code">1.  F = H_candidate · H_ref⁻¹ ;   E_pr = sym(F - I)      （反对称部分 W 在此被丢弃 → 抑制胞转动）</text>
+    <text x="20" y="88" class="code">2.  事件步（MOD(istep-1, caimd_stride)==0）：target(i) += caimd_stride · caimd_step_strain(i)</text>
+    <text x="20" y="116" class="code">3.  E_proj(i) = caimd_mask(i) ? target(i) : E_pr(i)      （掩码=受控/保持；未掩码=保留 PR 响应）</text>
+    <text x="20" y="144" class="code">4.  H_projected = (I + E_proj) · H_ref                   （对参考胞累计目标，避免乘积漂移）</text>
+    <text x="20" y="172" class="code">5.  det/条件数安全检查；ratd 等历史 ← (H_projected⁻¹ · H_candidate) · 历史（保持物理速度）</text>
+    <text x="20" y="198" class="sub">工程剪切 = 2 × 张量剪切；每事件增量硬限制 |stride · step_strain| ≤ 1.0e-2；累计名义应变首次超过 1.0e-2 时发出一次性警告。</text>
+  </g>
+
+  <!-- legend -->
+  <g transform="translate(60,530)">
+    <rect x="0" y="0" width="26" height="18" class="cellref"/>
+    <text x="34" y="14" class="sub">H_ref 参考胞</text>
+    <rect x="150" y="0" width="26" height="18" class="cellpr"/>
+    <text x="184" y="14" class="sub">PR 候选（未掩码自由度 + 转动）</text>
+    <rect x="420" y="0" width="26" height="18" class="cellproj"/>
+    <text x="454" y="14" class="sub">CAIMD 投影结果（strain-and-hold）</text>
+    <text x="0" y="48" class="sub">依据：PW/src/caimd_module.f90 caimd_project_cell_increment / caimd_project_tangent / caimd_transform_atomic_history（af7ebfc 源码核实）。</text>
+    <text x="0" y="68" class="sub">示意图为概念性质，不按比例；实际 V1 限于小应变协议。</text>
+  </g>
+</svg>

@@ -1,0 +1,19 @@
+{
+  "audit_utc": "2026-07-28T12:39:17Z",
+  "recovered": {
+    "JOB1": 50558068,
+    "JOB2": 50558069,
+    "JOB3": 50558070,
+    "JOB4": 50558071
+  },
+  "submission_timestamp_utc": "2026-07-28T12:08:47Z",
+  "dependency_expressions": {
+    "JOB2": "afterok:50558068",
+    "JOB3": "afterok:50558069",
+    "JOB4": "afterok:50558070"
+  },
+  "afterany_used": false,
+  "afterok_correct": true,
+  "chain_behavior": "CORRECT",
+  "chain_behavior_note": "JOB1 FAILED at QE input parsing; JOB2/JOB3/JOB4 were CANCELLED because their afterok dependency was never satisfied. The dependency chain enforced the intended gating correctly."
+}

@@ -1,0 +1,89 @@
+{
+  "continuation_0p30_caimd": {
+    "actual_xx_final": -0.026499999999999968,
+    "events_final": 53,
+    "last_actual_strains": {
+      "xx": -0.026499999999999968,
+      "xy": -0.46212053710344453,
+      "xz": 1.0796891802659618,
+      "yy": 0.5581433215010438,
+      "yz": -0.4741702477636549,
+      "zz": 0.8004691398698094
+    },
+    "last_temperature_K": 70017846364.13759,
+    "nominal_xx_final": -0.02650000000000002,
+    "rows": 265,
+    "velocity_jump_max": 1.640126728885195e-14,
+    "xx_abs_error_max": 2.255140518769849e-16
+  },
+  "control_A_ordinary_local": {
+    "final500_mean_K": 4770.521264780072,
+    "final_K": 5064.730659823691,
+    "first_step_above_2000K": 129,
+    "first_step_above_600K": 25,
+    "first_time_above_2000K_ps": 0.258,
+    "first_time_above_600K_ps": 0.05,
+    "initial_K": 300.0013104748603,
+    "max_K": 8047.601691796927,
+    "mean_K": 3843.933566504057,
+    "min_K": 184.56298354811466,
+    "rows": 664,
+    "std_K": 2000.023722378614
+  },
+  "convention": {
+    "dt_ps": 0.002,
+    "k_boltzmann_ry": 6.3336231268045196e-06,
+    "ndof": 21,
+    "temperature": "T = 2*eka/(ndof*kB_Ry), eka from .eal column 2"
+  },
+  "four_dof_test1": {
+    "final500_mean_K": 4449.256566348906,
+    "final_K": 4258.000655965425,
+    "first_step_above_2000K": 31,
+    "first_step_above_600K": 5,
+    "first_time_above_2000K_ps": 0.062,
+    "first_time_above_600K_ps": 0.01,
+    "initial_K": 559.0871998779901,
+    "max_K": 8503.520679997908,
+    "mean_K": 4612.569434785481,
+    "min_K": 293.97151119159537,
+    "rows": 3576,
+    "std_K": 1176.6061391505452
+  },
+  "four_dof_test2": {
+    "final500_mean_K": 5246.364754832165,
+    "final_K": 6011.454258014118,
+    "first_step_above_2000K": 31,
+    "first_step_above_600K": 5,
+    "first_time_above_2000K_ps": 0.062,
+    "first_time_above_600K_ps": 0.01,
+    "initial_K": 559.0871998779901,
+    "max_K": 9657.753580205932,
+    "mean_K": 4962.211698893025,
+    "min_K": 293.89632666187885,
+    "rows": 779,
+    "std_K": 1524.0700335565507
+  },
+  "leonardo_af7ebfc_cell": {
+    "condition_number_max": 1.0169748808001722,
+    "frames": 1000,
+    "volume_change_percent_final": 0.3024848736544772,
+    "volume_change_percent_max_abs": 0.3024848736544772,
+    "volume_final_bohr3": 258.6161656234765,
+    "volume_first_bohr3": 257.83624996852376
+  },
+  "leonardo_af7ebfc_ordinary": {
+    "final500_mean_K": 4915.216298124467,
+    "final_K": 4231.686070564643,
+    "first_step_above_2000K": 129,
+    "first_step_above_600K": 25,
+    "first_time_above_2000K_ps": 0.258,
+    "first_time_above_600K_ps": 0.05,
+    "initial_K": 300.0013104748603,
+    "max_K": 8123.838804929478,
+    "mean_K": 4201.452281035707,
+    "min_K": 184.57802045405793,
+    "rows": 1000,
+    "std_K": 1835.441134724242
+  }
+}

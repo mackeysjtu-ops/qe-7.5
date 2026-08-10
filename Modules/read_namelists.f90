@@ -601,8 +601,10 @@ MODULE read_namelists_module
        cell_damping = 0.1_DP
        press_conv_thr = 0.5_DP
        caimd = .FALSE.
+       caimd_loading_mode = 'legacy_strain'
        caimd_stride = 1
        caimd_step_strain = 0.0_DP
+       caimd_step_defgrad = 0.0_DP
        caimd_mask = .FALSE.
        treinit_gvecs = .FALSE.
        !
@@ -1314,8 +1316,10 @@ MODULE read_namelists_module
        CALL mp_bcast( cell_damping,     ionode_id, intra_image_comm )
        CALL mp_bcast( press_conv_thr,   ionode_id, intra_image_comm )
        CALL mp_bcast( caimd,            ionode_id, intra_image_comm )
+       CALL mp_bcast( caimd_loading_mode,ionode_id, intra_image_comm )
        CALL mp_bcast( caimd_stride,     ionode_id, intra_image_comm )
        CALL mp_bcast( caimd_step_strain,ionode_id, intra_image_comm )
+       CALL mp_bcast( caimd_step_defgrad,ionode_id, intra_image_comm )
        CALL mp_bcast( caimd_mask,       ionode_id, intra_image_comm )
        CALL mp_bcast( treinit_gvecs,    ionode_id, intra_image_comm )
        !
@@ -1919,6 +1923,7 @@ MODULE read_namelists_module
        INTEGER           :: i
        LOGICAL           :: allowed = .FALSE.
        REAL(DP)           :: event_increment
+       LOGICAL           :: strain_nonzero, defgrad_nonzero
        !
        !
        IF( prog == 'CP' .AND. caimd ) &
@@ -1941,6 +1946,12 @@ MODULE read_namelists_module
           CALL errore( sub_name,' cell_nstepe out of range ',1)
        IF( caimd_stride <= 0 ) &
           CALL errore( sub_name,' caimd_stride out of range ',1)
+       SELECT CASE( TRIM( caimd_loading_mode ) )
+       CASE( 'legacy_strain', 'linear_defgrad' )
+          CONTINUE
+       CASE DEFAULT
+          CALL errore( sub_name, ' unknown caimd_loading_mode ', 1 )
+       END SELECT
        DO i = 1, 6
           IF( caimd_step_strain(i) /= caimd_step_strain(i) .OR. &
               ABS( caimd_step_strain(i) ) >= HUGE( caimd_step_strain(i) ) * 0.1_DP ) &
@@ -1953,6 +1964,25 @@ MODULE read_namelists_module
              CALL errore( sub_name, &
                           ' abs(caimd_stride*caimd_step_strain) exceeds 1.0d-2 ', i )
        END DO
+       DO i = 1, 3
+          IF( caimd_step_defgrad(i,1) /= caimd_step_defgrad(i,1) .OR. &
+              ABS( caimd_step_defgrad(i,1) ) >= HUGE( caimd_step_defgrad(i,1) ) * 0.1_DP ) &
+             CALL errore( sub_name,' caimd_step_defgrad contains a non-finite value ', i )
+          IF( caimd_step_defgrad(i,2) /= caimd_step_defgrad(i,2) .OR. &
+              ABS( caimd_step_defgrad(i,2) ) >= HUGE( caimd_step_defgrad(i,2) ) * 0.1_DP ) &
+             CALL errore( sub_name,' caimd_step_defgrad contains a non-finite value ', 3 + i )
+          IF( caimd_step_defgrad(i,3) /= caimd_step_defgrad(i,3) .OR. &
+              ABS( caimd_step_defgrad(i,3) ) >= HUGE( caimd_step_defgrad(i,3) ) * 0.1_DP ) &
+             CALL errore( sub_name,' caimd_step_defgrad contains a non-finite value ', 6 + i )
+       END DO
+       strain_nonzero = ANY( ABS( caimd_step_strain ) > 0.0_DP )
+       defgrad_nonzero = ANY( ABS( caimd_step_defgrad ) > 0.0_DP )
+       IF( TRIM( caimd_loading_mode ) == 'legacy_strain' .AND. defgrad_nonzero ) &
+          CALL errore( sub_name, &
+                       ' caimd_step_defgrad requires caimd_loading_mode=''linear_defgrad'' ', 1 )
+       IF( TRIM( caimd_loading_mode ) == 'linear_defgrad' .AND. strain_nonzero ) &
+          CALL errore( sub_name, &
+                       ' caimd_step_strain requires caimd_loading_mode=''legacy_strain'' ', 1 )
        !
        RETURN
        !

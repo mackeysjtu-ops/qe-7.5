@@ -1,0 +1,52 @@
+{
+  "qe74": {
+    "return_code": 0,
+    "slurm_step": "50160152.0",
+    "slurm_step_state": "COMPLETED 0:0",
+    "job_done": true,
+    "runtime_version": "7.4.1",
+    "completed_ionic_steps": 1000,
+    "requested_steps": 1000,
+    "requested_time_ps": 2.0,
+    "completed_time_ps": 1.998,
+    "final_valid_nst": 999,
+    "first_error": null,
+    "scf_failure_count": 0,
+    "rows": {
+      "eal": 1000,
+      "p": 1000,
+      "tv": 1000,
+      "cel": 1000,
+      "pos": 1000,
+      "stdout_stress": 1000,
+      "stdout_T": 1000
+    },
+    "classification": "COMPLETE"
+  },
+  "qe75": {
+    "return_code": 0,
+    "slurm_step": "50160152.1",
+    "slurm_step_state": "COMPLETED 0:0",
+    "job_done": true,
+    "runtime_version": "7.5",
+    "completed_ionic_steps": 1000,
+    "requested_steps": 1000,
+    "requested_time_ps": 2.0,
+    "completed_time_ps": 1.998,
+    "final_valid_nst": 999,
+    "first_error": null,
+    "scf_failure_count": 0,
+    "rows": {
+      "eal": 1000,
+      "p": 1000,
+      "tv": 1000,
+      "cel": 1000,
+      "pos": 1000,
+      "stdout_stress": 1000,
+      "stdout_T": 1000
+    },
+    "classification": "COMPLETE"
+  },
+  "internal_post_processing_rc": 0,
+  "wrapper_completed": true
+}

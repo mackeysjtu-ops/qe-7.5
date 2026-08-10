@@ -1,0 +1,4 @@
+control,completion_status,completed_steps,simulated_time_ps,initial_direct_temperature_K,mean_direct_temperature_K,mean_eal_temperature_K,std_eal_temperature_K,first_500_mean_K,final_500_mean_K,min_K,max_K,drift_K_per_ps,fraction_below_150K,fraction_above_600K,first_step_above_600K,first_step_above_2000K,determinant_min,condition_number_max,volume_min,volume_max,maximum_cell_strain,classification
+A,FAIL,664,1.328,300.00000000000006,5064.727517264306,3843.933566439214,2000.0237223448755,3558.3748340024267,4770.521264699599,184.5629835450013,8047.601691661173,3351.0491708631257,0.0,0.8192771084337349,26,130,257.37349918149346,1.0073577512227918,257.37349918149346,257.83624996852376,0.003152696754065931,FAIL
+B,,,,300.00000000000006,,,,,,,,,,,,,,,,,,
+C,,,,300.00000000000006,,,,,,,,,,,,,,,,,,

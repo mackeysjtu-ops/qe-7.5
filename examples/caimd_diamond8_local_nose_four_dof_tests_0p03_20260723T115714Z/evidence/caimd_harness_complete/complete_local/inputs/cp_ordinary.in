@@ -1,0 +1,38 @@
+&CONTROL
+ calculation='vc-cp',
+ restart_mode='from_scratch',
+ prefix='cp_ordinary',
+ outdir='./tmp',
+ pseudo_dir='/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/evidence/caimd_harness_complete/complete_local/pseudopotentials',
+ nstep=1,
+ dt=5.0,
+/
+&SYSTEM
+ ibrav=0,
+ nat=1,
+ ntyp=1,
+ nbnd=4,
+ ecutwfc=12,
+ ecutrho=48,
+/
+&ELECTRONS
+ electron_dynamics='verlet',
+ emass=400.d0,
+ emass_cutoff=2.5d0,
+/
+&IONS
+ ion_dynamics='verlet',
+/
+&CELL
+ cell_dynamics='pr',
+ wmass=20.d0,
+ caimd=.false.,
+/
+ATOMIC_SPECIES
+ C 12.011 C.UPF
+CELL_PARAMETERS bohr
+     6.74000000     0.00000000     0.00000000
+     0.00000000     6.74000000     0.00000000
+     0.00000000     0.00000000     6.74000000
+ATOMIC_POSITIONS bohr
+ C 0.0 0.0 0.0

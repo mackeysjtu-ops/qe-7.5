@@ -1,0 +1,29 @@
+run,comparison,step_or_lag,value_or_max_abs_diff_K
+control,T_instant_3Np1 vs reported .tv (lag0),0,309.9886699
+control,T_running_avg(2avk/3(N+1)) vs .tv (lag0),0,233.33
+control,direct .md ratd x terminal .cel (3N-3),999,143.42689
+control,eal instantaneous terminal (3N-3),999,143.4355421
+control,direct-vs-eal terminal abs diff,0,0.008652103861
+control,eal instantaneous at step 0 (3N-3),0,300.0013105
+control,eal instantaneous at step 10 (3N-3),10,142.9754128
+control,eal instantaneous at step 25 (3N-3),25,199.8855907
+control,eal instantaneous at step 50 (3N-3),50,247.8833945
+control,eal instantaneous at step 100 (3N-3),100,221.0575543
+control,eal instantaneous at step 130 (3N-3),130,128.6091528
+control,eal instantaneous at step 250 (3N-3),250,93.24235006
+control,eal instantaneous at step 500 (3N-3),500,133.6660643
+control,eal instantaneous at step 750 (3N-3),750,203.6899279
+nose,T_instant_3Np1 vs reported .tv (lag0),0,313.4586788
+nose,T_running_avg(2avk/3(N+1)) vs .tv (lag0),0,233.33
+nose,direct .md ratd x terminal .cel (3N-3),999,144.6142648
+nose,eal instantaneous terminal (3N-3),999,144.6234577
+nose,direct-vs-eal terminal abs diff,0,0.009192850429
+nose,eal instantaneous at step 0 (3N-3),0,300.0013105
+nose,eal instantaneous at step 10 (3N-3),10,142.9754128
+nose,eal instantaneous at step 25 (3N-3),25,199.8855907
+nose,eal instantaneous at step 50 (3N-3),50,247.8833945
+nose,eal instantaneous at step 100 (3N-3),100,221.0575543
+nose,eal instantaneous at step 130 (3N-3),130,128.6091528
+nose,eal instantaneous at step 250 (3N-3),250,93.24235006
+nose,eal instantaneous at step 500 (3N-3),500,133.6660643
+nose,eal instantaneous at step 750 (3N-3),750,203.6899279

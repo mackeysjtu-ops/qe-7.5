@@ -1,0 +1,124 @@
+{
+  "workflow": "diamond8_no_velocity_qe74_vs_qe75_caimd_false_300K",
+  "created_utc": "2026-07-24T09:35:42Z",
+  "remote_workdir": "/leonardo/home/userexternal/mcheng00/workspace/Diamond/diamond8_no_velocity_qe74_vs_qe75_caimd_false_300K_20260724T092828Z",
+  "purpose": "Compare native from-scratch 300 K variable-cell MD for an ideal 8-atom diamond cell between official unmodified QE 7.4.1 and the QE 7.5 CAIMD-development build af7ebfc with caimd=.false., using no explicit input velocities.",
+  "scope_note": "This tests native 300 K initialization followed by ordinary variable-cell Parrinello-Rahman dynamics. It is NOT a continuing Nose-thermostat comparison: QE 7.4.1 does not accept ion_temperature='nose' for PW vc-md.",
+  "common_temperature_mode": {
+    "keyword": "ion_temperature='initial'",
+    "tempw_K": 300.0,
+    "qe75_source_evidence": "PW/src/input.f90 CASE('initial') present in both a11913a (pristine baseline) and af7ebfc; sets control_temp=.TRUE., temperature=tempw",
+    "qe74_binary_evidence": "string table of the QE 7.4.1 pw.x contains the ion_temperature keyword pool 'Initial|initial|Andersen|andersen|Berendsen|berendsen|reduce_t..|rescale_t..|rescaling|not controlled|not-controlled|not_controlled'; 'nose' is absent from that pool, consistent with the observed 'unknown ion_temperature nose' failure",
+    "no_continuing_thermostat_evidence": "PW/src/input.f90 CASE('vc-md') sets ntcheck=nstep+1 and only ion_temperature='rescaling' overrides it, so the vcmove velocity-rescaling branch (vcsubs.f90 ~line 1015) never triggers; tnosep=.false.",
+    "native_initialization_path": "PW/src/vcsmd.f90 -> vcsubs.f90:vcinit -> ranv(temp=tempw) Maxwell distribution",
+    "determinism_note": "QE randy() defaults to idum=0, so the Maxwell realization may be identical between versions; this is NOT assumed and the analysis compares statistically."
+  },
+  "local_repository": {
+    "root": "/Users/mengqicheng/Downloads/Learning/qe-7.5",
+    "branch": "main",
+    "head": "af7ebfc757c32e0b4f050ed9f2208e01020b2ee3",
+    "head_subject": "Support Nose thermostat with active CAIMD",
+    "status_short": [
+      "?? examples/caimd_development_progress_html_20260723T205507Z/",
+      "?? examples/caimd_diamond8_local_nose_continuation_0p30_20260723T102331Z/",
+      "?? examples/caimd_diamond8_local_nose_controls_ABC_20260723T134303Z/",
+      "?? examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/",
+      "?? examples/diamond8_ordinary_nose_qe74_vs_af7ebfc_completed_20260723T185307Z/",
+      "?? examples/diamond8_ordinary_nose_qe74_vs_qe75_af7ebfc_20260723T175625Z/"
+    ],
+    "source_modified": false,
+    "commit_created": false,
+    "pushed": false
+  },
+  "executables": {
+    "qe74": {
+      "module": "quantum-espresso/7.4.1--hpcx-mpi--2.19--nvhpc--24.5-openblas",
+      "path": "/leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/nvhpc-24.5/quantum-espresso-7.4.1-jfm6pcx2dqkcfcwywdgoyao3m3ncvc5a/bin/pw.x",
+      "sha256": "beb956cce572605941b791c37bc4dd30ac6cee714e18be7b93fd4ff0e47f4aca",
+      "sha256_matches_expected": true,
+      "version_probe": "pw.x --version produced no output on the login node; version taken from the module name and the binary string '7.4.1'"
+    },
+    "qe75": {
+      "path": "/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-thermostat-af7ebfc/install-current-gpu/bin/pw.x",
+      "sha256": "89d4fda827d2cc22a3b4c1670e90dc40ce629af42096c785b55c70c355a10e7d",
+      "sha256_matches_expected": true,
+      "remote_src_current_head": "af7ebfc757c32e0b4f050ed9f2208e01020b2ee3",
+      "loader": "/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-thermostat-af7ebfc/scripts/load_build_environment.sh",
+      "local_libs": "/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-thermostat-af7ebfc/local-libs/lib"
+    }
+  },
+  "structure": {
+    "system": "ideal unstrained 8-atom diamond conventional cell",
+    "lattice_constant_angstrom": 3.567,
+    "n_atoms": 8,
+    "cell_determinant_bohr3": 306.2710374914435,
+    "min_periodic_CC_distance_bohr": 2.9187884068060264,
+    "min_periodic_CC_distance_angstrom": 1.5445563083296239,
+    "provenance": "examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/00_metadata/DIAMOND8_SETUP.json",
+    "note": "ideal starting structure, NOT a terminal state from a failed/heated trajectory"
+  },
+  "parameters": {
+    "calculation": "vc-md",
+    "restart_mode": "from_scratch",
+    "ion_dynamics": "beeman",
+    "cell_dynamics": "pr",
+    "cell_dofree": "all",
+    "press_kbar": 0.0,
+    "wmass": 2000000.0,
+    "cell_temperature": "not_controlled",
+    "ecutwfc_Ry": 25.0,
+    "ecutrho_Ry": 120.0,
+    "occupations": "smearing",
+    "smearing": "gaussian",
+    "degauss_Ry": 0.01,
+    "conv_thr": 0.0001,
+    "electron_maxstep": 40,
+    "mixing_beta": 0.3,
+    "kpoints": "gamma",
+    "nosym": true,
+    "noinv": true,
+    "dt_qe": 41.34137333665,
+    "dt_fs": 2.0,
+    "nstep": 1000,
+    "simulated_time_ps": 2.0
+  },
+  "inputs": {
+    "qe74": "inputs/qe74_no_velocity.in",
+    "qe75": "inputs/qe75_caimd_false_no_velocity.in",
+    "qe74_sha256": "99ae1077a3eab5a738e59c9e6d2d2758ecdb094337adc6c897cf5c6dc7b40382",
+    "qe75_sha256": "a7ad97b873f1fda24892695802164e7b6e86e2ceb06e6f5193d2238980f4fd39",
+    "allowed_differences": [
+      "CONTROL.prefix",
+      "CONTROL.outdir",
+      "CELL.caimd",
+      "leading comment"
+    ],
+    "no_explicit_velocity": true,
+    "qe75_caimd": ".false.",
+    "qe74_caimd_keywords": 0
+  },
+  "pseudopotential": {
+    "file": "pseudo/C.UPF",
+    "sha256": "9c06aa642d22981491b32a18ec129086fe8366164984930389e4fc071c978639",
+    "expected_sha256": "9c06aa642d22981491b32a18ec129086fe8366164984930389e4fc071c978639",
+    "source": "/Users/mengqicheng/Downloads/Learning/qe-7.5/pseudo/C.UPF"
+  },
+  "slurm": {
+    "script": "scripts/run_comparison.slurm",
+    "account": "ICT26_CMSP_0",
+    "partition": "boost_usr_prod",
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus_per_task": 8,
+    "gpus_per_node": 1,
+    "time": "04:00:00",
+    "launch": "srun --mpi=pmix_v3 -n 1 <pw.x> -in <input>",
+    "sequential": "QE 7.4.1 first, then QE 7.5; the QE 7.5 run proceeds even if QE 7.4.1 fails"
+  },
+  "prior_evidence_consulted": [
+    "examples/caimd_development_progress_html_20260723T205507Z/CAIMD_DEVELOPMENT_PROGRESS.html",
+    "examples/diamond8_ordinary_nose_qe74_vs_af7ebfc_completed_20260723T185307Z",
+    "examples/caimd_diamond8_local_nose_controls_ABC_20260723T134303Z"
+  ],
+  "analysis_validation": "scripts/analyze_comparison.py parsers were tested locally against the previously completed Leonardo run and reproduced its known values: 1000 eal rows, initial 300.0013 K, max 8123.839 K, final 4231.686 K, volume change +0.3025%, condition number max 1.01697"
+}

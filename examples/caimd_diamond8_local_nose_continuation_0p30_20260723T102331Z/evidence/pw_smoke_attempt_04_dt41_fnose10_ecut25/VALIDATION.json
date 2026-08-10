@@ -1,0 +1,78 @@
+{
+  "caimd": {
+    "exists": false
+  },
+  "caimd_temperature_K": null,
+  "cell_condition_number_final": 2.9318516532001118,
+  "cell_condition_sane": true,
+  "cell_condition_sanity_max": 1000000.0,
+  "completed_expected_steps": true,
+  "dynamics_time_blocks": 1,
+  "expected_steps": 1,
+  "expected_time_increment_ps": 0.002,
+  "geometry_error": null,
+  "geometry_finite": true,
+  "job_done": true,
+  "minimum_periodic_C_C_distance_bohr_final": 1.4718538457103205,
+  "minimum_periodic_C_C_distance_sane": true,
+  "minimum_periodic_C_C_distance_sanity_bounds_bohr": [
+    0.8,
+    20.0
+  ],
+  "observed_time_increment_ps": null,
+  "prefix": "diamond8_smoke",
+  "pressure_kbar_final": -721.69,
+  "pressure_kbar_stats": {
+    "count": 1,
+    "drift_per_step": null,
+    "final_200_mean": -721.69,
+    "finite": true,
+    "first_200_mean": -721.69,
+    "max": -721.69,
+    "mean": -721.69,
+    "min": -721.69,
+    "std": 0.0
+  },
+  "returncode": 0,
+  "run_dir": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_continuation_0p30_20260723T102331Z/evidence/pw_smoke",
+  "stdout_temperature_K": {
+    "count": 1,
+    "drift_per_step": null,
+    "final_200_mean": 233.3,
+    "finite": true,
+    "first_200_mean": 233.3,
+    "max": 233.3,
+    "mean": 233.3,
+    "min": 233.3,
+    "std": 0.0
+  },
+  "stress_block_count": 1,
+  "temperature_analysis_K": {
+    "count": 1,
+    "drift_per_step": null,
+    "final_200_mean": 233.3,
+    "finite": true,
+    "first_200_mean": 233.3,
+    "max": 233.3,
+    "mean": 233.3,
+    "min": 233.3,
+    "std": 0.0
+  },
+  "temperature_analysis_source": "stdout_T_K",
+  "temperature_classification": "WARN",
+  "time_increment_sane": true,
+  "trajectory_blocks": {
+    "cel": 1,
+    "pos": 1,
+    "vel": 1
+  },
+  "valid": true,
+  "validated_utc": "2026-07-23T10:57:18Z",
+  "volume_bohr3_final": 306.2707622842221,
+  "volume_positive": true,
+  "volume_sane": true,
+  "volume_sanity_bounds_bohr3": [
+    10.0,
+    5000.0
+  ]
+}

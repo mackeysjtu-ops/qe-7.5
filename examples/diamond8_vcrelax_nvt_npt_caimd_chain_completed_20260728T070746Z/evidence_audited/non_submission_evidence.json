@@ -1,0 +1,37 @@
+{
+  "audit_utc": "2026-07-28T07:08:28Z",
+  "conclusion": "DIAMOND_CHAIN_NOT_SUBMITTED",
+  "session_stop_point": "before_transfer_and_before_the_four_sbatch_commands",
+  "remote_evidence": {
+    "matching_workflow_root": null,
+    "dependency_chain_json_found": false,
+    "chain_slurm_scripts_found_under_Diamond": false,
+    "sacct_records_for_chain_job_names": "none (queried job names d8_vcrelax,d8_fixed_nvt,d8_free_npt,d8_caimd_zn from 2026-07-27; zero rows)",
+    "note": "The only recent Diamond Slurm job is 50434898 (diamond8_native_nose_caimd_zero_strain_5000, a DIFFERENT prior workflow), not part of this chain."
+  },
+  "local_preparation_evidence": {
+    "prepared_files_exist_locally": true,
+    "local_staging_dir": "/private/tmp/.../scratchpad/stage5/diamond8_vcrelax_nvt_npt_caimd_chain_20260727T203049Z",
+    "copied_into_mirror": "prepared_not_submitted/",
+    "prepared_artifacts": [
+      "scripts/01_vc_relax.slurm", "scripts/02_fixed_nvt.slurm", "scripts/03_free_npt.slurm",
+      "scripts/04_caimd_zero_nonzero.slurm", "scripts/analyze_stage.py",
+      "scripts/extract_final_structure.py", "scripts/build_overall_report.py",
+      "inputs/generated/01_vc_relax.in", "pseudo/C.UPF"
+    ],
+    "transferred_to_leonardo": false,
+    "submitted": false
+  },
+  "provenance_verified_readonly": {
+    "local_repo_head": "af7ebfc757c32e0b4f050ed9f2208e01020b2ee3",
+    "local_repo_branch": "main",
+    "executable_path": "/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-thermostat-af7ebfc/install-current-gpu/bin/pw.x",
+    "executable_exists": true,
+    "executable_sha256": "89d4fda827d2cc22a3b4c1670e90dc40ce629af42096c785b55c70c355a10e7d",
+    "executable_sha256_matches_expected": true,
+    "pseudo_C_UPF_sha256": "9c06aa642d22981491b32a18ec129086fe8366164984930389e4fc071c978639",
+    "pseudo_sha256_matches_expected": true
+  },
+  "job_ids_recovered": null,
+  "job_ids_fabricated": false
+}

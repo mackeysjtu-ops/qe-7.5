@@ -1,0 +1,18 @@
+{
+  "runs": {
+    "qe74": {
+      "caimd_lines_effective_input": [],
+      "forbidden_parameters": [],
+      "active_true": []
+    },
+    "qe75": {
+      "caimd_lines_effective_input": [
+        "caimd = .false."
+      ],
+      "forbidden_parameters": [],
+      "active_true": []
+    }
+  },
+  "qe74_has_no_caimd_keyword": true,
+  "qe75_only_caimd_false": true
+}

@@ -1,0 +1,32 @@
+{
+  "control": "A",
+  "elapsed_s": 55.119303941726685,
+  "preserved_outputs": [
+    "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_controls_ABC_20260723T134303Z/02_control_A_ordinary_vcmd_nose/qe.out",
+    "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_controls_ABC_20260723T134303Z/02_control_A_ordinary_vcmd_nose/qe.err",
+    "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_controls_ABC_20260723T134303Z/02_control_A_ordinary_vcmd_nose/diamond8_control_A_ordinary_vcmd_nose.e",
+    "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_controls_ABC_20260723T134303Z/02_control_A_ordinary_vcmd_nose/diamond8_control_A_ordinary_vcmd_nose.eal",
+    "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_controls_ABC_20260723T134303Z/02_control_A_ordinary_vcmd_nose/diamond8_control_A_ordinary_vcmd_nose.ave",
+    "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_controls_ABC_20260723T134303Z/02_control_A_ordinary_vcmd_nose/diamond8_control_A_ordinary_vcmd_nose.avec",
+    "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_controls_ABC_20260723T134303Z/02_control_A_ordinary_vcmd_nose/diamond8_control_A_ordinary_vcmd_nose.p",
+    "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_controls_ABC_20260723T134303Z/02_control_A_ordinary_vcmd_nose/diamond8_control_A_ordinary_vcmd_nose.tv",
+    "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_controls_ABC_20260723T134303Z/02_control_A_ordinary_vcmd_nose/tmp/diamond8_control_A_ordinary_vcmd_nose.md",
+    "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_controls_ABC_20260723T134303Z/02_control_A_ordinary_vcmd_nose/tmp/diamond8_control_A_ordinary_vcmd_nose.cel",
+    "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_controls_ABC_20260723T134303Z/02_control_A_ordinary_vcmd_nose/tmp/diamond8_control_A_ordinary_vcmd_nose.pos",
+    "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_controls_ABC_20260723T134303Z/02_control_A_ordinary_vcmd_nose/tmp/diamond8_control_A_ordinary_vcmd_nose.vel",
+    "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_controls_ABC_20260723T134303Z/02_control_A_ordinary_vcmd_nose/tmp/diamond8_control_A_ordinary_vcmd_nose.for"
+  ],
+  "returncode": -15,
+  "safety": {
+    "consecutive_records": 20,
+    "control": "A",
+    "detected_utc": "2026-07-23T13:54:45Z",
+    "first_threshold_step": 130,
+    "first_threshold_temperature_K": 2533.4179132851405,
+    "latest_step": 664,
+    "latest_temperature_K": 5064.730659738254,
+    "prefix": "diamond8_control_A_ordinary_vcmd_nose",
+    "reason": "temperature above 2000 K for sustained records"
+  },
+  "status": "SAFETY_STOP"
+}

@@ -1,0 +1,33 @@
+--- case_A (normalized)
++++ case_C (normalized)
+@@ -1,7 +1,7 @@
+ &CONTROL
+   calculation = 'vc-md',
+   restart_mode = 'from_scratch',
+-  prefix = 'diamond8_case_A_caimd_false',
++  prefix = 'diamond8_case_C_caimd_zero',
+   pseudo_dir = '../pseudo',
+   outdir = './tmp',
+   nstep = 5000,
+@@ -42,7 +42,20 @@
+   press = 0.0,
+   wmass = 2000000.00000000,
+   cell_temperature = 'not_controlled',
+-  caimd = .false.
++  caimd = .true.
++  caimd_stride = 1
++  caimd_step_strain(1) = 0.0,
++  caimd_step_strain(2) = 0.0,
++  caimd_step_strain(3) = 0.0,
++  caimd_step_strain(4) = 0.0,
++  caimd_step_strain(5) = 0.0,
++  caimd_step_strain(6) = 0.0,
++  caimd_mask(1) = .true.,
++  caimd_mask(2) = .true.,
++  caimd_mask(3) = .true.,
++  caimd_mask(4) = .true.,
++  caimd_mask(5) = .true.,
++  caimd_mask(6) = .true.
+ /
+ ATOMIC_SPECIES
+ C 12.01070000 C.UPF

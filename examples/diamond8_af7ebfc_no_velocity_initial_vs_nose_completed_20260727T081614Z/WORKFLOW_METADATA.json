@@ -1,0 +1,117 @@
+{
+  "workflow": "diamond8_af7ebfc_no_velocity_initial_vs_nose_300K",
+  "created_utc": "2026-07-24T12:15:28Z",
+  "remote_workdir": "/leonardo/home/userexternal/mcheng00/workspace/Diamond/diamond8_af7ebfc_no_velocity_initial_vs_nose_300K_20260724T120726Z",
+  "purpose": "strict single-factor isolation of the ionic thermostat mode using ONE executable (QE 7.5 af7ebfc): CONTROL ion_temperature='initial' vs TEST ion_temperature='nose'. Neither run supplies explicit velocities; caimd=.false. in both.",
+  "changing_variable": "ion_temperature ('initial' -> 'nose') plus its fnosep/nhpcl parameters",
+  "intended_input_differences": [
+    "CONTROL.prefix",
+    "IONS.ion_temperature",
+    "IONS.fnosep(1) (nose only)",
+    "IONS.nhpcl (nose only)",
+    "leading comment"
+  ],
+  "not_involved": [
+    "QE 7.4.1",
+    "pristine QE 7.5 (a11913a)",
+    "active CAIMD"
+  ],
+  "local_repository": {
+    "root": "/Users/mengqicheng/Downloads/Learning/qe-7.5",
+    "branch": "main",
+    "head": "af7ebfc757c32e0b4f050ed9f2208e01020b2ee3",
+    "head_subject": "Support Nose thermostat with active CAIMD",
+    "status_short": [
+      "?? examples/caimd_development_progress_html_20260723T205507Z/",
+      "?? examples/caimd_diamond8_local_nose_continuation_0p30_20260723T102331Z/",
+      "?? examples/caimd_diamond8_local_nose_controls_ABC_20260723T134303Z/",
+      "?? examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/",
+      "?? examples/diamond8_no_velocity_qe74_vs_qe75_caimd_false_completed_20260724T113644Z/",
+      "?? examples/diamond8_ordinary_nose_qe74_vs_af7ebfc_completed_20260723T185307Z/",
+      "?? examples/diamond8_ordinary_nose_qe74_vs_qe75_af7ebfc_20260723T175625Z/"
+    ],
+    "source_modified": false,
+    "rebuilt": false,
+    "commit_created": false,
+    "pushed": false
+  },
+  "executable": {
+    "path": "/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-thermostat-af7ebfc/install-current-gpu/bin/pw.x",
+    "sha256": "89d4fda827d2cc22a3b4c1670e90dc40ce629af42096c785b55c70c355a10e7d",
+    "sha256_matches_expected": true,
+    "version": "7.5 (from run banner; login-node --version probe fails with an MPI init error for this GPU build)",
+    "remote_src_current_head": "af7ebfc757c32e0b4f050ed9f2208e01020b2ee3",
+    "ldd_missing_libraries": 0
+  },
+  "reference_workflow": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/diamond8_no_velocity_qe74_vs_qe75_caimd_false_completed_20260724T113644Z",
+  "reference_values_verified": {
+    "control_previous_mean_K": 170.01436653663114,
+    "control_previous_final200_K": 174.82712827452696,
+    "control_previous_volume_change_percent": -4.622395517125142,
+    "nose_previous_explicit_velocity_max_K": 8123.838804792437,
+    "nose_previous_explicit_velocity_final_K": 4231.686070493259,
+    "nose_previous_first_step_above_600K": 26,
+    "nose_previous_first_step_above_2000K": 130
+  },
+  "structure": {
+    "system": "ideal undeformed 8-atom diamond conventional cell",
+    "n_atoms": 8,
+    "cell_determinant_bohr3": 306.2710374914435,
+    "min_periodic_CC_bohr": 2.9187884068060264,
+    "note": "identical cell/positions/ordering in both inputs; not a heated or deformed state"
+  },
+  "parameters": {
+    "calculation": "vc-md",
+    "restart_mode": "from_scratch",
+    "ion_dynamics": "beeman",
+    "cell_dynamics": "pr",
+    "cell_dofree": "all",
+    "press": 0.0,
+    "wmass": 2000000.0,
+    "cell_temperature": "not_controlled",
+    "caimd": ".false.",
+    "ecutwfc_Ry": 25.0,
+    "ecutrho_Ry": 120.0,
+    "kpoints": "gamma",
+    "nosym": true,
+    "noinv": true,
+    "conv_thr": 0.0001,
+    "electron_maxstep": 40,
+    "mixing_beta": 0.3,
+    "dt_qe": 41.34137333665,
+    "dt_fs": 2.0,
+    "nstep": 1000,
+    "simulated_time_ps": 2.0,
+    "tempw_K": 300.0,
+    "nose_fnosep_THz": 50.0,
+    "nose_nhpcl": 4
+  },
+  "cutoff_caveat": "ecutwfc=25 Ry retained deliberately from the reference deck; this is a controlled thermostat diagnosis, NOT a converged pressure calculation. Absolute pressures are dominated by Pulay stress.",
+  "inputs": {
+    "control": "inputs/control_initial_no_velocity.in",
+    "nose": "inputs/test_nose_no_velocity.in",
+    "control_sha256": "501d5f5cb73e2f102758b9d50b2d7ab1a29b1a9bb022f53d0b04a9e098aa235b",
+    "nose_sha256": "95e4ac6a623e8408456e548cbc66ab2244efb2db3b19a9c8627eaa799f4bb8fa",
+    "explicit_velocities": false,
+    "caimd": "disabled in both"
+  },
+  "pseudopotential": {
+    "file": "pseudo/C.UPF",
+    "sha256": "9c06aa642d22981491b32a18ec129086fe8366164984930389e4fc071c978639",
+    "expected": "9c06aa642d22981491b32a18ec129086fe8366164984930389e4fc071c978639"
+  },
+  "slurm": {
+    "script": "scripts/run_initial_vs_nose.slurm",
+    "account": "ICT26_CMSP_0",
+    "partition": "boost_usr_prod",
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus_per_task": 8,
+    "gpus_per_node": 1,
+    "time": "04:00:00",
+    "launch": "srun --mpi=pmix_v3 -n 1 <pw.x> -in <input>",
+    "ordering": "CONTROL first, then TEST; the TEST runs even if CONTROL fails (no errexit)"
+  },
+  "safety": "no external runtime killer armed: each run is ~2 min wall time and QE's own singular-cell/non-finite guards are the effective mechanism; the documented extreme conditions are evaluated post-hoc by the analysis and reported",
+  "analysis_validation": "scripts/analyze_initial_vs_nose.py was dry-run locally against the two previously audited real trajectories and reproduced their values exactly: control mean 170.014 K -> CONTROL_BOUNDED; nose max 8123.839 K, first >600 K at 0.05 ps, first >2000 K at 0.258 ps, longest run above 600 K = 876 steps -> SUSTAINED_PHYSICAL_HEATING; direct .md velocity agreed with .eal to 0.06 K"
+}

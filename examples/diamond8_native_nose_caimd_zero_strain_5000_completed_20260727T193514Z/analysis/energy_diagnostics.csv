@@ -1,0 +1,4 @@
+case,quantity,status,initial_Ry,final_Ry,range_Ry,drift_total_Ry,drift_Ry_per_ps,drift_eV_per_atom_per_ps,slope_final_quarter,bounded
+A,edyn (.e col3 = ekint+ut),PARTIAL_EXTENDED_ENERGY (Nose chain energy not written by QE),0.019951,0.13874,0.125114,0.118789,0.01188127626,0.02020662483,0.03135578358,True
+B,edyn (.e col3 = ekint+ut),PARTIAL_EXTENDED_ENERGY (Nose chain energy not written by QE),0.019951,0.12889,0.119844,0.108939,0.01089607922,0.01853108876,0.01520968283,True
+C,edyn (.e col3 = ekint+ut),PARTIAL_EXTENDED_ENERGY (Nose chain energy not written by QE),0.019951,0.094635,0.075419,0.074684,0.007469893979,0.01270413564,0.01164109016,True

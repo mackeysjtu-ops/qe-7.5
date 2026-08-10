@@ -1,0 +1,17 @@
+{
+  "expected_report_paths": {
+    "local_audited": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/diamond8_ordinary_nose_qe74_vs_af7ebfc_completed_20260723T185307Z/FINAL_COMPARISON_REPORT_AUDITED.md",
+    "remote": "/leonardo/home/userexternal/mcheng00/workspace/Diamond/diamond8_ordinary_nose_qe74_vs_qe75_af7ebfc_20260723T175625Z/FINAL_COMPARISON_REPORT.md"
+  },
+  "input_paths": {
+    "qe74": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/diamond8_ordinary_nose_qe74_vs_af7ebfc_completed_20260723T185307Z/inputs/qe74.in",
+    "qe75_af7ebfc": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/diamond8_ordinary_nose_qe74_vs_af7ebfc_completed_20260723T185307Z/inputs/qe75_af7ebfc.in"
+  },
+  "job_id": "50127909",
+  "pseudo_path": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/diamond8_ordinary_nose_qe74_vs_af7ebfc_completed_20260723T185307Z/pseudo/C.UPF",
+  "qe74_executable": "/leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/nvhpc-24.5/quantum-espresso-7.4.1-jfm6pcx2dqkcfcwywdgoyao3m3ncvc5a/bin/pw.x",
+  "qe75_af7ebfc_executable": "/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-thermostat-af7ebfc/install-current-gpu/bin/pw.x",
+  "slurm_script": "/leonardo/home/userexternal/mcheng00/workspace/Diamond/diamond8_ordinary_nose_qe74_vs_qe75_af7ebfc_20260723T175625Z/scripts/run_comparison.slurm",
+  "submission_timestamp": "2026-07-23T20:17:06",
+  "workdir": "/leonardo/home/userexternal/mcheng00/workspace/Diamond/diamond8_ordinary_nose_qe74_vs_qe75_af7ebfc_20260723T175625Z"
+}

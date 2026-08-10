@@ -1,0 +1,30 @@
+{
+  "overall_status": "VCRELAX_FAILED",
+  "audit_utc": "2026-07-28T12:39:17Z",
+  "selected_remote_workdir": "/leonardo/home/userexternal/mcheng00/workspace/Diamond/diamond8_vcrelax_nvt_npt_caimd_chain_20260728T120614Z",
+  "local_mirror": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/diamond8_vcrelax_nvt_npt_caimd_chain_completed_20260728T123746Z",
+  "jobs": {
+    "JOB1": 50558068,
+    "JOB2": 50558069,
+    "JOB3": 50558070,
+    "JOB4": 50558071
+  },
+  "slurm_states": {
+    "JOB1": "FAILED(1:0)",
+    "JOB2": "CANCELLED",
+    "JOB3": "CANCELLED",
+    "JOB4": "CANCELLED"
+  },
+  "dependency_chain_correct": true,
+  "earliest_failed_stage": "vc-relax",
+  "root_cause": "cell_dofree='volume' rejected by init_dofree ibrav/=1 guard at parse time despite input ibrav=1",
+  "stages": {
+    "vc_relax": "VCRELAX_NUMERICAL_FAILURE",
+    "nvt": "NOT_RUN",
+    "npt": "NOT_RUN",
+    "caimd_zero": "NOT_RUN",
+    "caimd_nonzero": "NOT_RUN"
+  },
+  "ready_for_larger_cell_test": false,
+  "singlephase_excluded": true
+}

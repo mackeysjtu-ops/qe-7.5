@@ -1,0 +1,34 @@
+{
+  "audit_utc": "2026-07-28T12:39:17Z",
+  "qe_version": "7.5",
+  "executable_path": "/leonardo/.../qe-7.5-caimd-thermostat-af7ebfc/install-current-gpu/bin/pw.x",
+  "executable_sha256": "89d4fda827d2cc22a3b4c1670e90dc40ce629af42096c785b55c70c355a10e7d",
+  "executable_sha256_matches_expected": true,
+  "pseudopotential_sha256": "9c06aa642d22981491b32a18ec129086fe8366164984930389e4fc071c978639",
+  "pseudopotential_sha256_matches_expected": true,
+  "job1_input": {
+    "n_carbon": 8,
+    "no_H_or_O": true,
+    "ecutwfc": 80.0,
+    "ecutrho": 320.0,
+    "kpoints": "automatic 2 2 2 0 0 0",
+    "calculation": "vc-relax",
+    "press": 0.0,
+    "ibrav": 1,
+    "cell_dofree": "volume",
+    "caimd": "absent"
+  },
+  "downstream_inputs_generated": {
+    "job2": false,
+    "job3": false,
+    "job4a": false,
+    "job4b": false,
+    "note": "jobs 2-4 CANCELLED before running; their runtime-generated inputs never created"
+  },
+  "job_done_markers": {
+    "job1": false,
+    "job2": null,
+    "job3": null,
+    "job4": null
+  }
+}

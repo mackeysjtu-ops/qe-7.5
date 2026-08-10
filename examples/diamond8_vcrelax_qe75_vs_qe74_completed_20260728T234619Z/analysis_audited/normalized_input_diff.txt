@@ -1,0 +1,3 @@
+# Normalized physical-input diff: qe75 vs qe74
+# ignored fields: comment lines (!), prefix, outdir, blank lines
+# result: EMPTY (physical inputs are identical)

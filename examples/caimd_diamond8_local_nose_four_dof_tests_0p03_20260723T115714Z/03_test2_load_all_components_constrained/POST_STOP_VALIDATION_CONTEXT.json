@@ -1,0 +1,6 @@
+{
+  "reason": "post-stop validation of preserved partial or completed output",
+  "test": "test2",
+  "utc": "2026-07-23T12:36:02Z",
+  "validated_without_rerun": true
+}

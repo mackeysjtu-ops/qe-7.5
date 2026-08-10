@@ -1,0 +1,10 @@
+# Single Slurm query performed during this audit (no repeat queries, no polling):
+# sacct -j 50160152 --format=JobID,JobName%34,State,ExitCode,Elapsed,NodeList%28,Start,End
+JobID                                   JobName      State ExitCode    Elapsed                     NodeList               Start                 End 
+------------ ---------------------------------- ---------- -------- ---------- ---------------------------- ------------------- ------------------- 
+50160152                   dia8_qe74_qe75_novel  COMPLETED      0:0   00:04:32                     lrdn0416 2026-07-24T13:12:45 2026-07-24T13:17:17 
+50160152.ba+                              batch  COMPLETED      0:0   00:04:32                     lrdn0416 2026-07-24T13:12:45 2026-07-24T13:17:17 
+50160152.ex+                             extern  COMPLETED      0:0   00:04:32                     lrdn0416 2026-07-24T13:12:45 2026-07-24T13:17:17 
+50160152.0                                 pw.x  COMPLETED      0:0   00:01:42                     lrdn0416 2026-07-24T13:13:18 2026-07-24T13:15:00 
+50160152.1                                 pw.x  COMPLETED      0:0   00:01:43                     lrdn0416 2026-07-24T13:15:32 2026-07-24T13:17:15 
+# Step .0 = official QE 7.4.1 pw.x ; step .1 = QE 7.5 af7ebfc pw.x

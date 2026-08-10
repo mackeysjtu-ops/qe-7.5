@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QE-CAIMD 开发与验证进度报告</title>
+<style>
+:root{
+  --page:#f9f9f7; --surface:#fcfcfb; --ink:#0b0b0b; --ink2:#52514e; --muted:#898781;
+  --grid:#e1e0d9; --base:#c3c2b7; --border:rgba(11,11,11,.10);
+  --blue:#2a78d6; --good:#0ca30c; --warn:#fab219; --serious:#ec835a; --crit:#d03b3b;
+  --goodtext:#006300; --code-bg:#f3f2ee;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --page:#0d0d0d; --surface:#1a1a19; --ink:#ffffff; --ink2:#c3c2b7; --muted:#898781;
+    --grid:#2c2c2a; --base:#383835; --border:rgba(255,255,255,.10);
+    --blue:#3987e5; --goodtext:#0ca30c; --code-bg:#232322;
+  }
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--page);color:var(--ink);
+  font-family:system-ui,-apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Segoe UI",sans-serif;
+  line-height:1.75;font-size:15.5px}
+code,pre{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.92em}
+code{background:var(--code-bg);border:1px solid var(--border);border-radius:4px;padding:.05em .35em;word-break:break-all}
+pre{background:var(--code-bg);border:1px solid var(--border);border-radius:8px;padding:12px 16px;overflow-x:auto;line-height:1.55}
+pre code{background:none;border:none;padding:0;word-break:normal}
+a{color:var(--blue);text-decoration:none}
+a:hover{text-decoration:underline}
+h1,h2,h3,h4{line-height:1.35;color:var(--ink)}
+h2{font-size:1.5em;margin:2.2em 0 .6em;padding-top:.4em;border-top:2px solid var(--grid)}
+h2 .secno{color:var(--muted);font-weight:600;margin-right:.45em}
+h3{font-size:1.13em;margin:1.6em 0 .4em}
+p{margin:.55em 0}
+ul,ol{padding-left:1.6em}
+li{margin:.25em 0}
+/* top nav */
+.topnav{position:sticky;top:0;z-index:50;background:var(--surface);border-bottom:1px solid var(--border);
+  display:flex;flex-wrap:wrap;gap:.15em 1.1em;align-items:center;padding:.55em 22px;font-size:.92em}
+.topnav .brand{font-weight:700;margin-right:.8em}
+.topnav a{color:var(--ink2);white-space:nowrap}
+.topnav a:hover{color:var(--blue);text-decoration:none}
+/* warning banner */
+.warnbanner{background:#fff3e0;border:1.5px solid var(--warn);border-left:6px solid var(--crit);
+  border-radius:10px;padding:14px 18px;margin:20px 0;color:#3d2c00}
+@media (prefers-color-scheme: dark){ .warnbanner{background:#332a00;color:#ffe9c7} }
+.warnbanner b{color:#a03000}
+@media (prefers-color-scheme: dark){ .warnbanner b{color:#ff9c6b} }
+/* layout */
+.layout{display:grid;grid-template-columns:250px minmax(0,1fr);gap:34px;max-width:1340px;margin:0 auto;padding:0 22px 80px}
+main{min-width:0}
+aside.toc{position:sticky;top:56px;align-self:start;max-height:calc(100vh - 76px);overflow-y:auto;
+  font-size:.86em;padding:14px 0 20px;border-right:1px solid var(--grid)}
+aside.toc .toctitle{font-weight:700;color:var(--muted);letter-spacing:.06em;font-size:.9em;margin-bottom:.5em}
+aside.toc a{display:block;color:var(--ink2);padding:.18em .6em .18em 0;border-left:3px solid transparent;padding-left:.6em;line-height:1.45}
+aside.toc a.active{color:var(--blue);border-left-color:var(--blue);font-weight:600}
+@media (max-width: 980px){ .layout{grid-template-columns:1fr} aside.toc{position:static;max-height:none;border-right:none;border-bottom:1px solid var(--grid);columns:2;column-gap:2em} }
+/* cover */
+.cover{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:34px 36px;margin-top:26px}
+.cover h1{font-size:2em;margin:.2em 0 .35em}
+.cover .subtitle{color:var(--ink2);font-size:1.02em}
+.badges{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 6px}
+.badge{display:inline-block;padding:.28em .8em;border-radius:999px;font-size:.8em;font-weight:700;letter-spacing:.02em;color:#fff}
+.b-blue{background:var(--blue)} .b-good{background:var(--good)} .b-warn{background:var(--warn);color:#3d2c00} .b-crit{background:var(--crit)} .b-gray{background:var(--muted)}
+.kvs{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px 26px;margin-top:16px;font-size:.92em}
+.kvs div{border-top:1px solid var(--grid);padding-top:6px}
+.kvs .k{color:var(--muted);font-size:.86em;display:block}
+/* cards */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 20px;margin:14px 0}
+.card h4{margin:.1em 0 .4em}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+/* status chips */
+.chip{display:inline-block;min-width:5.4em;text-align:center;padding:.12em .6em;border-radius:6px;font-size:.78em;font-weight:700;color:#fff;white-space:nowrap}
+.c-pass{background:var(--good)} .c-part{background:var(--warn);color:#3d2c00} .c-fail{background:var(--crit)} .c-gray{background:var(--muted)} .c-impl{background:var(--blue)}
+.tag{display:inline-block;padding:.1em .55em;border-radius:5px;font-size:.76em;font-weight:700;border:1.4px solid;margin-right:.35em;white-space:nowrap}
+.t-conf{color:var(--goodtext);border-color:var(--good)}
+.t-strong{color:var(--blue);border-color:var(--blue)}
+.t-plaus{color:#8a6100;border-color:var(--warn)}
+.t-unres{color:var(--crit);border-color:var(--crit)}
+.t-not{color:var(--muted);border-color:var(--muted)}
+/* tables */
+.tablewrap{overflow-x:auto;margin:12px 0;border:1px solid var(--border);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.9em;min-width:640px}
+th,td{padding:8px 12px;border-bottom:1px solid var(--grid);text-align:left;vertical-align:top}
+th{background:var(--code-bg);color:var(--ink2);font-weight:700;white-space:nowrap}
+tr:last-child td{border-bottom:none}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+/* figures */
+figure.fig{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px 18px 14px;margin:22px 0}
+figure.fig img{max-width:100%;height:auto;display:block;margin:0 auto;border-radius:6px;background:#fcfcfb}
+figure.fig figcaption{margin-top:12px;font-size:.9em;color:var(--ink2);border-top:1px solid var(--grid);padding-top:10px}
+figure.fig figcaption b{color:var(--ink)}
+figure.fig .src{display:block;margin-top:4px;font-size:.86em;color:var(--muted)}
+/* details */
+details{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 16px;margin:10px 0}
+details>summary{cursor:pointer;font-weight:600;color:var(--ink2)}
+details[open]>summary{margin-bottom:.5em}
+/* misc */
+.note{border-left:4px solid var(--blue);background:var(--surface);padding:10px 16px;border-radius:0 10px 10px 0;margin:12px 0}
+.caution{border-left:4px solid var(--warn)}
+.danger{border-left:4px solid var(--crit)}
+hr{border:none;border-top:1px solid var(--grid);margin:2em 0}
+.small{font-size:.86em;color:var(--ink2)}
+.pathtext{font-family:ui-monospace,Menlo,monospace;font-size:.84em;color:var(--ink2);word-break:break-all}
+#backtop{position:fixed;right:18px;bottom:18px;background:var(--surface);border:1px solid var(--border);border-radius:999px;
+  padding:.45em .8em;font-size:.85em;color:var(--ink2);box-shadow:0 2px 8px rgba(0,0,0,.08);display:none}
+@media print{
+  .topnav,aside.toc,#backtop{display:none !important}
+  .layout{grid-template-columns:1fr;max-width:none}
+  body{background:#fff;color:#000;font-size:11.5pt}
+  figure.fig,.card,.tablewrap,details{break-inside:avoid;border-color:#bbb}
+  a{color:#000}
+  h2{break-after:avoid}
+}
+</style>
+</head>
+<body>
+<nav class="topnav">
+  <span class="brand">QE-CAIMD 进度报告</span>
+  <a href="#sec-01">总览 Overview</a>
+  <a href="#sec-05">实现 Implementation</a>
+  <a href="#sec-08">验证 Validation</a>
+  <a href="#sec-11">控温问题 Thermostat issue</a>
+  <a href="#sec-13">当前状态 Current status</a>
+  <a href="#sec-15">下一步 Next steps</a>
+  <a href="#sec-16">证据 Evidence</a>
+</nav>
+
+<div class="layout">
+<aside class="toc" id="toc">
+  <div class="toctitle">目录 CONTENTS</div>
+  <a href="#sec-01">1 · 封面与当前状态</a>
+  <a href="#sec-02">2 · 执行摘要</a>
+  <a href="#sec-03">3 · 科学动机</a>
+  <a href="#sec-04">4 · 原始 QE vc-md 架构</a>
+  <a href="#sec-05">5 · CAIMD 设计与实现</a>
+  <a href="#sec-06">6 · Thermostat 集成</a>
+  <a href="#sec-07">7 · 仓库与提交时间线</a>
+  <a href="#sec-08">8 · 验证战役</a>
+  <a href="#sec-09">9 · 成功验证证据</a>
+  <a href="#sec-10">10 · 失败与受阻证据</a>
+  <a href="#sec-11">11 · 温度控制调查</a>
+  <a href="#sec-12">12 · 初速度与延拓问题</a>
+  <a href="#sec-13">13 · 当前科学解读</a>
+  <a href="#sec-14">14 · 就绪度评估</a>
+  <a href="#sec-15">15 · 建议下一步</a>
+  <a href="#sec-16">16 · 证据与溯源附录</a>
+  <a href="#sec-17">17 · 源码与工作流索引</a>
+</aside>
+<main>
+
+<!-- ================= Section 1 ================= -->
+<section id="sec-01">
+<div class="cover">
+  <h1>QE-CAIMD 开发与验证进度报告</h1>
+  <div class="subtitle">Quantum ESPRESSO 7.5 constrained ab initio molecular dynamics（CAIMD）— 开发、验证与热浴调查现状</div>
+  <div class="badges">
+    <span class="badge b-blue">IMPLEMENTED</span>
+    <span class="badge b-good">SHORT-TEST VALIDATED</span>
+    <span class="badge b-good">GPU/MPI VALIDATED</span>
+    <span class="badge b-crit">LONG-TIME THERMOSTAT NOT VALIDATED</span>
+    <span class="badge b-crit">PRODUCTION NOT READY</span>
+  </div>
+  <div class="kvs">
+    <div><span class="k">仓库 Repository</span><span class="pathtext">/Users/mengqicheng/Downloads/Learning/qe-7.5</span></div>
+    <div><span class="k">分支 Branch</span><code>main</code></div>
+    <div><span class="k">HEAD</span><code>af7ebfc757c32e0b4f050ed9f2208e01020b2ee3</code><br><span class="small">"Support Nose thermostat with active CAIMD"（2026-07-22）</span></div>
+    <div><span class="k">基线 Baseline</span><code>a11913ac6cd37f39cf31056e8e4823ec7a5de49c</code><br><span class="small">"Original QE 7.5 source baseline"（2026-07-15）</span></div>
+    <div><span class="k">报告日期 Date</span>2026-07-23（UTC 生成时间见 <code>REPORT_METADATA.json</code>）</div>
+    <div><span class="k">实现版本 Version</span>CAIMD V1（thermostat-compatible，af7ebfc）</div>
+  </div>
+</div>
+
+<div class="warnbanner">
+  <b>⚠ 警告：长时间热浴 CAIMD 尚未通过验证。</b>
+  在普通 <code>vc-md + Nose</code> 基线行为与初始状态延拓（continuation）问题解决之前，<b>请勿</b>将当前实现用于生产加载轨迹。<br>
+  <span class="small">Long-time thermostatted CAIMD has not yet been validated. Do not use the current implementation for production loading trajectories without resolving the ordinary <code>vc-md + Nose</code> baseline and continuation issues.</span>
+</div>
+
+<p><b>主状态陈述：</b>CAIMD V1 的受控应变投影、速度基底转换、短程回归和 GPU/MPI 运行路径已经实现并通过验证；但长时间 Nose 控温尚未通过，当前仍不能将 thermostat-compatible CAIMD 视为生产级科学验证完成。</p>
+</section>
+
+<!-- ================= Section 2 ================= -->
+<section id="sec-02">
+<h2><span class="secno">2</span>执行摘要 Executive Summary</h2>
+
+<div class="grid2">
+  <div class="card">
+    <h4>✅ 已经工作的部分</h4>
+    <ul>
+      <li>CAIMD 输入接口（<code>caimd</code>、<code>caimd_stride</code>、<code>caimd_step_strain(6)</code>、<code>caimd_mask(6)</code>）、事件调度与拒绝路径全部实现并通过 harness 验证（16 / 29 / 34 / 40 例矩阵，零意外失败）。</li>
+      <li>掩码应变投影达到机器精度：即使在后来失稳的 0.30 大应变轨迹中，<code>nominal_xx − actual_xx</code> 最大偏差也仅 2.26e-16。</li>
+      <li>物理笛卡尔速度在投影事件处数值连续：变换残差 ≤ 1.64e-14（含失败轨迹），正常轨迹 ≤ 1e-19 量级。</li>
+      <li>禁用 / 全假掩码 no-op 与 pristine 基线在短程结构化对比中<b>逐位一致</b>（能量、力、应力、胞、轨迹、MD 历史）。</li>
+      <li>Leonardo A100 GPU/MPI 构建与运行路径验证完成（34 例 + 40 例矩阵；MPI 单写者 <code>.caimd</code>；98% GPU 利用率的 active 案例）。</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h4>❌ 尚未工作的部分</h4>
+    <ul>
+      <li>长时间 <code>vc-md + Nose</code> 温度控制：所有 ≥0.05 ps 量级的 Diamond8 轨迹都升温至数千 K，远离 300 K 目标。</li>
+      <li><b>普通、无 CAIMD 的 af7ebfc</b> 也升温（本地 Control A 与 Leonardo 作业 50127909），因此这不是（或不仅是）active CAIMD 投影的问题。</li>
+      <li>官方 QE 7.4.1 对照因 <code>unknown ion_temperature nose</code> 输入解析失败，未提供任何热浴基线。</li>
+      <li>pristine QE 7.5 的同输入行为<b>尚未测试</b> —— 这是当前最关键的缺失对照。</li>
+      <li><code>vcinit</code> 是否真正消费输入 <code>ATOMIC_VELOCITIES</code> 未被直接证明；native restart 不支持。</li>
+    </ul>
+  </div>
+</div>
+
+<div class="note">
+  <p><b>当前失败是否由 active CAIMD 引起？</b>——最强证据说明<b>不需要 active CAIMD 即可复现升温</b>：（1）four-DOF Test2 在<b>全部六个胞分量都被约束</b>时仍升温至 ~9658 K；（2）本地 Control A（<code>caimd</code> 关键字完全不出现）升温至 ~8048 K；（3）Leonardo af7ebfc 普通输入 1000 步升温至 ~8124 K，且升温（0.05 ps 越过 600 K）远早于任何显著胞变形（终态体积仅 +0.30%）。但在 pristine QE 7.5 对照完成之前，<b>不能</b>断言 CAIMD 修改与该问题完全无关，也不能断言这是 QE 上游 bug 或 <code>fnosep</code> 参数问题。</p>
+  <p><b>下一个决定性测试：</b>pristine（未修改）QE 7.5 与 af7ebfc 使用完全相同的普通非 CAIMD 输入对照（详见 <a href="#sec-15">§15 优先级 1</a>）。</p>
+</div>
+
+<h3>状态矩阵</h3>
+<div class="tablewrap"><table>
+<thead><tr><th>能力项</th><th>状态</th><th>关键证据（详见 §9 / §10 / §16）</th></tr></thead>
+<tbody>
+<tr><td>输入接口 input interface</td><td><span class="chip c-pass">PASS</span></td><td>harness 16/29/34/40 例；解析、广播、拒绝路径覆盖</td></tr>
+<tr><td>应变事件调度 strain event scheduling</td><td><span class="chip c-pass">PASS</span></td><td>stride-2 事件序列 <code>T,F,T,F,…</code>，事件计数精确</td></tr>
+<tr><td>掩码应变投影 masked strain projection</td><td><span class="chip c-pass">PASS</span></td><td>|nominal−actual| ≤ 2.26e-16（含失败轨迹）</td></tr>
+<tr><td>未掩码 PR 响应 unmasked PR response</td><td><span class="chip c-part">PARTIAL</span></td><td>短程正确；高速率大应变下演化至奇异胞（§10.1）</td></tr>
+<tr><td>反对称胞运动抑制 antisymmetric suppression</td><td><span class="chip c-pass">PASS</span></td><td>max ‖W‖<sub>F</sub> = 3.80e-08（Leonardo GPU 两进程）</td></tr>
+<tr><td>物理笛卡尔速度保持 velocity preservation</td><td><span class="chip c-pass">PASS</span></td><td>残差 ≤ 1.64e-14（失败轨迹）/ ≤ 1.5e-19（正常）</td></tr>
+<tr><td>禁用 / 全假掩码 no-op</td><td><span class="chip c-pass">PASS</span></td><td>与 pristine 基线逐位一致（短程结构化对比）</td></tr>
+<tr><td>重启 restart</td><td><span class="chip c-gray">NOT IMPLEMENTED</span></td><td>V1 显式拒绝；需持久化 CAIMD + Nose 状态</td></tr>
+<tr><td>thermostat 输入路径 thermostat input path</td><td><span class="chip c-pass">PASS</span></td><td><code>not_controlled</code> / <code>nose</code> 白名单；其余显式拒绝</td></tr>
+<tr><td>短程 active CAIMD + Nose 运行</td><td><span class="chip c-pass">PASS</span></td><td>本地定向 CAIMD+Nose harness 通过（短 smoke）</td></tr>
+<tr><td>长时间温度稳定性 long-time stability</td><td><span class="chip c-fail">FAIL</span></td><td>普通基线即升温至 ~8000 K（Control A / Leonardo 50127909）</td></tr>
+<tr><td>生产就绪 production readiness</td><td><span class="chip c-fail">FAIL</span></td><td>NOT READY：基线与延拓语义未解决（§14）</td></tr>
+</tbody>
+</table></div>
+</section>
+
+<!-- ================= Section 3 ================= -->
+<section id="sec-03">
+<h2><span class="secno">3</span>科学动机 Scientific Motivation</h2>
+<p>普通 Parrinello–Rahman（PR）<code>vc-md</code> 允许模拟胞在内应力与外压驱动下自由弛豫：胞的九个自由度都由 PR 运动方程演化。而定量的加载 / 变形协议需要相反的能力——<b>选定的应变分量必须跟随外部施加的时间表</b>（例如以固定应变率单轴压缩 xx），同时：</p>
+<ul>
+  <li>其余未指定的应变分量<b>保留普通 PR 响应</b>（例如横向法向分量按泊松效应自由弛豫）；</li>
+  <li>离子受力与 DFT 应力张量仍然是<b>普通 QE 量</b>——CAIMD 不修改 <code>forces.f90</code> / <code>stress.f90</code> / <code>pwcom.f90</code>；</li>
+  <li>CAIMD <b>约束的是由此产生的胞运动</b>（对 PR 候选胞做投影），而不是替换力或应力模型。</li>
+</ul>
+<p>目标系综因此是：<b>thermostatted constrained-strain Parrinello–Rahman dynamics</b>（受热浴控制的约束应变 PR 动力学）。它<b>不是</b>无约束完整 NpT：被掩码的应变分量由外部时间表驱动做功，系统处于驱动非平衡协议之下，只有离子子系统由 Nose-Hoover 链控温。</p>
+<p class="small">应用背景（见 <code>examples/iceX_100GPa_300K_caimd</code>）：Ice X 在 100 GPa、300 K 下的受控拉伸 / 压缩 / 剪切响应，以及 Diamond 的有限应变率加载。</p>
+</section>
+
+<!-- ================= Section 4 ================= -->
+<section id="sec-04">
+<h2><span class="secno">4</span>原始 QE <code>vc-md</code> 架构</h2>
+<p>以下调用路径已对照 af7ebfc 源码逐一核实（文件与行号见图 1 底注）：</p>
+<ol>
+  <li><code>PW/src/run_pwscf.f90</code>：每个离子步完成电子自洽，调用力与应力计算；XML step 输出发生在 <code>move_ions</code> <b>之前</b>。</li>
+  <li><code>PW/src/move_ions.f90</code>（<b>基线未修改</b>）：<code>calculation='vc-md'</code> + <code>cell_dynamics='pr'</code> 被 <code>input.f90</code> 映射为 <code>calc='cd'</code>，分派到 <code>vcsmd</code>。固定胞 Langevin 分支（<code>calc(1:1)=='l'</code>）与 <code>vc-md</code> 无关。</li>
+  <li><code>PW/src/vcsmd.f90</code>：把 PW 笛卡尔位置 / 力转换为晶格坐标，桥接 PR 状态与 MD 历史文件 <code>tmp_dir/prefix.md</code>。</li>
+  <li>第 1 个离子步走 <code>PW/src/vcsubs.f90:vcinit</code>（含<b>自有的速度生成路径</b>，见 §12）；之后各步走 <code>vcsubs.f90:vcmove</code>（Beeman 预测-校正 PR 积分器）。</li>
+  <li>每步结束提交原子与胞历史：<code>.md</code>（积分器状态）、<code>.cel/.pos/.vel/.for</code>（轨迹）、<code>.e/.eal/.ave/.p/.tv</code>（能量 / 温度诊断）。</li>
+</ol>
+<h3>关键状态变量（<code>vcsubs.f90</code> 内部约定）</h3>
+<div class="tablewrap"><table>
+<thead><tr><th>变量</th><th>含义</th></tr></thead>
+<tbody>
+<tr><td><code>rat</code></td><td>晶格（分数）坐标下的原子位置</td></tr>
+<tr><td><code>rati</code></td><td>上一步原子位置（Beeman 历史）</td></tr>
+<tr><td><code>ratd</code></td><td>晶格坐标下的原子速度类历史；<b>物理笛卡尔速度 = <code>avec · ratd</code></b></td></tr>
+<tr><td><code>rat2d</code> / <code>rat2di</code></td><td>当前 / 上一步晶格坐标加速度历史</td></tr>
+<tr><td><code>avec</code></td><td>物理胞矩阵（bohr；列为晶格矢量）</td></tr>
+<tr><td><code>aveci</code></td><td>上一步胞矩阵</td></tr>
+<tr><td><code>avecd</code></td><td>PR 胞速度</td></tr>
+<tr><td><code>avec2d</code> / <code>avec2di</code></td><td>当前 / 上一步 PR 胞加速度</td></tr>
+</tbody>
+</table></div>
+<p class="note"><b>要点：</b>MD 历史是物理积分器状态的一部分。Beeman 更新同时使用当前与上一步的加速度，且 PR 度规耦合把胞速度 / 加速度历史直接注入原子加速度更新。因此任何对返回胞矩阵的"仅投影"都不完整——投影必须一致地作用于全部历史（这正是 CAIMD V1 的做法，§5）。也因此，仅凭输入卡片无法构造精确延拓（§12）。</p>
+
+<figure class="fig" id="fig-1">
+  <img src="assets/architecture/fig01_architecture.svg" alt="图1：PW vc-md 调用路径框图：run_pwscf → move_ions → vcsmd → vcinit/vcmove → PR 候选胞 → CAIMD 投影 → 提交历史；标注 Nose 作用点与 CAIMD 插入点">
+  <figcaption><b>图 1 · QE vc-md 与 CAIMD 架构。</b>DFT 力 / 应力 → <code>move_ions</code> → <code>vcsmd</code> → <code>vcinit</code>（首步）或 <code>vcmove</code>（后续步）→ 普通 PR 候选胞 → CAIMD 投影 → 变换后的原子 / 胞历史 → 提交下一状态。琥珀色标注 Nose-Hoover 的三个作用位置：<code>ions_nosevel</code>（vcmove 前）、vcmove 内摩擦项（作用于 <code>ratd</code>）、<code>ions_noseupd</code>（vcmove 后），以及 CAIMD 投影后的 <code>ekin2nhp</code> 刷新。
+  <span class="src">来源：手绘 SVG，内容对照 af7ebfc 源码核实（行号见图内底注）。</span></figcaption>
+</figure>
+</section>
+
+<!-- ================= Section 5 ================= -->
+<section id="sec-05">
+<h2><span class="secno">5</span>CAIMD 设计与实现</h2>
+<h3>输入接口（<code>&amp;CELL</code> namelist，已在源码中核实）</h3>
+<div class="tablewrap"><table>
+<thead><tr><th>变量</th><th>类型 / 默认值</th><th>语义</th></tr></thead>
+<tbody>
+<tr><td><code>caimd</code></td><td><code>LOGICAL</code>，默认 <code>.FALSE.</code></td><td>总开关；<code>.FALSE.</code> 时必须是精确 no-op</td></tr>
+<tr><td><code>caimd_stride</code></td><td><code>INTEGER</code>，默认 <code>1</code>，必须 &gt; 0</td><td>事件间隔：每 stride 个离子步施加一次应变事件</td></tr>
+<tr><td><code>caimd_step_strain(6)</code></td><td><code>REAL(DP)</code>，默认 <code>0.0</code></td><td>每步名义应变增量（事件增量 = stride × step_strain）</td></tr>
+<tr><td><code>caimd_mask(6)</code></td><td><code>LOGICAL</code>，默认 <code>.FALSE.</code></td><td><code>.TRUE.</code> 分量受控 / 保持；<code>.FALSE.</code> 分量保留 PR 响应</td></tr>
+</tbody>
+</table></div>
+<ul>
+  <li><b>分量顺序：</b><code>(xx, yy, zz, yz, xz, xy)</code>。</li>
+  <li><b>剪切约定：</b>非对角分量为<b>张量剪切</b>；工程剪切 = 2 × 张量剪切（<code>.caimd</code> 文件头亦有声明）。</li>
+  <li><b>事件时间表：</b>事件步满足 <code>MOD(istep−1, caimd_stride) == 0</code>——<b>第一事件约定</b>：第 1 个离子移动即为事件。</li>
+  <li><b>strain-and-hold：</b>非事件步掩码分量被<b>保持</b>在当前累计名义值；未掩码分量每步都取 PR 候选响应。</li>
+  <li><b>累计目标：</b>掩码目标相对<b>运行开始记录的参考胞</b> <code>H_ref</code> 累计（<code>H_new = (I + E_new)·H_ref</code>），避免逐步 <code>(I+δE)</code> 连乘漂移。</li>
+  <li><b>安全检查：</b>每事件增量硬限制 <code>|stride·step_strain| ≤ 1.0e-2</code>；投影胞行列式下限与条件数上限检查，失败即显式报错停止（0.30 轨迹正是这样终止的，§10.1）。</li>
+</ul>
+
+<h3>数学描述</h3>
+<pre><code>F      = H_candidate · H_ref⁻¹              # 相对参考胞的变形梯度
+E_pr   = ½ (F + Fᵀ) − I                     # 对称小应变；反对称部分 W 被丢弃（抑制胞转动）
+target(i) += stride · step_strain(i)         # 仅事件步、仅掩码分量
+E_proj(i) = mask(i) ? target(i) : E_pr(i)    # 掩码分量受控，未掩码分量保留 PR 响应
+H_projected = (I + E_proj) · H_ref           # 重构投影胞（安全检查后提交）
+T = H_projected⁻¹ · H_candidate              # 速度基底变换
+ratd, rat2d, rat2di ← T · (·)                # 保持物理笛卡尔速度 u = H·ratd 与分数位置
+avecd, avec2d, avec2di ← 掩码分量置零的对称 tangent 投影</code></pre>
+
+<figure class="fig" id="fig-2">
+  <img src="assets/architecture/fig02_strain_and_hold.svg" alt="图2：strain-and-hold 概念示意：参考胞经 PR 动力学得到候选胞，CAIMD 将掩码分量替换为名义目标、保留未掩码分量、移除反对称部分后重构投影胞">
+  <figcaption><b>图 2 · CAIMD strain-and-hold 概念。</b>参考胞 → PR 候选（含未掩码自由度与可能的转动）→ 掩码分量替换为名义目标、未掩码分量保留、反对称部分移除 → 投影胞。示意图为概念性质，不按比例。
+  <span class="src">来源：手绘 SVG，公式对照 <code>caimd_module.f90</code> 核实。</span></figcaption>
+</figure>
+
+<h3>事实 / 设计选择 / 局限的区分</h3>
+<div class="grid2">
+  <div class="card"><h4>实现事实（源码核实）</h4>
+  <ul class="small">
+    <li>投影插入点在 <code>vcsubs.f90</code> PR/Beeman 路径内（<code>vcinit</code> 383-385 行、<code>vcmove</code> 735-737 / 857-870 / 1123-1152 行）。</li>
+    <li>力与应力计算完全未修改（<code>forces.f90</code>、<code>stress.f90</code>、<code>pwcom.f90</code> 与基线相同；<code>git diff</code> 证实）。</li>
+    <li><code>.caimd</code> 为 26 列 premove 诊断流，仅 I/O rank 写出。</li>
+    <li>压力路径不变：<code>press</code>（GPa）→ <code>press_ = press / ry_kbar</code>。</li>
+  </ul></div>
+  <div class="card"><h4>设计选择</h4>
+  <ul class="small">
+    <li>小应变度量 <code>E = sym(F−I)</code> 而非有限应变；累计目标锚定参考胞。</li>
+    <li>反对称增量完全抑制（实验室系不转动）。</li>
+    <li>保持物理笛卡尔速度而非晶格速度不变。</li>
+    <li>第一事件在第 1 步（而非先自由弛豫一段）。</li>
+  </ul></div>
+  <div class="card"><h4>当前局限</h4>
+  <ul class="small">
+    <li>V1 是小应变协议，<b>不是</b>有限应变本构框架；大累计应变（&gt;1e-2）只发一次性警告。</li>
+    <li>restart 不支持（§12）；无 XML/QEXSD 集成；无 <code>PW/Doc</code> 用户文档。</li>
+    <li>固定原子坐标（<code>if_pos≠1</code>）与 active CAIMD 组合被显式拒绝。</li>
+    <li>CP 不实现 CAIMD；CP 输入中 <code>caimd=.true.</code> 显式报错。</li>
+  </ul></div>
+</div>
+</section>
+
+<!-- ================= Section 6 ================= -->
+<section id="sec-06">
+<h2><span class="secno">6</span>Thermostat 集成</h2>
+<p><code>THERMOSTAT_CAIMD_AUDIT.md</code> 的源码审计结论（已对照 af7ebfc 源码复核）：</p>
+<ul>
+  <li>PW <code>vc-md</code> <b>不使用</b>固定胞 MD 的 <code>dynamics_module.apply_thermostat</code> 分派。<code>move_ions.f90</code> 只在 <code>calc(1:1)=='l'</code>（固定胞 Langevin）时走 <code>langevin_md</code>；<code>vc-md</code>/PR 永远进入 <code>vcsmd</code>。</li>
+  <li><b>Nose 是唯一在真实 <code>vcsmd/vcsubs</code> 调用图中显式集成的持续热浴</b>：<code>input.f90</code> 置 <code>tnosep=.true.</code>；<code>vcsmd</code> 在 <code>vcmove</code> 前调 <code>ions_nosevel</code>、后调 <code>ions_noseupd</code>；<code>vcmove</code> 内摩擦项 <code>rat2d ← rat2d − vnhp·ratd</code> 作用于离子速度历史（<code>vcsubs.f90:708-715</code>）。</li>
+  <li>其他 <code>ion_temperature</code> 关键字<b>不是</b>真实的 <code>vc-md</code> 路径：<code>berendsen</code>/<code>svr</code>/<code>andersen</code>/<code>rescale-v</code>/<code>rescale-T</code>/<code>reduce-T</code> 只被固定胞 <code>dynamics_module</code> 消费；<code>rescaling</code> 在 <code>vcmove</code> 中会同时重标 <code>ratd</code> <b>和</b> <code>avecd</code>（污染 PR 胞速度）；<code>initial</code> 只是初始化不是持续热浴；Langevin 在 <code>vc-md</code> 不可达。</li>
+</ul>
+<h3>白名单（<code>PW/src/input.f90:1739-1756</code>，源码核实）</h3>
+<div class="tablewrap"><table>
+<thead><tr><th>输入</th><th>active CAIMD 下的处理</th></tr></thead>
+<tbody>
+<tr><td><code>ion_temperature='not_controlled'</code>（及连字符 / 空格变体）</td><td><span class="chip c-pass">允许</span> 无离子热浴</td></tr>
+<tr><td><code>ion_temperature='nose'</code></td><td><span class="chip c-pass">允许</span> 既有 PW vc-md Nose-Hoover 路径</td></tr>
+<tr><td>其余全部 <code>ion_temperature</code> 模式</td><td><span class="chip c-fail">拒绝</span> <code>errore</code>：<code>active CAIMD supports only ion_temperature='not_controlled' or 'nose'</code></td></tr>
+<tr><td><code>cell_temperature</code> ≠ <code>not_controlled</code></td><td><span class="chip c-fail">拒绝</span> 胞热浴不支持</td></tr>
+</tbody>
+</table></div>
+<h3>Nose 与 CAIMD 投影的耦合（源码核实）</h3>
+<ul>
+  <li><b>Nose 作用位置：</b>摩擦项在 <code>vcmove</code> 内直接作用于晶格坐标离子速度历史 <code>ratd</code>（通过 <code>rat2d</code> 更新），发生在 CAIMD 最终投影<b>之前</b>。</li>
+  <li><b>为什么投影必须保持物理笛卡尔速度：</b>投影改变胞基底 <code>H</code>；若 <code>ratd</code> 不做 <code>H_projected⁻¹·H_candidate</code> 变换，物理速度 <code>u = H·ratd</code> 会在每个事件步发生非物理跳变，等效于对系统做隐性冲击 / 加热。</li>
+  <li><b>为什么投影后要重算离子动能：</b>Nose 链更新消费动能 <code>ekin2nhp</code>。CAIMD 投影后 <code>vc_refresh_projected_energies</code> 以最终投影胞与变换后 <code>ratd</code> 重算 <code>eka</code> / 温度，<code>tnosep</code> 时 <code>vc_refresh_projected_nose_ekin</code> 同步刷新 <code>ekin2nhp</code>（<code>vcsubs.f90:1143-1152, 1245-1278</code>），保证热浴更新与提交的 MD 历史引用同一物理速度状态。</li>
+  <li><b><code>.caimd</code> 的 <code>temperature_K</code>：</b>取自最近一次完成移动的离子动能（<code>ndof = 3(N−1) = 21</code>），不含 PR 胞动能；首行在积分器历史建立前回退为输入目标温度。</li>
+</ul>
+<p class="note danger"><b>边界声明：</b>以上确认的是<b>输入路径、调用图与动能同步逻辑</b>的实现正确性，以及短程 smoke 通过。<b>本节不声称长时间 Nose 控温已验证</b>——事实上长时间行为当前失败（§10、§11）。</p>
+</section>
+<!-- ================= Section 7 ================= -->
+<section id="sec-07">
+<h2><span class="secno">7</span>仓库与提交时间线</h2>
+<p>本仓库共 22 个提交（2026-07-15 至 2026-07-22），全部在 <code>main</code> 分支；2026-07-23 的验证工作流为未跟踪目录（不产生提交）。当前 <code>git status --short</code> 仅含 <code>examples/</code> 下的未跟踪验证工作流目录；<b>无任何已跟踪源文件被修改</b>。</p>
+
+<figure class="fig" id="fig-3">
+  <img src="assets/figures/fig03_timeline.png" alt="图3：开发时间线，从 2026-07-15 QE 7.5 基线到 2026-07-23 的本地失败与 Leonardo 对照，蓝色为实现提交、绿色为验证通过、红色为验证失败、琥珀色为部分完成">
+  <figcaption><b>图 3 · 开发与验证时间线。</b>蓝色 = 实现 / 加固提交；绿色 = 验证通过；红色 = 验证失败；琥珀色 = 部分完成 / 受阻。提交日期取自 <code>git log --date=iso-strict</code>；2026-07-23 的四个验证事件日期取自各工作流目录时间戳与报告生成时间。
+  <span class="src">数据：<code>assets/data/git_log.txt</code> 与四个工作流报告；脚本 <code>scripts/make_figures.py:fig03_timeline</code>。</span></figcaption>
+</figure>
+
+<details><summary>完整提交列表（22 个，含完整哈希与日期）</summary>
+<div class="tablewrap"><table>
+<thead><tr><th>短哈希</th><th>日期（iso-strict）</th><th>提交主题</th><th>类别</th></tr></thead>
+<tbody>
+<tr><td><code>a11913a</code></td><td class="num">2026-07-15T14:45:21+02:00</td><td>Original QE 7.5 source baseline</td><td>基线</td></tr>
+<tr><td><code>f7256b1</code></td><td class="num">2026-07-15T16:19:22+02:00</td><td>Document CAIMD implementation design</td><td>设计文档</td></tr>
+<tr><td><code>df2047e</code></td><td class="num">2026-07-15T16:57:40+02:00</td><td>Implement first CAIMD strain-and-hold mode</td><td>实现</td></tr>
+<tr><td><code>7aa6191</code></td><td class="num">2026-07-15T18:06:58+02:00</td><td>Validate CAIMD V1 on macOS</td><td>验证</td></tr>
+<tr><td><code>b53f593</code></td><td class="num">2026-07-15T20:19:07+02:00</td><td>Record deferred CAIMD review issues</td><td>文档</td></tr>
+<tr><td><code>d6dc6aa</code></td><td class="num">2026-07-16T11:15:26+02:00</td><td>Validate CAIMD V1 on Leonardo GPU</td><td>验证</td></tr>
+<tr><td><code>77455a7</code></td><td class="num">2026-07-16T13:43:46+02:00</td><td>Harden CAIMD V1 boundary handling</td><td>加固</td></tr>
+<tr><td><code>6226488</code></td><td class="num">2026-07-16T13:44:11+02:00</td><td>Add persistent CAIMD software validation harness</td><td>加固</td></tr>
+<tr><td><code>09bffd3</code></td><td class="num">2026-07-16T13:44:39+02:00</td><td>Document repeatable CAIMD Leonardo workflow</td><td>文档</td></tr>
+<tr><td><code>0282a6e</code></td><td class="num">2026-07-16T14:05:31+02:00</td><td>Revalidate CAIMD V1 after boundary hardening</td><td>验证</td></tr>
+<tr><td><code>b865b5d</code></td><td class="num">2026-07-18T12:09:21+02:00</td><td>Add Ice X CAIMD example framework</td><td>示例</td></tr>
+<tr><td><code>4a62546</code></td><td class="num">2026-07-18T12:11:42+02:00</td><td>Allow Ice X pseudo symlink validation</td><td>示例</td></tr>
+<tr><td><code>1813ffb</code></td><td class="num">2026-07-18T12:16:20+02:00</td><td>Fix Ice X matrix case iteration</td><td>示例</td></tr>
+<tr><td><code>04aceb3</code></td><td class="num">2026-07-18T12:23:38+02:00</td><td>Fix Ice X k-point convergence reference</td><td>示例</td></tr>
+<tr><td><code>20a9f2f</code></td><td class="num">2026-07-18T13:03:34+02:00</td><td>Record Ice X CAIMD validation evidence</td><td>示例</td></tr>
+<tr><td><code>1f1f16d</code></td><td class="num">2026-07-18T16:30:37+02:00</td><td>Support explicit velocities in PW vc-md</td><td>实现</td></tr>
+<tr><td><code>2ee4e75</code></td><td class="num">2026-07-18T16:32:12+02:00</td><td>Record vc-md velocity Leonardo checkpoint</td><td>文档</td></tr>
+<tr><td><code>c647143</code></td><td class="num">2026-07-18T16:47:01+02:00</td><td>Parse wrapped PR md histories in CAIMD harness</td><td>加固</td></tr>
+<tr><td><code>24bdc0e</code></td><td class="num">2026-07-18T17:09:28+02:00</td><td>Use supported velocity input path in Ice X decks</td><td>示例</td></tr>
+<tr><td><code>7b5e4f0</code></td><td class="num">2026-07-18T17:29:28+02:00</td><td>Record Leonardo velocity validation evidence</td><td>文档</td></tr>
+<tr><td><code>13ba2eb</code></td><td class="num">2026-07-18T17:49:58+02:00</td><td>Validate 300 K vc-md initialization</td><td>验证</td></tr>
+<tr><td><code>af7ebfc</code></td><td class="num">2026-07-22T12:51:53+02:00</td><td>Support Nose thermostat with active CAIMD</td><td>实现（HEAD）</td></tr>
+</tbody>
+</table></div>
+</details>
+
+<details><summary>基线 → HEAD 的已跟踪源码变更（git diff --name-status a11913a..af7ebfc，节选源码部分）</summary>
+<pre><code>M  Modules/input_parameters.f90      # CAIMD &CELL 变量声明
+M  Modules/read_namelists.f90        # 默认值 / 校验 / 广播 / ignored-&CELL 探测 / CP 拒绝
+M  PW/CMakeLists.txt                 # 加入 caimd_module.f90
+M  PW/src/Makefile                   # 加入 caimd_module.o
+A  PW/src/caimd_module.f90           # 新增：CAIMD 状态 / 投影 / 诊断（498 行）
+M  PW/src/input.f90                  # CAIMD 配置 / 边界拒绝 / thermostat 白名单
+M  PW/src/run_pwscf.f90              # premove .caimd 输出钩子
+M  PW/src/vcsmd.f90                  # 历史拒绝 / Nose 桥接 / 温度诊断 / 显式速度传递
+M  PW/src/vcsubs.f90                 # PR 积分器内投影插入点 / Nose 动能刷新
+A  test-suite/caimd/caimd_validation.py   # 持久化验证 harness（1990 行）
+# 另有文档（AGENTS.md 等 6 个 .md）与 examples/iceX_100GPa_300K_caimd/ 全套示例
+# 未修改：PW/src/move_ions.f90、PW/src/forces.f90、PW/src/stress.f90、PW/src/pwcom.f90</code></pre>
+</details>
+</section>
+
+<!-- ================= Section 8 ================= -->
+<section id="sec-08">
+<h2><span class="secno">8</span>验证战役 Validation Campaigns</h2>
+<p class="small">注：本节战役 C 使用 Ice X（48 原子）示例框架；所有长时热浴测试（D、E）使用 8 原子 Diamond8 胞。本地仓库中<b>没有</b> 64 原子 Diamond 工作流的证据镜像。</p>
+<div class="tablewrap"><table>
+<thead><tr><th></th><th>战役</th><th>目的</th><th>体系</th><th>可执行程序</th><th>关键参数</th><th>结果</th><th>解读 / 局限</th></tr></thead>
+<tbody>
+<tr><td>A</td><td>本地短程源码 / 运行时验证（macOS）</td><td>实现正确性与 no-op 回归</td><td>微型 C 胞（C.UPF，ecutwfc 16 Ry）</td><td>串行 CMake <code>pw.x</code>（current + baseline）</td><td><code>pr</code>，<code>dt=5</code>，零初速，确定性对比</td><td><span class="chip c-pass">PASS</span> 16 例 → 加固后 29 例，零意外失败</td><td>短程、小体系 smoke；不含长时热浴</td></tr>
+<tr><td>B</td><td>Leonardo GPU/MPI 验证</td><td>GPU/MPI 构建与运行路径</td><td>同类小胞 + SCF startup</td><td>GPU/MPI <code>pw.x</code>（NVHPC 24.5 + HPCX 2.19，A100，cc80）</td><td>1–2 rank；<code>mpiexec --oversubscribe -n 2</code></td><td><span class="chip c-pass">PASS</span> 34 例（b53f593）+ 29 例（09bffd3）+ 40 例（velocity, 24bdc0e）</td><td>证明可构建可运行；仍是短程验证</td></tr>
+<tr><td>C</td><td>Ice X CAIMD 示例框架（预备）</td><td>科学示例结构 / 收敛 / 速度初始化</td><td>Ice X 100 GPa（48 原子）</td><td>Leonardo GPU/MPI <code>pw.x</code></td><td>参考 / 收敛 / pilot decks；300 K 速度卡</td><td><span class="chip c-part">PARTIAL</span> 初始化 smoke 通过（<code>.tv</code> 295.86 K）；形变生产未提交</td><td>为生产准备的框架，尚非科学结果</td></tr>
+<tr><td>D</td><td>Diamond8 长时热浴测试（本地）</td><td>active CAIMD + Nose 长时行为</td><td>Diamond8（8 原子，Γ 点，25/120 Ry）</td><td>本地 af7ebfc <code>pw.x</code>（<code>7f7f5f81…</code>）</td><td><code>nose</code>，<code>tempw=300</code>，<code>fnosep=50</code>，<code>nhpcl=4</code>，<code>dt=2 fs</code>，<code>wmass=2e6</code></td><td><span class="chip c-fail">FAIL</span> 0.30 连续加载奇异终止；four-DOF Test1/Test2 升温数千 K</td><td>见 §10.1–10.2；应变投影本身保持精确</td></tr>
+<tr><td>E</td><td>普通无 CAIMD 对照</td><td>隔离 CAIMD 与基线热浴行为</td><td>同一 Diamond8 公共态（300 K 缩放速度）</td><td>本地 af7ebfc + Leonardo af7ebfc GPU</td><td>与 D 相同 Nose 参数；<b>无任何 CAIMD 关键字</b></td><td><span class="chip c-fail">FAIL</span> Control A 升至 ~8048 K；Leonardo 50127909 升至 ~8124 K</td><td><b>普通基线即失败</b> → 升温不需要 active CAIMD（§11）</td></tr>
+<tr><td>F</td><td>官方 QE 7.4.1 对比尝试</td><td>外部参考基线</td><td>同一输入（仅 prefix/outdir 不同）</td><td>Leonardo 模块 QE 7.4.1 <code>pw.x</code></td><td>同 E</td><td><span class="chip c-gray">BLOCKED</span> 输入解析失败：<code>unknown ion_temperature nose</code></td><td>未提供任何热浴基线；不是热浴稳定性结果</td></tr>
+</tbody>
+</table></div>
+</section>
+
+<!-- ================= Section 9 ================= -->
+<section id="sec-09">
+<h2><span class="secno">9</span>成功验证证据</h2>
+<ul>
+  <li><b>构建成功：</b>macOS 串行 CMake（current 与 baseline 各自成功）；Leonardo GPU/MPI CMake 构建 + 传统 <code>configure &amp;&amp; make pw</code> 观察构建（<code>traditional_build_rc=0</code>）。</li>
+  <li><b>禁用 CAIMD no-op / 全假掩码 no-op：</b>结构化短程对比中，pristine 基线、修改版默认、显式 <code>caimd=.false.</code>、全假掩码四者在所有解析量上<b>完全相等</b>（总能量、总力范数、SCF 修正范数、总应力、打印胞 / 位置 / 体积、<code>.ave/.avec/.e/.eal/.p/.tv</code>、<code>tmp/*.md</code>；<code>structured_regression.json</code>）。加固期复核：<code>.avec</code> 最大差 1.43e-101 / 4.8e-317（数值零）。</li>
+  <li><b>事件调度正确：</b>stride-2 事件旗标序列 <code>[T,F,T,F,T,F,T,F]</code>，事件计数 <code>[0,1,1,2,2,3,3,4]</code>。</li>
+  <li><b>名义-实际掩码应变精确跟踪：</b>macOS 关闭验证 <code>fixed_xx</code> 最大偏差 8.81e-17；0.30 失败轨迹中仍保持 ≤ 2.26e-16（本报告由原始 <code>.caimd</code> 重算证实，图 4）。</li>
+  <li><b>张量剪切约定：</b><code>shear_xy</code> 终态张量剪切 4.0e-4、工程剪切 8.0e-4（= 2×）；Leonardo 案例终态名义 xy 张量剪切 3.0e-4。</li>
+  <li><b>非正交胞处理：</b>非正交 / 各向异性胞下掩码 xx 保持零偏差（<code>nonorth_max_abs_xx_strain = 0.0</code>）。</li>
+  <li><b>胞转动抑制：</b>反对称增量处于数值噪声：全固定零应变 max‖E‖=‖W‖=0；stride-2 两 rank GPU max ‖W‖<sub>F</sub> = 3.80e-08（skew/strain 比 1.82e-04）；shear xy max ‖W‖<sub>F</sub> = 6.76e-09。</li>
+  <li><b>速度变换残差有限且极小：</b>正常轨迹 ≤ 1.53e-19；Leonardo 两 rank velocity smoke 3.83e-20；失败 0.30 轨迹全程 ≤ 1.64e-14（图 10）。</li>
+  <li><b><code>.caimd</code> 格式有效：</b>26 列 schema、无重复行、温度与残差列有限；premove 应力与 stdout 一致到 4.96e-4 GPa、体积一致到 3.5e-7 bohr³。</li>
+  <li><b>MPI 单写者行为：</b>多 rank 下 <code>.caimd</code> 仅 I/O rank 写出，无交错损坏。</li>
+  <li><b>真实 A100 执行：</b>startup SCF 观察到 GPU 活动（1184–2334 MiB 显存）；active <code>stride2_xx</code> 两 rank 案例峰值 GPU 利用率 98%。</li>
+  <li><b>本地与 Leonardo harness：</b>final 34 例 / 29 例 / 40 例矩阵全部零意外失败（summary SHA256 见 §16）。</li>
+  <li><b>显式速度路径（1f1f16d）：</b>untouched 基线显式 <code>vc-md</code> 的 PR <code>ratd=0</code>（证明基线忽略速度卡），修复后 <code>ratd_max_abs=2.97e-05</code>，输入 / 初始化失配 2.71e-20；Ice X smoke 三案例 <code>.tv</code> 均 295.86 K（与 300 K 速度卡在 PR <code>3(N+1)</code> 分母约定下一致）。</li>
+</ul>
+
+<p class="note caution"><b>范围限定：</b>上述短程相等性（基线 = 默认 = 显式 false = 全假掩码）只证明<b>短轨迹、被解析量</b>上的 no-op 性质，<b>不能</b>作为长时热浴稳定性的证明——长时行为在 §10 中独立失败。</p>
+
+<figure class="fig" id="fig-4">
+  <img src="assets/figures/fig04_strain_tracking.png" alt="图4：0.30 大应变轨迹中 nominal_xx 与 actual_xx 完全重合（上），偏差绝对值全程处于 1e-18 到 2.3e-16 的双精度舍入量级（下，对数轴）">
+  <figcaption><b>图 4 · 应变跟踪证据（选自后来失稳的高速率轨迹）。</b>上：<code>nominal_xx</code>（目标，虚线）与 <code>actual_xx</code>（实测）在 265 行诊断内完全重合；下：偏差 |actual−nominal| 全程 ≤ 2.26e-16（双精度舍入量级）。<b>注意：应变跟踪精确不证明热稳定性</b>——同一轨迹随后因未掩码分量失稳而终止（图 9，§10.1）。
+  <span class="src">数据：<code>assets/data/cont_0p30_diamond8_continuous.caimd</code>（原始 26 列诊断流的逐行重算）；脚本 <code>scripts/make_figures.py:fig04_strain_tracking</code>。</span></figcaption>
+</figure>
+
+<figure class="fig" id="fig-10">
+  <img src="assets/figures/fig10_velocity_jump.png" alt="图10：velocity_jump_max 随时间变化，对数轴，始终在 1e-19 到 1.64e-14 之间，处于浮点舍入量级">
+  <figcaption><b>图 10 ·（可选图）速度基底变换残差。</b><code>velocity_jump_max</code> 是强制速度历史变换的浮点残差诊断（非物理速度跳变）；即使在失稳发散的 0.30 轨迹中也仅从 ~1e-19 增长到 1.64e-14，随胞条件数恶化而增大但始终处于舍入量级——证明"保持物理笛卡尔速度"的变换实现正确。
+  <span class="src">数据：同图 4；脚本 <code>scripts/make_figures.py:fig10_velocity_jump</code>。</span></figcaption>
+</figure>
+</section>
+
+<!-- ================= Section 10 ================= -->
+<section id="sec-10">
+<h2><span class="secno">10</span>失败与受阻证据</h2>
+
+<h3>10.1 大应变 Diamond8 连续加载（本地，rate 0.05 ps⁻¹，目标 −0.30）</h3>
+<ul>
+  <li>掩码 xx 投影全程精确（≤ 2.26e-16，图 4）；速度残差 ≤ 1.64e-14。</li>
+  <li>但<b>未掩码胞自由度失稳</b>：~0.37 ps 起 zz/xz/yy/yz/xy 依次越过 0.05 → 0.1 → 0.25 → 0.5，终态 |分量| 高达 1.08（图 9）；第 265 步 QE 以 <code>Error in routine caimd_inverse3 (1): caimd projected cell is singular</code> 显式终止。</li>
+  <li>末行 CAIMD 温度 ~7.0e10 K、压力 ~11777 kbar、最小 C-C 距离 0.256 bohr——轨迹早已非物理。</li>
+  <li><b>解读：</b>0.05 ps⁻¹ 的激进速率 + 大残余应力使该设置<b>不适合用于热浴验证</b>；这是安全检查按设计工作的例证，同时暴露未掩码 PR 分量在该参数域的失稳。升温本身在第 3 步就已出现（90978 K @ 0.004 ps），远早于胞畸变——与 §11 的基线问题一致。</li>
+</ul>
+
+<figure class="fig" id="fig-9">
+  <img src="assets/figures/fig09_unmasked_strain_components.png" alt="图9：失败轨迹的六个实际应变分量：掩码 xx 保持 -0.0265，未掩码 zz、xz、yy、yz、xy 在约 0.4 ps 后发散到正负 0.5 至 1.1">
+  <figcaption><b>图 9 ·（可选图）失败高速率轨迹的全部六个胞应变分量。</b>掩码分量 xx（蓝，加粗）保持在名义值 −0.0265；未掩码分量在 ~0.4 ps 后失稳发散（zz 峰值 +1.5 后翻转，xz 达 +1.08），最终触发奇异胞保护性终止。
+  <span class="src">数据：同图 4；脚本 <code>scripts/make_figures.py:fig09_unmasked_components</code>。</span></figcaption>
+</figure>
+
+<h3>10.2 four-DOF 测试（本地，0.003 ps⁻¹，目标 −0.03）</h3>
+<div class="tablewrap"><table>
+<thead><tr><th>测试</th><th>配置</th><th>完成步数</th><th>温度（.eal 重算）</th><th>判定</th></tr></thead>
+<tbody>
+<tr><td>Test1</td><td>active CAIMD 零载荷 + 完整自由 PR（mask=xx，step_strain=0）</td><td class="num">3576</td><td class="num">mean 4612.6 K，max 8503.5 K，final500 4449.3 K</td><td><span class="chip c-fail">FAIL</span></td></tr>
+<tr><td>Test2</td><td>加载 xx 且<b>全部六分量约束</b></td><td class="num">779</td><td class="num">mean 4962.2 K，max 9657.8 K，final500 5246.4 K</td><td><span class="chip c-fail">FAIL</span></td></tr>
+<tr><td>Test3 / Test4</td><td>横向法向自由 / 完整 PR 加载</td><td colspan="2">未运行（被 Test1/Test2 失败阻断）</td><td><span class="chip c-gray">NOT RUN</span></td></tr>
+</tbody>
+</table></div>
+<p><b>关键推论：</b>Test2 在<b>没有任何自由 PR 剪切自由度</b>的情况下仍升温至数千 K——<b>自由 PR 剪切本身不能解释升温</b>。（两测试初始直接速度温度为公共态的 559.1 K，未重新缩放至 300 K。）</p>
+
+<h3>10.3 普通 Control A（本地，CAIMD 完全禁用）</h3>
+<ul>
+  <li>输入不含任何 CAIMD 关键字；公共态速度经 COM 移除 + 均匀缩放到精确 300.000 K。</li>
+  <li>664 步（1.328 ps）后安全停止：<code>.eal</code> 重算 mean 3843.9 K、max 8047.6 K、final500 4770.5 K；终态直接 <code>.md</code> 速度温度 5064.7 K，与 <code>.eal</code> 一致。</li>
+  <li>最早偏离观测量：<code>.eal</code> 离子温度于第 26 步（0.05 ps）越过 600 K。</li>
+  <li><b>因此，复现升温不需要 active CAIMD。</b>Controls B（全假掩码）与 C（全真零载荷）因基线已失败而未运行。</li>
+</ul>
+
+<h3>10.4 Leonardo af7ebfc 普通测试（作业 50127909，无 CAIMD 关键字）</h3>
+<ul>
+  <li>1000 步全部完成（<code>JOB DONE</code>，返回码 0）；初始温度 300.001 K。</li>
+  <li>最高 8123.839 K；终态 4231.686 K（本报告由镜像 <code>.eal</code> 原始文件重算，与既有 CSV 完全一致）。</li>
+  <li>首次越过 600 K：第 26 个离子步（0.05 ps）；首次越过 2000 K：第 130 个离子步（0.258 ps）。</li>
+  <li>终态直接 <code>.md</code> 速度温度与 <code>.eal</code> 一致到 0.057 K（stdout/<code>.tv</code> 使用不同温度约定，定性一致）。</li>
+  <li>胞保持非奇异且仅弱变形：终态体积变化 +0.302%，最大条件数 1.017（本报告由 <code>.cel</code> 重算证实，图 6）。</li>
+</ul>
+
+<h3>10.5 官方 QE 7.4.1 对比</h3>
+<ul>
+  <li>同一物理输入（仅 <code>prefix</code>/<code>outdir</code> 不同）下，官方模块 QE 7.4.1 在 <code>iosys</code> 输入解析阶段失败：<code>unknown ion_temperature nose</code>，未产生任何 MD 轨迹。</li>
+  <li><b>因此官方 QE 7.4.1 运行不提供任何热浴基线</b>；这是解析 / 兼容性失败，不是热浴稳定性结果。Slurm 顶层状态 <code>COMPLETED 0:0</code>（step 0 失败、step 1 完成），不能据此声称"对比成功"。</li>
+</ul>
+
+<figure class="fig" id="fig-5">
+  <img src="assets/figures/fig05_temperature_comparison.png" alt="图5：四条轨迹的离子动能温度对比：Leonardo af7ebfc 普通、本地 Control A 普通、Test1 零载荷、Test2 全约束，全部升温至 4000-9700 K，远超 300 K 目标虚线；标注 af7ebfc 首越 600 K 与 2000 K">
+  <figcaption><b>图 5 · 温度对比。</b>四条 <code>vc-md + Nose</code> 轨迹（两条<b>无 CAIMD</b>、两条 active CAIMD）全部升温远超 300 K 目标（灰色虚线）；蓝点标注 Leonardo 普通轨迹首越 600 K（0.05 ps）与 2000 K（0.26 ps）。Control A 与 Leonardo 从 300 K 出发，Test1/Test2 从公共态 559 K 出发。<b>无论 CAIMD 是否激活、胞是否被约束，升温都出现</b>。
+  <span class="src">数据：四个 <code>.eal</code> 原始文件（<code>assets/data/*.eal</code>），T = 2·eka/(21·k<sub>B</sub>)；脚本 <code>scripts/make_figures.py:fig05_temperature_comparison</code>。</span></figcaption>
+</figure>
+</section>
+
+<!-- ================= Section 11 ================= -->
+<section id="sec-11">
+<h2><span class="secno">11</span>温度控制调查</h2>
+
+<h3>假设的演进</h3>
+<ol>
+  <li><b>初始假设：</b>active CAIMD 投影或自由 PR 胞分量导致升温（因为最初的失败出现在 active CAIMD 大应变运行中）。</li>
+  <li><b>反对该简单解读的证据：</b>
+    <ul>
+      <li>Test2：<b>全部胞分量被约束</b>仍升温（排除"自由 PR 剪切"单因解释）；</li>
+      <li>Control A：<b>CAIMD 完全禁用</b>仍升温（排除"active 投影必需"）；</li>
+      <li>Leonardo 50127909：升温（0.05 ps）远早于任何显著胞变形（体积 +0.30%、条件数 ≤1.017，图 6）；</li>
+      <li><code>.eal</code> 与终态直接 <code>.md</code> 速度重建一致（0.057 K）——升温是<b>物理速度中真实存在的</b>，不是诊断量伪影。</li>
+    </ul>
+  </li>
+</ol>
+
+<div class="note"><b>当前最窄结论（Confirmed）：</b>在当前 af7ebfc 普通 <code>vc-md + Nose</code> 测试中，<b>复现所观测到的升温不需要 active CAIMD 投影</b>。</div>
+
+<div class="note danger"><b>尚不能得出的结论：</b>
+<ul>
+  <li>不能断言 pristine QE 7.5 有相同行为（未测试——这是决定性缺失对照）；</li>
+  <li>不能断言问题一定由 <code>fnosep</code>（=50 THz）引起（参数矩阵未在等价性确立后系统测试）；</li>
+  <li>不能断言这一定是 QE 上游 bug；</li>
+  <li>不能断言 CAIMD 修改与此完全无关（af7ebfc 也修改了 <code>vcsmd/vcsubs</code> 的非 active 路径，如显式速度桥接；只有 pristine 对照能排除）。</li>
+</ul>
+<b>决定性缺失对照：</b>pristine（未修改）QE 7.5 vs af7ebfc，使用完全相同的普通非 CAIMD 输入（§15 优先级 1）。</div>
+
+<h3>Nose 参数整定历史（0.30 工作流平衡化尝试 01–08）</h3>
+<details><summary>八次平衡化尝试的参数与结果（点击展开）</summary>
+<div class="tablewrap"><table>
+<thead><tr><th>尝试</th><th>关键参数</th><th>结果</th></tr></thead>
+<tbody>
+<tr><td>01</td><td><code>wmass=2000</code></td><td>胞体积暴走至 8.2e8 bohr³，T max 8991 K → FAIL</td></tr>
+<tr><td>02</td><td><code>dt=82.68</code>（实为 4 fs），wmass 按比例缩放</td><td>仍暴走（体积 1.0e7 bohr³）；时间步与要求不符 → FAIL</td></tr>
+<tr><td>03</td><td><code>dt=41.34</code>（2 fs），<code>fnosep=100</code>，ecut 12 Ry</td><td>胞有界但离子温控失败：每个 Nose 振荡仅 ~9 步，T mean 8897 K → FAIL</td></tr>
+<tr><td>04</td><td><code>fnosep=10</code>，ecut 25 Ry</td><td>显著改善但仍偏热漂移（final200 mean 678.6 K）→ FAIL</td></tr>
+<tr><td>05</td><td><code>fnosep=20</code>，<code>wmass=1.37e5</code></td><td>离子温度偏冷漂移 → FAIL</td></tr>
+<tr><td>06–07</td><td><code>fnosep=20</code>，<code>wmass=2e6</code>，500/1500 步</td><td>稳定但偏冷（"stable_cold"）</td></tr>
+<tr><td>08</td><td><code>fnosep=50</code>，<code>nhpcl=4</code>，<code>wmass=2e6</code></td><td>被采用为工作参数；平衡化通过（ionic mean 251.7 K，final200 252.1 K）</td></tr>
+</tbody>
+</table></div>
+<p class="small">注意：这段整定史说明该参数域内 Nose 行为对 <code>fnosep</code>/<code>wmass</code>/<code>dt</code> 敏感，且"平衡化通过"的短窗口并不保证后续长时稳定——被采用的尝试 08 参数正是后来 Control A / Leonardo 失败时使用的参数。这是相关性观察，<b>不构成因果证明</b>。</p>
+</details>
+
+<figure class="fig" id="fig-6">
+  <img src="assets/figures/fig06_leonardo_temp_cell.png" alt="图6：Leonardo af7ebfc 普通轨迹三联图：温度在 0.26 ps 内升至数千 K，而体积变化全程小于 0.31%、胞条件数最大 1.017，升温先于胞变形">
+  <figcaption><b>图 6 · 温度 vs 胞稳定性（Leonardo af7ebfc 普通轨迹，1000 步）。</b>上：离子温度在 0.05 ps 越过 600 K、0.26 ps 越过 2000 K；中：体积变化全程 |ΔV/V₀| ≤ 0.30%；下：胞条件数单调缓增至 1.017。琥珀色竖线标记两次温度越限时刻——<b>升温显著先于任何实质胞变形</b>，胞失稳不是该升温的成因。
+  <span class="src">数据：<code>assets/data/leonardo_af7ebfc.eal</code>（温度）与 <code>assets/data/leonardo_af7ebfc.cel</code>（体积 / 条件数，本报告重算）；脚本 <code>scripts/make_figures.py:fig06_leonardo_temp_cell</code>。</span></figcaption>
+</figure>
+
+<figure class="fig" id="fig-11">
+  <img src="assets/figures/fig11_nose_extended_energy.png" alt="图11：Control A 的扩展总能类量从 0.039 Ry 漂移至约 0.12 Ry，随升温持续增长，无守恒平台">
+  <figcaption><b>图 11 ·（可选图）Control A 的 Nose 扩展能量类量。</b>该量（<code>uta+eka+utl+ekla</code> 组合，不含完整 Nose 链项）随升温从 ~0.039 Ry 漂移至 ~0.12 Ry，未出现守恒平台——与积分病理一致的现象学证据，但因缺少完整链能量项，仅作定性参考。
+  <span class="src">数据：<code>assets/data/controls_ABC_nose_extended_energy_timeseries.csv</code>（controls ABC 工作流分析产物）；脚本 <code>scripts/make_figures.py:fig11_nose_extended</code>。</span></figcaption>
+</figure>
+</section>
+
+<!-- ================= Section 12 ================= -->
+<section id="sec-12">
+<h2><span class="secno">12</span>初速度与延拓问题</h2>
+<h3>源码观察（af7ebfc，<code>vcsubs.f90:190-260</code>）</h3>
+<ul>
+  <li>第一 <code>vc-md</code> 步中 <code>vcinit</code> 拥有<b>自己的速度生成路径</b>：仅当 <code>input_velocities_read</code>（需要 <code>ion_velocities='from_input'</code> + <code>ATOMIC_VELOCITIES { a.u }</code> 卡片，且经 <code>vcsmd</code> 桥接——该桥接是 1f1f16d 引入的<b>本仓库修改</b>）时才消费输入速度；否则调用 <code>ranv(temp, …)</code> 按目标温度生成 Maxwell 分布。pristine QE 7.5 的 <code>vc-md</code> <b>总是</b>走 <code>ranv</code> 路径。</li>
+  <li>因此：<b>输入文件中存在直接温度为 300 K 的速度块，不能证明积分器消费了该速度块</b>。</li>
+  <li>同样：首行 <code>.eal</code> 温度接近 300 K <b>也不能</b>证明输入速度被使用——<code>tempw=300</code> 会使 <code>ranv</code> 生成的内部速度落在同一目标附近。</li>
+</ul>
+<h3>推论</h3>
+<ul>
+  <li>对<b>干净的普通 from-scratch 基线</b>（§15 优先级 1）：<b>省略</b> <code>ATOMIC_VELOCITIES</code> 是合理的——让两个可执行程序各走原生初始化，避免把速度路径差异混入对照。</li>
+  <li>对<b>声称精确的 Stage-1 → Stage-2 延拓</b>：省略速度<b>不可接受</b>；且外部 <code>restart_mode='from_scratch'</code> 延拓在证明输入速度确被消费之前，<b>不能称为动力学精确</b>。此外 Beeman 历史（<code>rat2di</code> 等）与 Nose 链状态（<code>xnhp0/xnhpm/xnhpp/vnhp</code>）无法通过输入卡传递——外部延拓在原理上就不是精确 Nose 扩展态重启。</li>
+  <li>native CAIMD restart 当前<b>不支持</b>（V1 显式拒绝 <code>restart_mode='restart'</code> 与陈旧 MD 历史）。</li>
+</ul>
+<div class="note"><b>建议的最小速度消费测试（V0/V1/V2）：</b>
+<ol>
+  <li>V0：不含 <code>ATOMIC_VELOCITIES</code>；</li>
+  <li>V1：显式速度卡；</li>
+  <li>V2：符号反转的显式速度卡；</li>
+  <li>比较三者<b>第一条提交的 <code>.md</code> 中的 <code>ratd</code></b>：若 V1 与 V2 给出反号的确定性 <code>ratd</code> 而 V0 给出随机分布，即证明消费；若三者统计相同，即证明未消费；</li>
+  <li>对 pristine QE 7.5 与 af7ebfc <b>都</b>执行。</li>
+</ol></div>
+</section>
+
+<!-- ================= Section 13 ================= -->
+<section id="sec-13">
+<h2><span class="secno">13</span>当前科学解读</h2>
+<div class="grid2">
+<div class="card">
+<h4>已确认 Confirmed</h4>
+<ul>
+  <li><span class="tag t-conf">确认</span>CAIMD 输入接口存在且行为符合规范（多轮 harness）。</li>
+  <li><span class="tag t-conf">确认</span>掩码应变投影工作正确（机器精度跟踪，含失败轨迹）。</li>
+  <li><span class="tag t-conf">确认</span>短程 no-op 回归通过（与 pristine 逐位一致）。</li>
+  <li><span class="tag t-conf">确认</span>CAIMD 事件处物理笛卡尔速度变换数值连续（残差 ≤ 1.64e-14）。</li>
+  <li><span class="tag t-conf">确认</span>CAIMD 在 Leonardo GPU/MPI 上可构建、可运行（A100 实测活动）。</li>
+  <li><span class="tag t-conf">确认</span>当前观测到的升温<b>不需要</b> active CAIMD 即可复现（Control A、Leonardo 50127909、Test2 全约束）。</li>
+</ul>
+</div>
+<div class="card">
+<h4>未确认 Not confirmed</h4>
+<ul>
+  <li><span class="tag t-unres">未解决</span>长时间稳定的 Nose 控温（当前在测参数域内全部失败）。</li>
+  <li><span class="tag t-not">未测试</span>pristine QE 7.5 的普通 <code>vc-md + Nose</code> 行为（决定性缺失对照）。</li>
+  <li><span class="tag t-unres">未解决</span><code>vcinit</code> 对输入 <code>ATOMIC_VELOCITIES</code> 的精确消费（V0/V1/V2 未执行）。</li>
+  <li><span class="tag t-unres">未解决</span>精确的外部轨迹延拓（Beeman 历史与 Nose 链状态无法经输入卡传递）。</li>
+  <li><span class="tag t-not">未测试</span>长时间有限应变生产行为（0.30 尝试因激进速率失效，不构成协议级测试）。</li>
+  <li><span class="tag t-unres">未解决</span>生产就绪的 CAIMD 热力学系综（依赖以上全部）。</li>
+</ul>
+</div>
+</div>
+<p><span class="tag t-strong">强支持</span>升温是物理速度中真实存在的动力学现象（<code>.eal</code>、stdout、终态直接速度三源一致），并且发生在胞仍近乎刚性时（图 6）——指向离子子系统 + 热浴耦合的积分 / 参数问题域，而非胞失稳的次生效应。<br>
+<span class="tag t-plaus">可能</span><code>fnosep=50 THz</code>（2 fs 步长下每 Nose 周期 ~10 步）过于激进、或 Nose 链参数与该小体系不匹配——与整定史一致，但<b>未被证明</b>为原因。</p>
+</section>
+
+<!-- ================= Section 14 ================= -->
+<section id="sec-14">
+<h2><span class="secno">14</span>就绪度评估 Readiness Assessment</h2>
+<div class="tablewrap"><table>
+<thead><tr><th>维度</th><th>评级</th><th>依据</th></tr></thead>
+<tbody>
+<tr><td>源码实现成熟度 source implementation maturity</td><td><span class="chip c-pass">HIGH</span></td><td>窄边界、显式拒绝、安全检查、审计文档齐备；deferred issues 有记录</td></tr>
+<tr><td>软件回归成熟度 software regression maturity</td><td><span class="chip c-pass">HIGH</span></td><td>持久化 harness（<code>test-suite/caimd/caimd_validation.py</code>）多平台多轮零意外失败</td></tr>
+<tr><td>数值投影验证 numerical projection validation</td><td><span class="chip c-pass">HIGH</span></td><td>机器精度应变跟踪与速度保持，含失败轨迹下的稳健性</td></tr>
+<tr><td>GPU/MPI 就绪度 GPU/MPI readiness</td><td><span class="chip c-pass">HIGH</span></td><td>A100 构建 / 运行 / 单写者 / 两 rank active 案例全通过</td></tr>
+<tr><td>Thermostat 就绪度 thermostat readiness</td><td><span class="chip c-fail">LOW</span></td><td>输入路径与动能同步已实现，但长时行为失败且基线未隔离</td></tr>
+<tr><td>重启就绪度 restart readiness</td><td><span class="chip c-gray">NONE</span></td><td>V1 显式不支持；精确延拓需持久化 CAIMD + Nose 状态</td></tr>
+<tr><td>长时科学验证 long-time scientific validation</td><td><span class="chip c-fail">FAIL</span></td><td>所有 ≥1 ps Diamond8 Nose 轨迹升温至数千 K（含普通基线）</td></tr>
+<tr><td>生产就绪 production readiness</td><td><span class="chip c-fail">NOT READY</span></td><td>见最终判定</td></tr>
+</tbody>
+</table></div>
+
+<div class="note danger"><b>最终判定：</b>CAIMD V1 是一个<b>技术上可用的研究原型</b>（technically functional research prototype），拥有扎实的短程投影与回归证据；但由于普通 <code>vc-md + Nose</code> 的长时行为与初始状态延拓语义仍未解决，<b>它尚未准备好用于生产级热浴加载模拟</b>。</div>
+
+<figure class="fig" id="fig-7">
+  <img src="assets/figures/fig07_status_matrix.png" alt="图7：验证状态矩阵：12 个能力项各标 PASS（绿）、PARTIAL（琥珀）、FAIL（红）或 NOT IMPLEMENTED（灰），并附关键证据说明">
+  <figcaption><b>图 7 · 验证状态矩阵。</b>绿色 = PASS；琥珀 = PARTIAL；红色 = FAIL；灰色 = NOT IMPLEMENTED / NOT TESTED；每行附关键证据。与 §2 状态矩阵表内容一致。
+  <span class="src">内容依据：§9 / §10 汇总的文档化标量指标（非时间序列拟合）；脚本 <code>scripts/make_figures.py:fig07_status_matrix</code>。</span></figcaption>
+</figure>
+</section>
+
+<!-- ================= Section 15 ================= -->
+<section id="sec-15">
+<h2><span class="secno">15</span>建议下一步（按科学优先级）</h2>
+<ol>
+  <li><b>优先级 1 —— pristine QE 7.5 vs af7ebfc 普通对照：</b>用完全相同的普通非 CAIMD 输入（无任何 CAIMD 关键字）分别运行未修改 QE 7.5 与 af7ebfc。<b>首选省略 <code>ATOMIC_VELOCITIES</code></b>，让两个可执行程序都走各自原生 from-scratch 初始化。此测试单独决定问题归属：pristine 也升温 → 上游行为 / 参数域；pristine 稳定 → af7ebfc 回归，二分定位。</li>
+  <li><b>优先级 2 —— V0/V1/V2 速度消费诊断：</b>对 pristine QE 7.5 与 af7ebfc 都执行（§12），以第一条提交 <code>.md</code> 的 <code>ratd</code> 为判据。</li>
+  <li><b>优先级 3 —— 保守 Nose 参数矩阵（在普通 pristine/current 等价性确立之后）：</b>降低 <code>fnosep</code>；缩短时间步；缩短 Nose 链（<code>nhpcl</code>）；可选固定胞 <code>md</code> vs PR 对照。<b>不预设任何单一参数已被证明是原因。</b></li>
+  <li><b>优先级 4 —— 重启 CAIMD 验证阶梯（获得稳定普通 Nose 基线后）：</b>依次重复：零载荷 active CAIMD → 全约束 3% 加载 → 横向法向自由加载 → 完整 PR 加载。</li>
+  <li><b>优先级 5 —— 延拓 / 重启方案：</b>若需要精确轨迹延拓，设计并实现科学上显式的 continuation/restart（持久化 CAIMD 协议状态 + Nose 链变量 <code>xnhp0/xnhpm/xnhpp/vnhp</code>、链维度与原子映射）。</li>
+</ol>
+
+<figure class="fig" id="fig-8">
+  <img src="assets/architecture/fig08_decision_tree.svg" alt="图8：诊断决策树：P1 pristine 对照分为 pristine 也升温与 pristine 稳定两支，汇入 P2 速度消费检查、P3 Nose 参数研究、P4 CAIMD 重新验证、P5 重启方案">
+  <figcaption><b>图 8 · 当前诊断决策树。</b>pristine QE 7.5 稳定或升温 → af7ebfc 对照分支 → 速度消费检查 → Nose 参数研究 → 重启 CAIMD 验证。蓝框为最高优先级决定性测试。
+  <span class="src">来源：手绘 SVG；逻辑依据 §10–§12 证据与 <code>THERMOSTAT_CAIMD_AUDIT.md</code>。</span></figcaption>
+</figure>
+</section>
+
+<!-- ================= Section 16 ================= -->
+<section id="sec-16">
+<h2><span class="secno">16</span>证据与溯源附录</h2>
+
+<h3>16.1 关键数值结果（本报告重算 vs 既有记录）</h3>
+<div class="tablewrap"><table>
+<thead><tr><th>量</th><th>本报告重算值</th><th>既有记录值</th><th>证据来源</th></tr></thead>
+<tbody>
+<tr><td>Leonardo af7ebfc 最高温度</td><td class="num">8123.8388 K</td><td class="num">8123.839 K</td><td><a href="assets/data/leonardo_af7ebfc.eal">leonardo_af7ebfc.eal</a> / <a href="evidence/leonardo_completed/FINAL_COMPARISON_REPORT_AUDITED.md">审计报告</a></td></tr>
+<tr><td>Leonardo af7ebfc 终态温度</td><td class="num">4231.6861 K</td><td class="num">4231.686 K</td><td>同上</td></tr>
+<tr><td>Leonardo 首越 600 K / 2000 K</td><td class="num">0.05 ps / 0.258 ps</td><td class="num">step 26 @ 0.05 ps / step 130 @ 0.258 ps</td><td>同上（.eal 步号 0 基 / 报告 1 基，时间一致）</td></tr>
+<tr><td>Leonardo 终态体积变化 / 最大条件数</td><td class="num">+0.3025% / 1.0170</td><td class="num">0.302% / 1.017</td><td><a href="assets/data/leonardo_af7ebfc.cel">leonardo_af7ebfc.cel</a>（本报告重算）</td></tr>
+<tr><td>Control A mean / max / final500</td><td class="num">3843.93 / 8047.60 / 4770.52 K</td><td class="num">3843.93 / 8047.60 / 4770.52 K</td><td><a href="assets/data/control_A.eal">control_A.eal</a> / <a href="evidence/controls_ABC/FINAL_VALIDATION_REPORT.md">controls 报告</a></td></tr>
+<tr><td>Control A 终态直接速度温度</td><td class="num">5064.73 K（.eal 终行）</td><td class="num">5064.727 K（.md 重建）</td><td>同上</td></tr>
+<tr><td>Test1 mean / max</td><td class="num">4612.57 / 8503.52 K</td><td class="num">4611.46 / 8503.58 K（.caimd 列）</td><td><a href="assets/data/test1.eal">test1.eal</a> / <a href="evidence/four_dof_0p03/FINAL_VALIDATION_REPORT.md">four-DOF 报告</a></td></tr>
+<tr><td>Test2 mean / max</td><td class="num">4962.21 / 9657.75 K</td><td class="num">4954.88 / 9657.71 K（.caimd 列）</td><td>同上（.eal 与 .caimd 温度列口径略异，均为同一现象）</td></tr>
+<tr><td>0.30 轨迹 xx 跟踪最大偏差</td><td class="num">2.2551e-16</td><td class="num">~2.26e-16</td><td><a href="assets/data/cont_0p30_diamond8_continuous.caimd">.caimd 流</a> / <a href="evidence/continuation_0p30/SAFETY_STOP_REPORT.md">安全停止报告</a></td></tr>
+<tr><td>0.30 轨迹速度残差最大值</td><td class="num">1.6401e-14</td><td class="num">~1.64e-14</td><td>同上</td></tr>
+<tr><td>0.30 轨迹终态未掩码应变</td><td class="num">yy 0.558 / zz 0.800 / yz −0.474 / xz 1.080 / xy −0.462</td><td class="num">一致</td><td>同上</td></tr>
+</tbody>
+</table></div>
+<p class="small">完整重算输出：<a href="assets/data/recomputed_metrics.json">assets/data/recomputed_metrics.json</a>（由 <a href="scripts/recompute_metrics.py">scripts/recompute_metrics.py</a> 生成；温度约定 T = 2·eka/(21·k<sub>B,Ry</sub>)）。</p>
+
+<h3>16.2 工作流与可执行程序</h3>
+<details open><summary>本地验证工作流（绝对路径）</summary>
+<ul class="small">
+  <li><span class="pathtext">/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_continuation_0p30_20260723T102331Z</span>（0.30 大应变；副本：<a href="evidence/continuation_0p30/">evidence/continuation_0p30/</a>）</li>
+  <li><span class="pathtext">/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z</span>（four-DOF；副本：<a href="evidence/four_dof_0p03/">evidence/four_dof_0p03/</a>）</li>
+  <li><span class="pathtext">/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_controls_ABC_20260723T134303Z</span>（普通对照；副本：<a href="evidence/controls_ABC/">evidence/controls_ABC/</a>）</li>
+  <li><span class="pathtext">/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/diamond8_ordinary_nose_qe74_vs_af7ebfc_completed_20260723T185307Z</span>（Leonardo 完成镜像；副本：<a href="evidence/leonardo_completed/">evidence/leonardo_completed/</a>）</li>
+  <li><span class="pathtext">/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/diamond8_ordinary_nose_qe74_vs_qe75_af7ebfc_20260723T175625Z</span>（提交侧工作流；其 FINAL_COMPARISON_REPORT.md 为 PENDING 占位，权威记录在完成镜像）</li>
+</ul>
+</details>
+<details><summary>可执行程序与校验和（SHA256）</summary>
+<div class="tablewrap"><table>
+<thead><tr><th>可执行程序</th><th>SHA256</th></tr></thead>
+<tbody>
+<tr><td>本地 af7ebfc <code>pw.x</code>（Diamond8 本地测试；<span class="pathtext">/private/tmp/qe_diamond8_af7ebfc_build/bin/pw.x</span>）</td><td class="pathtext">7f7f5f815f53983c3b41dfab1570d96e8f8816d56cdcc574a3a2e33fcf492303</td></tr>
+<tr><td>Leonardo af7ebfc GPU/MPI <code>pw.x</code>（作业 50127909）</td><td class="pathtext">89d4fda827d2cc22a3b4c1670e90dc40ce629af42096c785b55c70c355a10e7d</td></tr>
+<tr><td>Leonardo 官方 QE 7.4.1 模块 <code>pw.x</code></td><td class="pathtext">beb956cce572605941b791c37bc4dd30ac6cee714e18be7b93fd4ff0e47f4aca</td></tr>
+<tr><td>Leonardo baseline（a11913a）GPU/MPI <code>pw.x</code></td><td class="pathtext">7804c655a1ea6c157e09f402ef4064940edea08558317d1b529623fe8825d67f</td></tr>
+<tr><td>Leonardo current（b53f593 阶段）GPU/MPI <code>pw.x</code></td><td class="pathtext">4b316dad82d2cb18155fa62ed4957aef041355955b4a7a5687f15fe7fbcd0b35</td></tr>
+<tr><td>Leonardo current（24bdc0e 阶段）GPU/MPI <code>pw.x</code></td><td class="pathtext">7cacabbef8d32aa83fa561cd124e319ced62714e0a66e2a85f2b1d99def4a6e8</td></tr>
+<tr><td>赝势 <code>C.UPF</code>（所有 Diamond8 / 对照运行）</td><td class="pathtext">9c06aa642d22981491b32a18ec129086fe8366164984930389e4fc071c978639</td></tr>
+<tr><td>输入 <code>qe74.in</code> / <code>qe75_af7ebfc.in</code>（作业 50127909）</td><td class="pathtext">fb36b256662bc48b4486ab0f71e71e6c66324e91de590229c6cb1c8cf2ef35d6 / 33b584fc5ecccae84138d4bdce6de85872a218a8693deb2544bc80ed293ed51d</td></tr>
+</tbody>
+</table></div>
+</details>
+<details><summary>本地镜像中发现的 Slurm 作业 ID</summary>
+<ul class="small">
+  <li><b>50127909</b>：QE 7.4.1 vs af7ebfc 普通对照（COMPLETED 0:0；step .0 失败 = QE74 解析拒绝，step .1 完成 = af7ebfc 1000 步）。</li>
+  <li>49490363 / 49522699 / 49525164：初次 Leonardo GPU 构建 / 验证交互分配（b53f593 阶段）。</li>
+  <li>49542425（构建 + 旧 Python 失败）/ 49543531（Python 3.11 harness，COMPLETED，29 例）：加固阶段。</li>
+  <li>49723755（K_velocity 11 例 + 全矩阵 40 例，COMPLETED）/ 49725763（Ice X smoke）/ 49728066（两 rank velocity smoke）：显式速度阶段；失败尝试 49723125、49723301、49724256、49724464、49725315、49727555、49727841 均已诊断并被后续作业取代。</li>
+  <li>矩阵 TSV：matrix-49701674.tsv、matrix-49701713.tsv（<span class="pathtext">examples/iceX_100GPa_300K_caimd/evidence/</span>）。</li>
+</ul>
+</details>
+<details><summary>主要报告 / JSON / CSV 路径（副本为相对链接，原始为绝对路径文本）</summary>
+<ul class="small">
+  <li>根文档：<a href="evidence/root_docs/AGENTS.md">AGENTS.md</a> · <a href="evidence/root_docs/CAIMD_IMPLEMENTATION.md">CAIMD_IMPLEMENTATION.md</a> · <a href="evidence/root_docs/CAIMD_V1_IMPLEMENTATION_REPORT.md">CAIMD_V1_IMPLEMENTATION_REPORT.md</a> · <a href="evidence/root_docs/CAIMD_LEONARDO_GPU_VALIDATION_REPORT.md">CAIMD_LEONARDO_GPU_VALIDATION_REPORT.md</a> · <a href="evidence/root_docs/THERMOSTAT_CAIMD_AUDIT.md">THERMOSTAT_CAIMD_AUDIT.md</a> · <a href="evidence/root_docs/LEONARDO_BUILD.md">LEONARDO_BUILD.md</a></li>
+  <li>工作流报告副本：<a href="evidence/continuation_0p30/SAFETY_STOP_REPORT.md">continuation SAFETY_STOP_REPORT.md</a> · <a href="evidence/four_dof_0p03/FINAL_VALIDATION_REPORT.md">four-DOF FINAL_VALIDATION_REPORT.md</a> · <a href="evidence/controls_ABC/FINAL_VALIDATION_REPORT.md">controls FINAL_VALIDATION_REPORT.md</a> · <a href="evidence/leonardo_completed/FINAL_COMPARISON_REPORT_AUDITED.md">Leonardo FINAL_COMPARISON_REPORT_AUDITED.md</a></li>
+  <li>JSON：<a href="evidence/leonardo_completed/comparison_summary_audited.json">comparison_summary_audited.json</a> · <a href="evidence/controls_ABC/DIAGNOSTIC_CLASSIFICATION.json">DIAGNOSTIC_CLASSIFICATION.json</a> · <a href="evidence/four_dof_0p03/OLD_FAILURE_DIAGNOSIS.json">OLD_FAILURE_DIAGNOSIS.json</a> · <a href="assets/data/test_comparison_summary.json">test_comparison_summary.json</a> · <a href="assets/data/recomputed_metrics.json">recomputed_metrics.json</a></li>
+  <li>CSV：<a href="assets/data/run_statistics.csv">run_statistics.csv</a> · <a href="assets/data/controls_ABC_temperature_statistics.csv">controls_ABC_temperature_statistics.csv</a> · <a href="assets/data/qe75_af7ebfc_temperature.csv">qe75_af7ebfc_temperature.csv</a> · <a href="assets/data/controls_ABC_nose_extended_energy_timeseries.csv">nose_extended_energy_timeseries.csv</a></li>
+  <li>Leonardo harness 摘要（远程路径，未镜像）：<span class="pathtext">$ROOT/validation/analysis/summary.json</span>（SHA256 03401cc1…）、<span class="pathtext">$ROOT/validation/hardening-py311-49543531/analysis/summary.json</span>（fff545a5…）、<span class="pathtext">$ROOT/validation/velocity-full-49723755/analysis/summary.json</span>（053fa00f…），其中 <span class="pathtext">$ROOT = /leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-v1-7aa61919</span>。</li>
+</ul>
+</details>
+</section>
+
+<!-- ================= Section 17 ================= -->
+<section id="sec-17">
+<h2><span class="secno">17</span>源码与工作流索引</h2>
+<h3>相关源文件（相对仓库根的路径，未复制入本报告目录）</h3>
+<ul class="small">
+  <li><span class="pathtext">Modules/input_parameters.f90</span> — CAIMD <code>&amp;CELL</code> 变量声明（1346–1369 行附近）</li>
+  <li><span class="pathtext">Modules/read_namelists.f90</span> — 默认值 / 校验 / 广播 / ignored-<code>&amp;CELL</code> 探测 / CP 拒绝</li>
+  <li><span class="pathtext">PW/src/input.f90</span> — CAIMD 配置（1307 行）、active 边界与 thermostat 白名单（1739–1756 行）</li>
+  <li><span class="pathtext">PW/src/run_pwscf.f90</span> — premove <code>.caimd</code> 写出（241 行）</li>
+  <li><span class="pathtext">PW/src/move_ions.f90</span> — <code>vcsmd</code> 分派（393 行；基线未修改）</li>
+  <li><span class="pathtext">PW/src/vcsmd.f90</span> — PR 桥接 / Nose 调用（334–353 行）/ 历史拒绝（154 行）</li>
+  <li><span class="pathtext">PW/src/vcsubs.f90</span> — <code>vcinit</code> 速度路径（190–260 行）、Nose 摩擦（708–715 行）、投影插入与动能刷新（1123–1278 行）</li>
+  <li><span class="pathtext">PW/src/caimd_module.f90</span> — CAIMD 模块全体（498 行）</li>
+  <li><span class="pathtext">PW/src/stress.f90 · PW/src/forces.f90 · PW/src/pwcom.f90</span> — 普通 QE 力 / 应力路径（未修改，已验证）</li>
+  <li><span class="pathtext">test-suite/caimd/caimd_validation.py</span> — 持久化验证 harness</li>
+</ul>
+<h3>本报告目录内容（相对链接）</h3>
+<ul class="small">
+  <li>图：<a href="assets/architecture/fig01_architecture.svg">fig01</a> · <a href="assets/architecture/fig02_strain_and_hold.svg">fig02</a> · <a href="assets/figures/fig03_timeline.png">fig03</a> · <a href="assets/figures/fig04_strain_tracking.png">fig04</a> · <a href="assets/figures/fig05_temperature_comparison.png">fig05</a> · <a href="assets/figures/fig06_leonardo_temp_cell.png">fig06</a> · <a href="assets/figures/fig07_status_matrix.png">fig07</a> · <a href="assets/architecture/fig08_decision_tree.svg">fig08</a> · <a href="assets/figures/fig09_unmasked_strain_components.png">fig09</a> · <a href="assets/figures/fig10_velocity_jump.png">fig10</a> · <a href="assets/figures/fig11_nose_extended_energy.png">fig11</a></li>
+  <li>数据：<a href="assets/data/">assets/data/</a>（原始 <code>.eal</code>/<code>.cel</code>/<code>.caimd</code> 副本、派生 CSV、<code>git_log.txt</code>、<code>recomputed_metrics.json</code>）</li>
+  <li>脚本：<a href="scripts/recompute_metrics.py">recompute_metrics.py</a> · <a href="scripts/make_figures.py">make_figures.py</a></li>
+  <li>证据副本：<a href="evidence/">evidence/</a>（root_docs / continuation_0p30 / four_dof_0p03 / controls_ABC / leonardo_completed）</li>
+  <li>元数据：<a href="REPORT_METADATA.json">REPORT_METADATA.json</a> · <a href="README.md">README.md</a></li>
+</ul>
+<p class="small">本报告生成过程未修改任何已跟踪 QE 源文件、任何原始计算输出与任何既有报告；未使用 Leonardo / SSH / SCP / Slurm / 网络；未创建 Git 提交、未执行 push。所有新文件仅位于本报告目录内。</p>
+</section>
+
+<hr>
+<p class="small">QE-CAIMD 开发与验证进度报告 · 生成于 2026-07-23（UTC，目录时间戳 20260723T205507Z）· 仓库 <span class="pathtext">/Users/mengqicheng/Downloads/Learning/qe-7.5</span> @ <code>af7ebfc</code>（main）· 本页面完全离线自包含（无外部字体 / CDN / 网络依赖）。</p>
+
+</main>
+</div>
+<a href="#sec-01" id="backtop">↑ 返回顶部</a>
+<script>
+(function(){
+  var links = document.querySelectorAll('aside.toc a');
+  var map = {};
+  links.forEach(function(a){ map[a.getAttribute('href').slice(1)] = a; });
+  var obs = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){
+        links.forEach(function(a){a.classList.remove('active');});
+        var a = map[e.target.id];
+        if(a) a.classList.add('active');
+      }
+    });
+  }, {rootMargin:'-10% 0px -80% 0px'});
+  document.querySelectorAll('main section[id]').forEach(function(s){obs.observe(s);});
+  var bt = document.getElementById('backtop');
+  window.addEventListener('scroll', function(){
+    bt.style.display = window.scrollY > 900 ? 'block' : 'none';
+  }, {passive:true});
+  window.addEventListener('beforeprint', function(){
+    document.querySelectorAll('details').forEach(function(d){ d.setAttribute('open',''); });
+  });
+})();
+</script>
+</body>
+</html>

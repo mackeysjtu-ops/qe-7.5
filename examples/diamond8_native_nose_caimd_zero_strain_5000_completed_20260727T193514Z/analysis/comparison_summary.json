@@ -1,0 +1,566 @@
+{
+  "job_id": "50434898",
+  "remote_workdir": "/leonardo/home/userexternal/mcheng00/workspace/Diamond/diamond8_native_nose_caimd_zero_strain_5000_20260727T151734Z",
+  "overall_status": "ACTIVE_CAIMD_ZERO_STRAIN_UNSTABLE",
+  "test": "three-case native-init Nose + CAIMD zero-strain, 5000 steps (10 ps) each",
+  "cutoff_caveat": "ecutwfc=25 Ry: absolute pressures are Pulay-dominated, not converged.",
+  "temperature_convention": {
+    "instantaneous": "2*eka/((3N-3)k_B) from .eal",
+    "reported_tv": "2*avk/(3(N+1)k_B) RUNNING AVERAGE (not used)",
+    "direct": "terminal .md ratd x terminal .cel, COM removed"
+  },
+  "executable_provenance": {
+    "job_id": "50434898",
+    "executable_path": "/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-thermostat-af7ebfc/install-current-gpu/bin/pw.x",
+    "executable_sha256": "89d4fda827d2cc22a3b4c1670e90dc40ce629af42096c785b55c70c355a10e7d",
+    "expected_sha256": "89d4fda827d2cc22a3b4c1670e90dc40ce629af42096c785b55c70c355a10e7d",
+    "versions": {
+      "A": "7.5",
+      "B": "7.5",
+      "C": "7.5"
+    },
+    "nose_active": {
+      "A": true,
+      "B": true,
+      "C": true
+    }
+  },
+  "run_completeness": {
+    "A": {
+      "return_code": 0,
+      "slurm_step_state": "see sacct",
+      "job_done": true,
+      "runtime_version": "7.5",
+      "first_error": null,
+      "scf_failure_count": 0,
+      "completed_ionic_steps": 5000,
+      "requested_steps": 5000,
+      "final_valid_nst": 4999,
+      "completed_time_ps": 9.998,
+      "requested_time_ps": 10.0,
+      "safety_stop": false,
+      "safety_trigger": null,
+      "nose_active_in_stdout": true,
+      "classification": "COMPLETE"
+    },
+    "B": {
+      "return_code": 0,
+      "slurm_step_state": "see sacct",
+      "job_done": true,
+      "runtime_version": "7.5",
+      "first_error": null,
+      "scf_failure_count": 0,
+      "completed_ionic_steps": 5000,
+      "requested_steps": 5000,
+      "final_valid_nst": 4999,
+      "completed_time_ps": 9.998,
+      "requested_time_ps": 10.0,
+      "safety_stop": false,
+      "safety_trigger": null,
+      "nose_active_in_stdout": true,
+      "classification": "COMPLETE"
+    },
+    "C": {
+      "return_code": 0,
+      "slurm_step_state": "see sacct",
+      "job_done": true,
+      "runtime_version": "7.5",
+      "first_error": null,
+      "scf_failure_count": 0,
+      "completed_ionic_steps": 5000,
+      "requested_steps": 5000,
+      "final_valid_nst": 4999,
+      "completed_time_ps": 9.998,
+      "requested_time_ps": 10.0,
+      "safety_stop": false,
+      "safety_trigger": null,
+      "nose_active_in_stdout": true,
+      "classification": "COMPLETE"
+    },
+    "internal_post_processing_rc": -1
+  },
+  "initial_state": {
+    "note": "All three cases omit explicit velocities and use the same executable + tempw, so vcinit->ranv(300 K) should yield the same deterministic Maxwell realization (randy idum=0; total momentum zeroed). .md holds only the terminal state, so the identity of the initial realization is read from the early bit-identical .eal rows.",
+    "pairs": {
+      "A_vs_B": {
+        "first_step_eka": [
+          0.019951,
+          0.019951
+        ],
+        "first_step_eka_abs_diff": 0.0,
+        "first_eka_divergence_step": 701,
+        "classification": "IDENTICAL"
+      },
+      "A_vs_C": {
+        "first_step_eka": [
+          0.019951,
+          0.019951
+        ],
+        "first_step_eka_abs_diff": 0.0,
+        "first_eka_divergence_step": 10,
+        "classification": "NUMERICALLY_EQUIVALENT"
+      },
+      "B_vs_C": {
+        "first_step_eka": [
+          0.019951,
+          0.019951
+        ],
+        "first_step_eka_abs_diff": 0.0,
+        "first_eka_divergence_step": 10,
+        "classification": "NUMERICALLY_EQUIVALENT"
+      }
+    },
+    "all_identical_initialization": false
+  },
+  "runs": {
+    "A": {
+      "label": "CASE A caimd=.false.",
+      "rc": 0,
+      "job_done": true,
+      "version": "7.5",
+      "completed_steps": 5000,
+      "temperature_classification": "STABLE_ABOVE_TARGET",
+      "nose_active_in_stdout": true,
+      "temperature": {
+        "n": 5000,
+        "initial": 300.001310468147,
+        "final": 4131.089169711493,
+        "mean": 2844.572909471627,
+        "std": 2472.2252378194416,
+        "median": 3430.9708290069216,
+        "min": 55.0756753973075,
+        "max": 8981.69428879399,
+        "first500_mean": 170.16680918539035,
+        "final500_mean": 4838.215310061727,
+        "final1000_mean": 4737.602590478221,
+        "final2500_mean": 4905.973039754185
+      },
+      "temperature_initialized_K": 300.001310468147,
+      "final_5ps_mean_K": 4905.973039754185,
+      "final_2p5ps_mean_K": 4786.374049073702,
+      "drift_full_K_per_ps": 687.530231608245,
+      "drift_final_half_K_per_ps": -76.94641979090133,
+      "drift_final_quarter_K_per_ps": -64.67373633517484,
+      "block1000_means_K": [
+        169.93170264990027,
+        221.34538921743666,
+        4062.901688254568,
+        5031.083176758013,
+        4737.602590478221
+      ],
+      "block500_means_K": [
+        170.16680918539035,
+        169.6965961144102,
+        181.32423249102777,
+        261.36654594384555,
+        3133.3097122106788,
+        4992.493664298456,
+        5088.333790230911,
+        4973.832563285114,
+        4636.989870894715,
+        4838.215310061727
+      ],
+      "roll500_final": 4838.215310061727,
+      "crossings": {
+        "first_above_600K": {
+          "nst": 2045,
+          "time_ps": 4.09,
+          "value": 601.2807579414463
+        },
+        "first_above_1000K": {
+          "nst": 2175,
+          "time_ps": 4.35,
+          "value": 1115.1670185423648
+        },
+        "first_above_2000K": {
+          "nst": 2177,
+          "time_ps": 4.354,
+          "value": 2144.563525586042
+        }
+      },
+      "fraction_above": {
+        "600K": 0.5662,
+        "1000K": 0.565,
+        "2000K": 0.5616
+      },
+      "longest_run_above": {
+        "600K": 2828,
+        "1000K": 2825,
+        "2000K": 680
+      },
+      "direct_terminal_T_K": 4131.578479636427,
+      "direct_confirms_reported": true,
+      "pressure_kbar": {
+        "n": 5000,
+        "initial": -714.3569692758001,
+        "final": 387.4159334208,
+        "mean": 383.1884195690357,
+        "std": 898.3623900156043,
+        "median": 450.88441932390003,
+        "min": -793.1611595604,
+        "max": 2081.831063856,
+        "first500_mean": -744.0870232236624,
+        "final500_mean": 395.6534041293207,
+        "final1000_mean": 663.729255327674,
+        "final2500_mean": 1134.4140834061864
+      },
+      "pressure_final1000_mean_kbar": 663.729255327674,
+      "stress_mean_kbar": {
+        "sxx": 126.69361400000005,
+        "syy": 411.45366200000007,
+        "szz": 380.50773599999997,
+        "syz": 61.997352,
+        "sxz": 18.849026000000006,
+        "sxy": 40.32509399999999
+      },
+      "cell": {
+        "volume_initial_bohr3": 306.27101880388557,
+        "volume_final_bohr3": 279.54396758183907,
+        "volume_change_percent": -8.726601467689186,
+        "volume_min": 226.34627326105337,
+        "volume_max": 306.27101880388557,
+        "determinant_min": 226.34627326105337,
+        "condition_number_max": 1.1299354790829073,
+        "strain6_final": [
+          -0.08204794892255407,
+          0.005484223236861041,
+          -0.009746924956562819,
+          0.022722374401404708,
+          0.017381815783889316,
+          0.02238019101240865
+        ],
+        "min_CC_bohr": 2.162928020345104,
+        "max_CC_bohr": 19.123055965018136,
+        "mean_NN_CC_bohr": 2.649094648747901,
+        "classification": "STABLE_PR_CELL"
+      },
+      "energy_partial": {
+        "quantity": "edyn = ekint+ut",
+        "is_full_conserved": false,
+        "note": "Nose chain energy not written by QE; partial diagnostic",
+        "drift_eV_per_atom_per_ps": 0.02020662482980764,
+        "bounded": true
+      }
+    },
+    "B": {
+      "label": "CASE B caimd no-op (masks .false.)",
+      "rc": 0,
+      "job_done": true,
+      "version": "7.5",
+      "completed_steps": 5000,
+      "temperature_classification": "STABLE_ABOVE_TARGET",
+      "nose_active_in_stdout": true,
+      "temperature": {
+        "n": 5000,
+        "initial": 300.001310468147,
+        "final": 2620.782336799826,
+        "mean": 2833.79570365564,
+        "std": 2498.044773196353,
+        "median": 3463.0746231951575,
+        "min": 48.677471918574774,
+        "max": 8384.428384739314,
+        "first500_mean": 170.16680918539035,
+        "final500_mean": 4853.494911666614,
+        "final1000_mean": 4946.542684165459,
+        "final2500_mean": 4966.912278432042
+      },
+      "temperature_initialized_K": 300.001310468147,
+      "final_5ps_mean_K": 4966.912278432042,
+      "final_2p5ps_mean_K": 4957.478785267284,
+      "drift_full_K_per_ps": 706.4910191782467,
+      "drift_final_half_K_per_ps": -19.48337668469667,
+      "drift_final_quarter_K_per_ps": -105.73904518211138,
+      "block1000_means_K": [
+        170.04875894790388,
+        221.3130373143004,
+        3831.833764962648,
+        4999.240272887888,
+        4946.542684165459
+      ],
+      "block500_means_K": [
+        170.16680918539035,
+        169.93070871041743,
+        178.64788277200634,
+        263.9781918565945,
+        2720.6720518717816,
+        4942.995478053514,
+        5077.200164332619,
+        4921.280381443155,
+        5039.590456664306,
+        4853.494911666614
+      ],
+      "roll500_final": 4853.494911666614,
+      "crossings": {
+        "first_above_600K": {
+          "nst": 2085,
+          "time_ps": 4.17,
+          "value": 612.5885112105578
+        },
+        "first_above_1000K": {
+          "nst": 2232,
+          "time_ps": 4.464,
+          "value": 1394.8985797993912
+        },
+        "first_above_2000K": {
+          "nst": 2233,
+          "time_ps": 4.466,
+          "value": 2074.6419129512424
+        }
+      },
+      "fraction_above": {
+        "600K": 0.5576,
+        "1000K": 0.5536,
+        "2000K": 0.5522
+      },
+      "longest_run_above": {
+        "600K": 2770,
+        "1000K": 2768,
+        "2000K": 812
+      },
+      "direct_terminal_T_K": 2621.0237021929897,
+      "direct_confirms_reported": true,
+      "pressure_kbar": {
+        "n": 5000,
+        "initial": -714.3569692758001,
+        "final": 156.0931982658,
+        "mean": 387.85856918766416,
+        "std": 911.3981916796484,
+        "median": 402.86196661080004,
+        "min": -793.1611595604,
+        "max": 2105.9562966480003,
+        "first500_mean": -744.087052644678,
+        "final500_mean": 400.9297967227794,
+        "final1000_mean": 700.0865098408683,
+        "final2500_mean": 1162.0911620692414
+      },
+      "pressure_final1000_mean_kbar": 700.0865098408683,
+      "stress_mean_kbar": {
+        "sxx": 398.57502600000004,
+        "syy": 228.28548199999997,
+        "szz": 305.2061499999999,
+        "syz": 58.32192,
+        "sxz": 73.133838,
+        "sxy": -121.16738799999999
+      },
+      "cell": {
+        "volume_initial_bohr3": 306.27101880388557,
+        "volume_final_bohr3": 276.9924167413727,
+        "volume_change_percent": -9.559703747634314,
+        "volume_min": 224.90245245939718,
+        "volume_max": 306.27101880388557,
+        "determinant_min": 224.90245245939718,
+        "condition_number_max": 1.1314783483762796,
+        "strain6_final": [
+          -0.012687056405970676,
+          -0.04902381185567706,
+          -0.033398515992600686,
+          0.011989637561974176,
+          0.026584081328919394,
+          -0.04883044668703787
+        ],
+        "min_CC_bohr": 2.172957547249314,
+        "max_CC_bohr": 19.801382327408998,
+        "mean_NN_CC_bohr": 2.6575360025726558,
+        "classification": "STABLE_PR_CELL"
+      },
+      "energy_partial": {
+        "quantity": "edyn = ekint+ut",
+        "is_full_conserved": false,
+        "note": "Nose chain energy not written by QE; partial diagnostic",
+        "drift_eV_per_atom_per_ps": 0.01853108875682441,
+        "bounded": true
+      }
+    },
+    "C": {
+      "label": "CASE C active zero-strain",
+      "rc": 0,
+      "job_done": true,
+      "version": "7.5",
+      "completed_steps": 5000,
+      "temperature_classification": "STABLE_ABOVE_TARGET",
+      "nose_active_in_stdout": true,
+      "temperature": {
+        "n": 5000,
+        "initial": 300.001310468147,
+        "final": 564.2598955098599,
+        "mean": 384.12911908669037,
+        "std": 190.78026728201516,
+        "median": 350.4877221716607,
+        "min": 40.613179261361246,
+        "max": 1185.1337418949927,
+        "first500_mean": 172.75627566187336,
+        "final500_mean": 667.6924259172263,
+        "final1000_mean": 618.9414205212091,
+        "final2500_mean": 522.9658734167842
+      },
+      "temperature_initialized_K": 300.001310468147,
+      "final_5ps_mean_K": 522.9658734167842,
+      "final_2p5ps_mean_K": 599.7423597623281,
+      "drift_full_K_per_ps": 54.93512430989084,
+      "drift_final_half_K_per_ps": 65.16997867365383,
+      "drift_final_quarter_K_per_ps": 87.2387582031145,
+      "block1000_means_K": [
+        184.66530668154527,
+        261.91412239221165,
+        364.9267246457617,
+        490.1980211927238,
+        618.9414205212091
+      ],
+      "block500_means_K": [
+        172.75627566187336,
+        196.57433770121716,
+        235.7967114285767,
+        288.03153335584665,
+        333.30296563546796,
+        396.55048365605546,
+        466.7443274434276,
+        513.6517149420199,
+        570.1904151251921,
+        667.6924259172263
+      ],
+      "roll500_final": 667.6924259172262,
+      "crossings": {
+        "first_above_600K": {
+          "nst": 2623,
+          "time_ps": 5.246,
+          "value": 601.0852781641877
+        },
+        "first_above_1000K": {
+          "nst": 4757,
+          "time_ps": 9.514,
+          "value": 1035.3511217970924
+        },
+        "first_above_2000K": null
+      },
+      "fraction_above": {
+        "600K": 0.1566,
+        "1000K": 0.0018,
+        "2000K": 0.0
+      },
+      "longest_run_above": {
+        "600K": 24,
+        "1000K": 3,
+        "2000K": 0
+      },
+      "direct_terminal_T_K": 564.2587889619468,
+      "direct_confirms_reported": true,
+      "pressure_kbar": {
+        "n": 5000,
+        "initial": -714.3569692758001,
+        "final": -819.3605739522001,
+        "mean": -794.8985411420175,
+        "std": 44.94834067456011,
+        "median": -787.0636540773,
+        "min": -946.1210196648001,
+        "max": -695.4539667528,
+        "first500_mean": -757.1751385394161,
+        "final500_mean": -788.9393909268782,
+        "final1000_mean": -794.3578152384066,
+        "final2500_mean": -807.962331162073
+      },
+      "pressure_final1000_mean_kbar": -794.3578152384066,
+      "stress_mean_kbar": {
+        "sxx": -804.9285060000001,
+        "syy": -807.339044,
+        "szz": -796.967204,
+        "syz": 12.221672,
+        "sxz": 7.674694000000001,
+        "sxy": 6.059864
+      },
+      "cell": {
+        "volume_initial_bohr3": 306.27103783218973,
+        "volume_final_bohr3": 306.27103783218973,
+        "volume_change_percent": 0.0,
+        "volume_min": 306.27103783218973,
+        "volume_max": 306.27103783218973,
+        "determinant_min": 306.27103783218973,
+        "condition_number_max": 1.0000000012402281,
+        "strain6_final": [
+          0.0,
+          0.0,
+          2.220446049250313e-16,
+          -4.79500799350209e-18,
+          -4.997016321090504e-17,
+          -1.0340561135061387e-16
+        ],
+        "min_CC_bohr": 2.671873239375417,
+        "max_CC_bohr": 19.198763778857046,
+        "mean_NN_CC_bohr": 2.8877313972483822,
+        "classification": "STABLE_PR_CELL"
+      },
+      "energy_partial": {
+        "quantity": "edyn = ekint+ut",
+        "is_full_conserved": false,
+        "note": "Nose chain energy not written by QE; partial diagnostic",
+        "drift_eV_per_atom_per_ps": 0.01270413564209947,
+        "bounded": true
+      }
+    }
+  },
+  "caimd_case_B_noop": {
+    "case": "B",
+    "all_masks_false_in_input": true,
+    "caimd_file_present": true,
+    "caimd_rows": 5000,
+    "caimd_ncols_seen": [
+      26
+    ],
+    "any_event_flag_true": false,
+    "max_abs_actual_strain": 0.10096005298848232,
+    "max_velocity_jump_max": 0.0,
+    "mean_T_vs_control_delta_K": 10.777205815987145,
+    "final5ps_T_vs_control_delta_K": 60.93923867785634,
+    "eka_first_divergence_step_vs_control": 701,
+    "statistically_consistent_with_control": true
+  },
+  "caimd_case_C_zero_strain": {
+    "case": "C",
+    "all_masks_true_in_input": true,
+    "caimd_file_present": true,
+    "caimd_rows": 5000,
+    "caimd_ncols_seen": [
+      26
+    ],
+    "schema_26_columns_ok": true,
+    "event_count_final": 4999,
+    "n_event_flags_true": 5000,
+    "max_abs_nominal_xx": 0.0,
+    "max_abs_actual_xx": 0.0,
+    "max_abs_nominal_yy": 0.0,
+    "max_abs_actual_yy": 2.220446049250313e-16,
+    "max_abs_nominal_zz": 0.0,
+    "max_abs_actual_zz": 1.1102230246251565e-16,
+    "max_abs_nominal_yz": 0.0,
+    "max_abs_actual_yz": 3.6138790850127925e-18,
+    "max_abs_nominal_xz": 0.0,
+    "max_abs_actual_xz": 1.9755418678427536e-17,
+    "max_abs_nominal_xy": 0.0,
+    "max_abs_actual_xy": 1.1231345159513133e-17,
+    "max_abs_nominal_minus_actual": 2.220446049250313e-16,
+    "max_velocity_jump_max": 0.0,
+    "max_velocity_jump_rms": 0.0,
+    "temperature_diag_range_K": [
+      40.61349436058463,
+      1185.1336471974653
+    ],
+    "determinant_range_bohr3": [
+      306.27103783218973,
+      306.27103783218973
+    ],
+    "determinant_always_positive": true,
+    "condition_number_range": [
+      1.0000000012402281,
+      1.0000000012402281
+    ],
+    "max_skew_norm": 2.1464554419741031e-16,
+    "max_abs_strain_from_cel": 2.220446049250313e-16,
+    "nominal_all_zero": true
+  },
+  "reference_1000step": {
+    "nose_native_mean_K": 169.696,
+    "nose_native_final200_K": 173.237,
+    "nose_native_max_K": 300.001,
+    "control_native_mean_K": 169.858
+  },
+  "plots_generated": true
+}

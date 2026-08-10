@@ -1,0 +1,21 @@
+{
+  "local_prepared_source": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/diamond8_vcrelax_nvt_npt_caimd_chain_completed_20260728T070746Z/prepared_not_submitted",
+  "remote_root": "/leonardo/home/userexternal/mcheng00/workspace/Diamond/diamond8_vcrelax_nvt_npt_caimd_chain_20260728T120614Z",
+  "executable_path": "/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-thermostat-af7ebfc/install-current-gpu/bin/pw.x",
+  "executable_sha256": "89d4fda827d2cc22a3b4c1670e90dc40ce629af42096c785b55c70c355a10e7d",
+  "executable_sha256_matches_expected": true,
+  "pseudopotential_sha256": "9c06aa642d22981491b32a18ec129086fe8366164984930389e4fc071c978639",
+  "pseudopotential_sha256_matches_expected": true,
+  "atom_count_job1": 8,
+  "species": "C only (no H, no O)",
+  "ecutwfc_Ry": 80.0,
+  "ecutrho_Ry": 320.0,
+  "kpoints": "automatic 2 2 2 0 0 0",
+  "scripts": ["scripts/01_vc_relax.slurm","scripts/02_fixed_nvt.slurm","scripts/03_free_npt.slurm","scripts/04_caimd_zero_nonzero.slurm"],
+  "static_checks": {"bash_n_all_pass": true, "py_compile_all_pass": true},
+  "no_explicit_velocity": true,
+  "job1_caimd": "absent/false",
+  "job3_caimd_false_ion_and_cell_nose": true,
+  "job4_zero_before_nonzero_gated": true,
+  "intended_dependency_graph": {"JOB2":"afterok:JOB1","JOB3":"afterok:JOB2","JOB4":"afterok:JOB3"}
+}

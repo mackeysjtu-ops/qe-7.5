@@ -1,0 +1,37 @@
+{
+  "branch": "main",
+  "created_utc": "2026-07-23T13:53:34Z",
+  "git_status_short_initial": [
+    "## main",
+    "?? examples/caimd_diamond8_local_nose_continuation_0p30_20260723T102331Z/",
+    "?? examples/caimd_diamond8_local_nose_controls_ABC_20260723T134303Z/",
+    "?? examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/"
+  ],
+  "head_full": "af7ebfc757c32e0b4f050ed9f2208e01020b2ee3",
+  "head_short": "af7ebfc",
+  "local_only_restrictions": {
+    "commit": false,
+    "git_push": false,
+    "network": false,
+    "remote": false,
+    "slurm": false,
+    "source_modification": false,
+    "ssh": false
+  },
+  "platform": "macOS-26.5.2-arm64-arm-64bit",
+  "pseudo": "/Users/mengqicheng/Downloads/Learning/qe-7.5/pseudo/C.UPF",
+  "pseudo_sha256": "9c06aa642d22981491b32a18ec129086fe8366164984930389e4fc071c978639",
+  "pseudo_sha256_expected": "9c06aa642d22981491b32a18ec129086fe8366164984930389e4fc071c978639",
+  "pw_executable": "/private/tmp/qe_diamond8_af7ebfc_build/bin/pw.x",
+  "pw_sha256": "7f7f5f815f53983c3b41dfab1570d96e8f8816d56cdcc574a3a2e33fcf492303",
+  "pw_sha256_expected": "7f7f5f815f53983c3b41dfab1570d96e8f8816d56cdcc574a3a2e33fcf492303",
+  "recent_commits": [
+    "af7ebfc Support Nose thermostat with active CAIMD",
+    "13ba2eb Validate 300 K vc-md initialization",
+    "7b5e4f0 Record Leonardo velocity validation evidence",
+    "24bdc0e Use supported velocity input path in Ice X decks",
+    "c647143 Parse wrapped PR md histories in CAIMD harness"
+  ],
+  "repo_root": "/Users/mengqicheng/Downloads/Learning/qe-7.5",
+  "workflow_root": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_controls_ABC_20260723T134303Z"
+}

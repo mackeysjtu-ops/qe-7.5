@@ -1,0 +1,10 @@
+# Single Slurm query performed during this audit (no repeats, no polling):
+# sacct -j 50434898 --format=JobID,JobName%34,State,ExitCode,Elapsed,NodeList%28,Start,End
+JobID                                   JobName      State ExitCode    Elapsed                     NodeList               Start                 End
+50434898                     dia8_caimd_zero_5k  COMPLETED      0:0   01:12:09                     lrdn1374 2026-07-27T18:50:45 2026-07-27T20:02:54
+50434898.ba+                              batch  COMPLETED      0:0   01:12:09                     lrdn1374 2026-07-27T18:50:45 2026-07-27T20:02:54
+50434898.ex+                             extern  COMPLETED      0:0   01:12:09                     lrdn1374 2026-07-27T18:50:45 2026-07-27T20:02:54
+50434898.0                                 pw.x  COMPLETED      0:0   00:24:20                     lrdn1374 2026-07-27T18:50:48 2026-07-27T19:15:08
+50434898.1                                 pw.x  COMPLETED      0:0   00:24:05                     lrdn1374 2026-07-27T19:15:08 2026-07-27T19:39:13
+50434898.2                                 pw.x  COMPLETED      0:0   00:23:33                     lrdn1374 2026-07-27T19:39:13 2026-07-27T20:02:46
+# step .0=CASE A, .1=CASE B, .2=CASE C

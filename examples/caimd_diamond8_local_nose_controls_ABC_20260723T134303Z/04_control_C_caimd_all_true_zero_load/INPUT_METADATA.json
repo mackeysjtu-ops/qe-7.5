@@ -1,0 +1,30 @@
+{
+  "caimd": true,
+  "caimd_mask": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+  ],
+  "caimd_step_strain": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "control": "C",
+  "dt_fs": 2.0,
+  "dt_qe": 41.341381006,
+  "fnosep_THz": 50.0,
+  "input": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_controls_ABC_20260723T134303Z/04_control_C_caimd_all_true_zero_load/qe.in",
+  "nhpcl": 4,
+  "nstep": 5000,
+  "prefix": "diamond8_control_C_caimd_all_true_zero_load",
+  "tempw_K": 300.0,
+  "title": "active all-true zero-strain CAIMD projection",
+  "wmass": 2000000.0
+}

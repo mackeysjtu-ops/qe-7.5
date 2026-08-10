@@ -1,0 +1,49 @@
+! Diamond8 vc-relax reference. CASE: QE 7.5 custom build af7ebfc; constrained-dynamics disabled/absent.
+! ibrav=1 (simple cubic) with cell_dofree='ibrav' relaxes only the cubic lattice constant while
+! preserving simple-cubic Bravais symmetry: the corrected cell-relaxation path for the new chain.
+! No constrained-dynamics keywords, no thermostats, no explicit velocities, no restart.
+&CONTROL
+  calculation = 'vc-relax',
+  restart_mode = 'from_scratch',
+  prefix = 'diamond8_vcrelax_qe75',
+  pseudo_dir = '../pseudo',
+  outdir = './tmp',
+  tstress = .true.,
+  tprnfor = .true.,
+  nstep = 100,
+  forc_conv_thr = 1.0d-4,
+/
+&SYSTEM
+  ibrav = 1,
+  celldm(1) = 6.7406530895,   ! validated initial cubic lattice constant (bohr)
+  nat = 8,
+  ntyp = 1,
+  ecutwfc = 80.0,
+  ecutrho = 320.0,
+  occupations = 'fixed',
+/
+&ELECTRONS
+  conv_thr = 1.0d-8,
+/
+&IONS
+  ion_dynamics = 'bfgs',
+/
+&CELL
+  cell_dynamics = 'bfgs',
+  press = 0.0,
+  press_conv_thr = 0.5,
+  cell_dofree = 'ibrav',
+/
+ATOMIC_SPECIES
+C 12.01070000 C.UPF
+ATOMIC_POSITIONS crystal
+C  0.00000000000000  0.00000000000000  0.00000000000000
+C  0.00000000000000  0.50000000000000  0.50000000000000
+C  0.50000000000000  0.00000000000000  0.50000000000000
+C  0.50000000000000  0.50000000000000  0.00000000000000
+C  0.25000000000000  0.25000000000000  0.25000000000000
+C  0.25000000000000  0.75000000000000  0.75000000000000
+C  0.75000000000000  0.25000000000000  0.75000000000000
+C  0.75000000000000  0.75000000000000  0.25000000000000
+K_POINTS automatic
+2 2 2 0 0 0

@@ -1,0 +1,336 @@
+{
+  "workflow": "diamond8_af7ebfc_no_velocity_initial_vs_nose_300K",
+  "purpose": "strict single-factor isolation of the ionic thermostat mode; same af7ebfc executable, same structure, no explicit velocities, caimd=.false. in both",
+  "changing_variable": "ion_temperature 'initial' -> 'nose' (+ fnosep=50, nhpcl=4)",
+  "caveat_pressure": "ecutwfc=25 Ry retained from the reference deck; absolute pressures are dominated by Pulay stress and are NOT converged diamond pressures. Pressure/volume are used only to compare the two runs and to diagnose cell stability.",
+  "temperature_convention": {
+    "instantaneous": "2*eka/((3N-3) k_B), eka from .eal col2",
+    "reported_tv_stdout": "2*avk/(3(N+1) k_B) - RUNNING AVERAGE, not used as instantaneous",
+    "direct": "from terminal .md ratd x terminal .cel, COM removed"
+  },
+  "initial_state": {
+    "note": "Both runs omit explicit velocities and use the same af7ebfc executable, so vcinit->ranv(temp=tempw) should generate the SAME deterministic Maxwell realization (QE randy is seeded with idum=0). ranv also zeroes the total linear momentum, so the initial COM velocity is zero by construction. tmp/*.md holds only the TERMINAL state, so the first committed ratd cannot be read back; step-1 kinetic energy and the step-2 positions are used as the equivalent evidence.",
+    "first_step_eka_Ry": {
+      "control": 0.019951,
+      "nose": 0.019951
+    },
+    "first_step_eka_abs_diff_Ry": 0.0,
+    "first_step_T_K": {
+      "control": 300.001310468147,
+      "nose": 300.001310468147
+    },
+    "first_step_T_abs_diff_K": 0.0,
+    "identical_initial_kinetic_energy": true,
+    "step2_position_max_abs_diff_bohr": 2.9993368899638995e-15,
+    "identical_step2_positions": false,
+    "terminal_COM_velocity_au": {
+      "control": [
+        -4.780111853217028e-16,
+        -2.5386424462158635e-17,
+        -1.392183352107168e-16
+      ],
+      "nose": [
+        1.2770546339163635e-16,
+        6.663608196049581e-17,
+        2.173757593197656e-16
+      ]
+    },
+    "strict_single_factor": false,
+    "interpretation": "Initial realizations differ: the random realization is an additional uncontrolled difference; compare statistically."
+  },
+  "runs": {
+    "control": {
+      "label": "CONTROL  ion_temperature='initial'",
+      "rc": 0,
+      "job_done": true,
+      "version": "7.5",
+      "error": null,
+      "scf_failures": 0,
+      "completed_steps": 1000,
+      "simulated_time_ps": 1.998,
+      "classification": "CONTROL_BOUNDED",
+      "temperature": {
+        "n": 1000,
+        "initial": 300.001310468147,
+        "final": 143.4355420993738,
+        "mean": 169.85804135875745,
+        "std": 40.46427923507593,
+        "median": 172.2252022177796,
+        "min": 55.0756753973075,
+        "max": 300.001310468147,
+        "first100_mean": 172.0963660076603,
+        "final100_mean": 171.4708607942447,
+        "final200_mean": 174.0455399774234
+      },
+      "temperature_initialized_K": 300.001310468147,
+      "temperature_drift_K_per_ps": 1.0650957612578538,
+      "block100_means_K": [
+        172.0963660076603,
+        168.17041030882277,
+        168.54929522786773,
+        171.9753189148194,
+        170.04265546778166,
+        164.19919352309688,
+        166.93908319187096,
+        168.5170109908082,
+        176.6202191606021,
+        171.4708607942447
+      ],
+      "block_slope_K_per_block": 0.1963971196538632,
+      "late_half_block_slope_K_per_block": 2.4224470511026603,
+      "roll25_final": 176.03771949818344,
+      "roll100_final": 171.47086079424471,
+      "crossings": {
+        "first_above_600K": null,
+        "first_above_1000K": null,
+        "first_above_2000K": null
+      },
+      "fraction_above": {
+        "600K": 0.0,
+        "1000K": 0.0,
+        "2000K": 0.0
+      },
+      "longest_run_above": {
+        "600K": 0,
+        "1000K": 0,
+        "2000K": 0
+      },
+      "direct_terminal_T_K": 143.42688999551305,
+      "direct_confirms_reported": true,
+      "pressure_kbar": {
+        "n": 1000,
+        "initial": -714.3569692758001,
+        "final": -649.1599987062,
+        "mean": -708.7461756537708,
+        "std": 48.46425804320401,
+        "median": -724.5366406734,
+        "min": -793.1611595604,
+        "max": -561.9119769444001,
+        "first100_mean": -748.3302986195881,
+        "final100_mean": -620.118808417596,
+        "final200_mean": -638.194271324307
+      },
+      "pressure_GPa": {
+        "n": 1000,
+        "initial": -71.43569692758001,
+        "final": -64.91599987062,
+        "mean": -70.87461756537708,
+        "std": 4.846425804320401,
+        "median": -72.45366406734,
+        "min": -79.31611595604001,
+        "max": -56.19119769444001,
+        "first100_mean": -74.8330298619588,
+        "final100_mean": -62.011880841759606,
+        "final200_mean": -63.819427132430704
+      },
+      "stress_mean_kbar": {
+        "sxx": -725.80979,
+        "syy": -712.27333,
+        "szz": -699.18319,
+        "syz": 14.674520000000001,
+        "sxz": 10.95059,
+        "sxy": 4.159129999999999
+      },
+      "cell": {
+        "volume_initial_bohr3": 306.27101880388557,
+        "volume_final_bohr3": 292.11396104683814,
+        "volume_change_percent": -4.622395488915852,
+        "determinant_min": 292.11396104683814,
+        "condition_number_max": 1.001234446255031,
+        "strain6_final": [
+          -0.015953796375542395,
+          -0.015802880545728537,
+          -0.015197924073689584,
+          0.00041404570247305985,
+          0.0003178954405851283,
+          7.553561555048998e-05
+        ],
+        "min_CC_bohr": 2.824236131492388,
+        "mean_NN_CC_bohr": 2.884953356908742
+      },
+      "energy_partial": {
+        "quantity": "edyn = ekint + ut",
+        "is_full_conserved_hamiltonian": false,
+        "note": "PARTIAL: Nose chain energy is computed in vcsmd but never written to an output file, so a full Nose+PR conserved quantity cannot be formed. For the Nose run a change in edyn is EXPECTED (thermostat exchanges energy).",
+        "initial_Ry": 0.019951,
+        "final_Ry": 0.02216,
+        "drift_total_Ry": 0.002208999999999999,
+        "drift_Ry_per_ps": 0.0011056056056056051,
+        "drift_eV_per_atom_per_ps": 0.0018803163231164747,
+        "bounded": true
+      },
+      "safety_conditions": {
+        "nonpositive_determinant": false,
+        "condition_number_gt_1e8": false,
+        "nonfinite_values": false,
+        "qe_singular_cell": false,
+        "T_above_20000K_for_10_consecutive": false,
+        "any_triggered": false
+      }
+    },
+    "nose": {
+      "label": "TEST  ion_temperature='nose' (fnosep=50, nhpcl=4)",
+      "rc": 0,
+      "job_done": true,
+      "version": "7.5",
+      "error": null,
+      "scf_failures": 0,
+      "completed_steps": 1000,
+      "simulated_time_ps": 1.998,
+      "classification": "BOUNDED_BUT_OFFSET",
+      "temperature": {
+        "n": 1000,
+        "initial": 300.001310468147,
+        "final": 144.62345766886827,
+        "mean": 169.6964036420141,
+        "std": 40.59831489072418,
+        "median": 171.9545379108062,
+        "min": 55.0756753973075,
+        "max": 300.001310468147,
+        "first100_mean": 172.0963660076603,
+        "final100_mean": 169.8773397238447,
+        "final200_mean": 173.23724613536513
+      },
+      "temperature_initialized_K": 300.001310468147,
+      "temperature_drift_K_per_ps": 0.5874601071417075,
+      "block100_means_K": [
+        172.0963660076603,
+        168.17041030882277,
+        168.54929522786773,
+        171.9753189148194,
+        170.04265546778166,
+        164.1992085600028,
+        166.93908319187096,
+        168.51720647058536,
+        176.59715254688555,
+        169.8773397238447
+      ],
+      "block_slope_K_per_block": 0.10850521969129527,
+      "late_half_block_slope_K_per_block": 2.101433168269827,
+      "roll25_final": 169.8415518877004,
+      "roll100_final": 169.87733972384464,
+      "crossings": {
+        "first_above_600K": null,
+        "first_above_1000K": null,
+        "first_above_2000K": null
+      },
+      "fraction_above": {
+        "600K": 0.0,
+        "1000K": 0.0,
+        "2000K": 0.0
+      },
+      "longest_run_above": {
+        "600K": 0,
+        "1000K": 0,
+        "2000K": 0
+      },
+      "direct_terminal_T_K": 144.61426481843895,
+      "direct_confirms_reported": true,
+      "pressure_kbar": {
+        "n": 1000,
+        "initial": -714.3569692758001,
+        "final": -631.7280469632001,
+        "mean": -708.75373685478,
+        "std": 48.39111083350087,
+        "median": -724.5366406734,
+        "min": -793.1611595604,
+        "max": -564.4127632704001,
+        "first100_mean": -748.3302986195881,
+        "final100_mean": -620.1816222859021,
+        "final200_mean": -638.231636014119
+      },
+      "pressure_GPa": {
+        "n": 1000,
+        "initial": -71.43569692758001,
+        "final": -63.17280469632001,
+        "mean": -70.875373685478,
+        "std": 4.839111083350087,
+        "median": -72.45366406734,
+        "min": -79.31611595604001,
+        "max": -56.44127632704001,
+        "first100_mean": -74.8330298619588,
+        "final100_mean": -62.018162228590214,
+        "final200_mean": -63.8231636014119
+      },
+      "stress_mean_kbar": {
+        "sxx": -725.65064,
+        "syy": -712.40437,
+        "szz": -699.2231499999999,
+        "syz": 14.67297,
+        "sxz": 10.73343,
+        "sxy": 4.063539999999999
+      },
+      "cell": {
+        "volume_initial_bohr3": 306.27101880388557,
+        "volume_final_bohr3": 292.1139451829256,
+        "volume_change_percent": -4.622400668613432,
+        "determinant_min": 292.1139451829256,
+        "condition_number_max": 1.0012341099953477,
+        "strain6_final": [
+          -0.015953644771538822,
+          -0.0158029980357699,
+          -0.015198011893078234,
+          0.00041394334475772774,
+          0.00031777595301464903,
+          7.543091693157667e-05
+        ],
+        "min_CC_bohr": 2.824218803458217,
+        "mean_NN_CC_bohr": 2.8849663934226317
+      },
+      "energy_partial": {
+        "quantity": "edyn = ekint + ut",
+        "is_full_conserved_hamiltonian": false,
+        "note": "PARTIAL: Nose chain energy is computed in vcsmd but never written to an output file, so a full Nose+PR conserved quantity cannot be formed. For the Nose run a change in edyn is EXPECTED (thermostat exchanges energy).",
+        "initial_Ry": 0.019951,
+        "final_Ry": 0.022094,
+        "drift_total_Ry": 0.002142999999999999,
+        "drift_Ry_per_ps": 0.0010725725725725722,
+        "drift_eV_per_atom_per_ps": 0.0018241366593203284,
+        "bounded": true
+      },
+      "safety_conditions": {
+        "nonpositive_determinant": false,
+        "condition_number_gt_1e8": false,
+        "nonfinite_values": false,
+        "qe_singular_cell": false,
+        "T_above_20000K_for_10_consecutive": false,
+        "any_triggered": false
+      }
+    }
+  },
+  "overall_status": "NOSE_STABLE_WITH_NATIVE_INITIALIZATION",
+  "heating_vs_cell_order": {
+    "first_600K_time_ps": null,
+    "note": "Nose never crossed 600 K"
+  },
+  "reference_values_verified_before_submission": {
+    "control_previous_no_velocity_initial": {
+      "mean_K": 170.01436653663114,
+      "final200_K": 174.82712827452696,
+      "volume_change_percent": -4.622395517125142,
+      "fraction_above_600K": 0.0
+    },
+    "nose_previous_with_explicit_velocities_job50127909": {
+      "max_K": 8123.838804792437,
+      "final_K": 4231.686070493259,
+      "mean_K": 4201.45228096483,
+      "first_step_above_600K": 26,
+      "first_step_above_2000K": 130
+    }
+  },
+  "comparison_with_reference": {
+    "control_vs_previous_no_velocity_initial": {
+      "previous_mean_K": 170.01436653663114,
+      "new_mean_K": 169.85804135875745,
+      "previous_final200_K": 174.82712827452696,
+      "new_final200_K": 174.0455399774234
+    },
+    "nose_vs_previous_explicit_velocity_nose": {
+      "previous_max_K": 8123.838804792437,
+      "new_max_K": 300.001310468147,
+      "previous_final_K": 4231.686070493259,
+      "new_final_K": 144.62345766886827
+    }
+  },
+  "plots_generated": true
+}

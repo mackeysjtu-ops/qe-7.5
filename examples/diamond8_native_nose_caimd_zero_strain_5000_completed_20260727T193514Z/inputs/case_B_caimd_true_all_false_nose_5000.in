@@ -1,0 +1,78 @@
+! CASE B: CAIMD enabled, all six masks .false., zero step_strain (no-op boundary).
+! 5000-step (10 ps) QE 7.5 af7ebfc; ion_temperature='nose', tempw=300, fnosep=50, nhpcl=4.
+! No explicit velocities: QE vcinit generates the native 300 K Maxwell distribution.
+&CONTROL
+  calculation = 'vc-md',
+  restart_mode = 'from_scratch',
+  prefix = 'diamond8_case_B_caimd_noop',
+  pseudo_dir = '../pseudo',
+  outdir = './tmp',
+  nstep = 5000,
+  dt = 41.34137333665,
+  iprint = 1,
+  tstress = .true.,
+  tprnfor = .true.,
+  disk_io = 'low',
+  verbosity = 'high',
+/
+&SYSTEM
+  ibrav = 0,
+  nat = 8,
+  ntyp = 1,
+  ecutwfc = 25.0,
+  ecutrho = 120.0,
+  occupations = 'smearing',
+  smearing = 'gaussian',
+  degauss = 0.01,
+  nosym = .true.,
+  noinv = .true.,
+/
+&ELECTRONS
+  conv_thr = 1.0000000000000000e-04,
+  electron_maxstep = 40,
+  mixing_beta = 0.300,
+/
+&IONS
+  ion_dynamics = 'beeman',
+  ion_temperature = 'nose',
+  tempw = 300.0,
+  fnosep(1) = 50.0,
+  nhpcl = 4,
+/
+&CELL
+  cell_dynamics = 'pr',
+  cell_dofree = 'all',
+  press = 0.0,
+  wmass = 2000000.00000000,
+  cell_temperature = 'not_controlled',
+  caimd = .true.
+  caimd_stride = 1
+  caimd_step_strain(1) = 0.0,
+  caimd_step_strain(2) = 0.0,
+  caimd_step_strain(3) = 0.0,
+  caimd_step_strain(4) = 0.0,
+  caimd_step_strain(5) = 0.0,
+  caimd_step_strain(6) = 0.0,
+  caimd_mask(1) = .false.,
+  caimd_mask(2) = .false.,
+  caimd_mask(3) = .false.,
+  caimd_mask(4) = .false.,
+  caimd_mask(5) = .false.,
+  caimd_mask(6) = .false.
+/
+ATOMIC_SPECIES
+C 12.01070000 C.UPF
+CELL_PARAMETERS bohr
+  3.89171787574137  4.76636150921721  2.75186010040163
+  3.89171787574137  -4.76636150921721  2.75186010040163
+  3.89171787574137  0.00000000000000  -5.50372020080326
+ATOMIC_POSITIONS crystal
+C  0.00000000000000  0.00000000000000  0.00000000000000
+C  0.00000000000000  0.50000000000000  0.50000000000000
+C  0.50000000000000  0.00000000000000  0.50000000000000
+C  0.50000000000000  0.50000000000000  0.00000000000000
+C  0.25000000000000  0.25000000000000  0.25000000000000
+C  0.25000000000000  0.75000000000000  0.75000000000000
+C  0.75000000000000  0.25000000000000  0.75000000000000
+C  0.75000000000000  0.75000000000000  0.25000000000000
+K_POINTS gamma

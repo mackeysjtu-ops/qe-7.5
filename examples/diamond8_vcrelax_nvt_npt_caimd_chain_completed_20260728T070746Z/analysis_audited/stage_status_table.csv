@@ -1,0 +1,5 @@
+stage,job_name_intended,dependency_intended,job_id,slurm_state,gate_verdict,status
+JOB1_vc_relax,d8_vcrelax,(none),,,,NOT_SUBMITTED
+JOB2_fixed_nvt,d8_fixed_nvt,afterok:JOB1,,,,NOT_SUBMITTED
+JOB3_free_npt,d8_free_npt,afterok:JOB2,,,,NOT_SUBMITTED
+JOB4_caimd_zero_nonzero,d8_caimd_zn,afterok:JOB3,,,,NOT_SUBMITTED

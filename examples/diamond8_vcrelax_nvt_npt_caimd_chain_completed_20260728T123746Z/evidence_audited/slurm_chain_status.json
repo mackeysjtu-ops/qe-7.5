@@ -1,0 +1,41 @@
+{
+  "audit_utc": "2026-07-28T12:39:17Z",
+  "single_sacct_query": true,
+  "jobs": {
+    "JOB1": {
+      "id": 50558068,
+      "name": "d8_vcrelax",
+      "state": "FAILED",
+      "exit_code": "1:0",
+      "elapsed": "00:00:06",
+      "node": "lrdn0858",
+      "step_pw_x": {
+        "state": "FAILED",
+        "exit": "1:0",
+        "elapsed": "00:00:02"
+      }
+    },
+    "JOB2": {
+      "id": 50558069,
+      "name": "d8_fixed_nvt",
+      "state": "CANCELLED",
+      "exit_code": "0:0",
+      "reason": "dependency_never_satisfied"
+    },
+    "JOB3": {
+      "id": 50558070,
+      "name": "d8_free_npt",
+      "state": "CANCELLED",
+      "exit_code": "0:0",
+      "reason": "dependency_never_satisfied"
+    },
+    "JOB4": {
+      "id": 50558071,
+      "name": "d8_caimd_zn",
+      "state": "CANCELLED",
+      "exit_code": "0:0",
+      "reason": "Dependency"
+    }
+  },
+  "still_active": false
+}

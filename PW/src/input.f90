@@ -433,7 +433,9 @@ SUBROUTINE control_iosys()
   USE input_parameters, ONLY : cell_parameters, cell_dynamics, press, wmass,  &
                                cell_temperature, cell_factor, press_conv_thr, &
                                cell_dofree, treinit_gvecs, caimd,             &
-                               caimd_stride, caimd_step_strain, caimd_mask
+                               caimd_loading_mode, caimd_stride,              &
+                               caimd_step_strain, caimd_step_defgrad,         &
+                               caimd_mask
   !
   ! ... CELL NOSE HOOVER THERMOSTAT
   ! 
@@ -1304,8 +1306,9 @@ SUBROUTINE control_iosys()
   ! CONSTRAINTS
   !
   CALL init_dofree ( cell_dofree )
-  CALL caimd_configure( caimd, caimd_stride, caimd_step_strain, caimd_mask, &
-                        calculation, calc, cell_dofree, restart,           &
+  CALL caimd_configure( caimd, caimd_loading_mode, caimd_stride,            &
+                        caimd_step_strain, caimd_step_defgrad, caimd_mask,  &
+                        calculation, calc, cell_dofree, restart,            &
                         fix_volume, fix_area )
   lconstrain = ( nconstr_inp > 0 )
   IF ( lconstrain .AND. ( lbfgs .OR. lmovecell ) ) &
@@ -1709,8 +1712,8 @@ SUBROUTINE iosys_end ( )
   !! control variables, cell and atomic structure have been read and set
   !
   USE input_parameters,      ONLY : trism, lfcp, lgcscf
-  USE input_parameters,      ONLY : caimd, caimd_mask, ion_temperature, &
-                                    cell_temperature
+  USE input_parameters,      ONLY : caimd, caimd_loading_mode, caimd_mask, &
+                                    ion_temperature, cell_temperature
   USE input_parameters,      ONLY : k_points, xk, wk, nk1, nk2, nk3,  &
                                     k1, k2, k3, nkstot
   USE input_parameters,      ONLY : ibrav, ecutwfc, ecutrho
@@ -1730,13 +1733,18 @@ SUBROUTINE iosys_end ( )
   !
   IMPLICIT NONE
   INTEGER :: ibrav_mp
+  LOGICAL :: active_caimd_controls
   INTEGER, EXTERNAL :: at2ibrav
   !
   ! ... set up k-points (may require reciprocal lattice vectors bg)
   !
   CALL init_start_k ( nk1, nk2, nk3, k1, k2, k3, k_points, nkstot, xk, wk )
   !
-  IF ( caimd .AND. ANY( caimd_mask ) ) THEN
+  active_caimd_controls = caimd .AND. &
+       ( ( TRIM( caimd_loading_mode ) == 'legacy_strain' .AND. &
+           ANY( caimd_mask ) ) .OR. &
+         TRIM( caimd_loading_mode ) == 'linear_defgrad' )
+  IF ( active_caimd_controls ) THEN
      IF ( ANY( if_pos(:,1:nat) /= 1 ) ) CALL errore( 'iosys', &
           'active CAIMD does not support fixed atomic coordinates', 1 )
      SELECT CASE ( TRIM( ion_temperature ) )

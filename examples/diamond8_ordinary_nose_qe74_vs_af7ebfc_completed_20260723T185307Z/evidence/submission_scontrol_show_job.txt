@@ -1,0 +1,30 @@
+JobId=50127909 JobName=diamond8_nose_qe74_qe75
+   UserId=mcheng00(132226) GroupId=interactive(25200) MCS_label=N/A
+   Priority=124882 Nice=0 Account=ict26_cmsp_0 QOS=normal
+   JobState=PENDING Reason=Priority Dependency=(null)
+   Requeue=0 Restarts=0 BatchFlag=1 Reboot=0 ExitCode=0:0
+   RunTime=00:00:00 TimeLimit=04:00:00 TimeMin=N/A
+   SubmitTime=2026-07-23T20:17:06 EligibleTime=2026-07-23T20:17:06
+   AccrueTime=Unknown
+   StartTime=Unknown EndTime=Unknown Deadline=N/A
+   SuspendTime=None SecsPreSuspend=0 LastSchedEval=2026-07-23T20:17:06 Scheduler=Main
+   Partition=boost_usr_prod AllocNode:Sid=login05-net99-3:86718
+   ReqNodeList=(null) ExcNodeList=(null)
+   NodeList=
+   NumNodes=1-1 NumCPUs=8 NumTasks=1 CPUs/Task=8 ReqB:S:C:T=0:0:*:*
+   ReqTRES=cpu=8,mem=123200M,node=1,billing=8,gres/gpu=1
+   AllocTRES=(null)
+   Socks/Node=* NtasksPerN:B:S:C=0:0:*:* CoreSpec=*
+   MinCPUsNode=8 MinMemoryCPU=15400M MinTmpDiskNode=0
+   Features=(null) DelayBoot=00:00:00
+   OverSubscribe=OK Contiguous=0 Licenses=(null) Network=(null)
+   Command=/leonardo/home/userexternal/mcheng00/workspace/Diamond/diamond8_ordinary_nose_qe74_vs_qe75_af7ebfc_20260723T175625Z/scripts/run_comparison.slurm
+   WorkDir=/leonardo/home/userexternal/mcheng00/workspace/Diamond/diamond8_ordinary_nose_qe74_vs_qe75_af7ebfc_20260723T175625Z
+   StdErr=/leonardo/home/userexternal/mcheng00/workspace/Diamond/diamond8_ordinary_nose_qe74_vs_qe75_af7ebfc_20260723T175625Z/slurm-50127909.err
+   StdIn=/dev/null
+   StdOut=/leonardo/home/userexternal/mcheng00/workspace/Diamond/diamond8_ordinary_nose_qe74_vs_qe75_af7ebfc_20260723T175625Z/slurm-50127909.out
+   Power=
+   TresPerNode=gres/gpu:1
+   TresPerTask=cpu:8
+   
+

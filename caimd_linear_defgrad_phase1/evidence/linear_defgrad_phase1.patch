@@ -1,0 +1,1662 @@
+diff --git a/CAIMD_IMPLEMENTATION.md b/CAIMD_IMPLEMENTATION.md
+index b1cc5fd..4b665d8 100644
+--- a/CAIMD_IMPLEMENTATION.md
++++ b/CAIMD_IMPLEMENTATION.md
+@@ -16,11 +16,27 @@ The CAIMD input names live in the PW/CP shared `&CELL` namelist:
+ 
+ ```fortran
+ caimd                  ! logical, default .false.
++caimd_loading_mode     ! character, default 'legacy_strain'
+ caimd_stride           ! integer, default 1
+ caimd_step_strain(6)   ! real, default 0.0
++caimd_step_defgrad(3,3)! real, default 0.0
+ caimd_mask(6)          ! logical, default .false.
+ ```
+ 
++`caimd_loading_mode='legacy_strain'` is the default and preserves the original
++small symmetric-strain protocol exactly.  `caimd_step_defgrad` must remain zero
++in this mode.
++
++`caimd_loading_mode='linear_defgrad'` adds a finite-deformation loading path.
++In this mode `caimd_step_strain` must remain zero.  The legacy
++`caimd_mask(6)` does not define the deformation-gradient loading path and does
++not freeze zero entries of the deformation-gradient matrix.  Nonzero entries of
++`caimd_step_defgrad(3,3)` are the prescribed loading components; all other cell
++degrees of freedom continue their ordinary PR evolution between imposed events.
++An explicitly selected `linear_defgrad` mode with zero `caimd_step_defgrad`
++still follows the CAIMD event path and records identity `F_load`/`A_event`
++diagnostics.
++
+ The six-component order is:
+ 
+ ```text
+@@ -47,6 +63,45 @@ I/O rank when the maximum absolute cumulative nominal masked strain first
+ exceeds `1.0d-2`. The cumulative warning is diagnostic only; it does not alter
+ the trajectory.
+ 
++For `linear_defgrad`, let `m` be the one-based CAIMD event index, `s` be
++`caimd_stride`, `D` be `caimd_step_defgrad`, and `I` be the 3x3 identity.  The
++cumulative prescribed loading deformation gradient is
++
++```text
++F_load(m) = I + (m * s) D
++F_load(0) = I
++```
++
++At event `m`, CAIMD applies only the incremental affine map
++
++```text
++A_event(m) = F_load(m) * inverse(F_load(m-1))
++```
++
++to the current PR candidate cell:
++
++```text
++H_projected = A_event(m) * H_PR_candidate
++```
++
++It intentionally does not replace the current cell with
++`F_load(m) * H_reference`, because that would erase ordinary PR cell evolution
++accumulated between CAIMD events.
++
++`caimd_step_defgrad` is dimensionless per MD step.  A strain rate in ps^-1 is
++converted as
++
++```text
++per-step increment = strain_rate_ps^-1 * dt_ps
++```
++
++For a later 2 fs timestep example, `0.001 ps^-1 * 0.002 ps = 2.0e-6`.
++Local-z engineering compression uses `caimd_step_defgrad(3,3)=-dc`, while
++simple shear in local x on planes normal to local z uses
++`caimd_step_defgrad(1,3)=dgamma`.  The input structure must be pre-oriented so
++the desired crystallographic directions align with the QE Cartesian axes; QE
++does not parse Miller indices or rotate structures for CAIMD.
++
+ ## Supported Boundary
+ 
+ CAIMD V1 is supported only when all of the following hold:
+@@ -101,8 +156,11 @@ namelist. It must not search through `ATOMIC_SPECIES`, `CELL_PARAMETERS`,
+ 
+ ## Physical Convention
+ 
+-QE stores the cell matrix as columns of lattice vectors. CAIMD uses the total
+-deformation gradient
++QE stores the cell matrix as columns of lattice vectors.  Therefore a physical
++affine relation `r_new = A * r_old` is represented internally as
++`H_new = A * H_old`.
++
++In `legacy_strain` mode, CAIMD uses the total deformation gradient
+ 
+ ```text
+ F = H * inverse(H_ref)
+@@ -128,6 +186,17 @@ H_projected = (I + E_projected) * H_ref
+ This is a first-version small-strain protocol, not a finite-strain constitutive
+ framework.
+ 
++In `linear_defgrad` mode, the driver is instead the finite deformation-gradient
++increment `A_event(m)`.  It is applied by left-multiplying the current PR
++candidate cell.  The diagnostic Green-Lagrange strain
++
++```text
++E = 0.5 * (transpose(F_load) * F_load - I)
++```
++
++is computed for reporting and validation only; it is not used to drive the
++cell.
++
+ ## PR Coupling And History Projection
+ 
+ The validated insertion point is inside the PR Beeman path in
+@@ -163,6 +232,12 @@ rat2di_projected = inverse(H_projected) * H_candidate * rat2di_candidate
+ The same transformation principle applies to the stored acceleration histories.
+ Atomic thermal motion is not zeroed.
+ 
++For `linear_defgrad` events, the cell velocity and acceleration histories are
++left-multiplied by the same `A_event` used for the cell.  Between events no
++legacy symmetric tangent projection is applied in `linear_defgrad` mode, so
++zero entries of `caimd_step_defgrad` do not freeze the corresponding PR cell
++degrees of freedom.
++
+ With `ion_temperature='nose'`, the ordinary QE Nose-Hoover friction term is
+ applied in `vcmove` before the CAIMD final projection. After projection, CAIMD
+ refreshes the ionic kinetic energy and Nose chain kinetic inputs from the final
+@@ -213,7 +288,7 @@ CAIMD writes a premove diagnostic file:
+ tmp_dir/prefix.caimd
+ ```
+ 
+-The file has 26 columns:
++The file keeps the legacy 26 data columns for parser compatibility:
+ 
+ ```text
+ ionic_step
+@@ -248,6 +323,17 @@ Important semantics:
+   they should be at roundoff scale; they are not physical velocity jumps to be
+   interpreted as a thermostat or impulse.
+ 
++In `linear_defgrad` mode, event matrices are written additively to
++
++```text
++tmp_dir/prefix.caimd_defgrad
++```
++
++with a versioned header and rows containing the ionic step, event index,
++`F_load` before and after the event, `A_event`, determinants, the
++Green-Lagrange diagnostic, and the affine velocity residuals.  The ordinary
++`.caimd` data schema is not changed.
++
+ Because QE XML step output occurs before `move_ions` and `.cel` trajectory
+ output occurs after the move, stress-strain analysis should pair `.caimd`
+ stress/strain rows with the premove cell, not blindly with the following `.cel`
+@@ -277,11 +363,17 @@ unexpected MD history at the start of `vcsmd`.
+ CAIMD V1 requires:
+ 
+ - positive `caimd_stride`;
++- recognized `caimd_loading_mode`;
++- zero `caimd_step_defgrad` in `legacy_strain` mode;
++- zero `caimd_step_strain` in `linear_defgrad` mode;
+ - finite `caimd_step_strain` values;
++- finite `caimd_step_defgrad` values;
+ - finite event increments;
+ - per-event increment bound `abs(stride * step_strain) <= 1.0d-2`;
+ - positive projected-cell determinant above the CAIMD determinant floor;
+ - projected-cell condition number below the CAIMD condition bound;
++- positive `det(F_load(m))` and `det(A_event(m))` above the CAIMD determinant
++  floor in `linear_defgrad` mode;
+ - explicit error paths for singular or ill-conditioned 3x3 inversions.
+ 
+ ## Implementation Files
+diff --git a/Modules/input_parameters.f90 b/Modules/input_parameters.f90
+index 2989933..7ef0060 100644
+--- a/Modules/input_parameters.f90
++++ b/Modules/input_parameters.f90
+@@ -1347,6 +1347,11 @@ MODULE input_parameters
+         !! Enable constrained AIMD small-strain driving for PW vc-md with
+         !! Parrinello-Rahman cell dynamics.
+ 
++        CHARACTER(len=80) :: caimd_loading_mode = 'legacy_strain'
++        !! Selects the CAIMD loading definition.  The default
++        !! 'legacy_strain' preserves the original symmetric-strain protocol;
++        !! 'linear_defgrad' applies linear deformation-gradient increments.
++
+         INTEGER :: caimd_stride = 1
+         !! Positive interval, in ionic MD steps, between imposed CAIMD events.
+ 
+@@ -1354,6 +1359,10 @@ MODULE input_parameters
+         !! Nominal symmetric tensor-strain increment associated with one ionic
+         !! MD step, ordered as (xx, yy, zz, yz, xz, xy).
+ 
++        REAL(DP) :: caimd_step_defgrad(3,3) = 0.0_DP
++        !! Dimensionless deformation-gradient increment associated with one
++        !! ionic MD step in CAIMD linear_defgrad mode.
++
+         LOGICAL :: caimd_mask(6) = .FALSE.
+         !! Selects CAIMD-controlled symmetric strain components, ordered as
+         !! (xx, yy, zz, yz, xz, xy).
+@@ -1366,7 +1375,8 @@ MODULE input_parameters
+                           press, wmass, cell_temperature, temph, fnoseh,   &
+                           cell_dofree, greash, cell_factor, cell_nstepe,   &
+                           cell_damping, press_conv_thr, caimd, caimd_stride,&
+-                          caimd_step_strain, caimd_mask, treinit_gvecs
++                          caimd_loading_mode, caimd_step_strain,           &
++                          caimd_step_defgrad, caimd_mask, treinit_gvecs
+ 
+ !
+ !=----------------------------------------------------------------------------=!!
+diff --git a/Modules/read_namelists.f90 b/Modules/read_namelists.f90
+index 133bee5..e89c76a 100644
+--- a/Modules/read_namelists.f90
++++ b/Modules/read_namelists.f90
+@@ -601,8 +601,10 @@ MODULE read_namelists_module
+        cell_damping = 0.1_DP
+        press_conv_thr = 0.5_DP
+        caimd = .FALSE.
++       caimd_loading_mode = 'legacy_strain'
+        caimd_stride = 1
+        caimd_step_strain = 0.0_DP
++       caimd_step_defgrad = 0.0_DP
+        caimd_mask = .FALSE.
+        treinit_gvecs = .FALSE.
+        !
+@@ -1314,8 +1316,10 @@ MODULE read_namelists_module
+        CALL mp_bcast( cell_damping,     ionode_id, intra_image_comm )
+        CALL mp_bcast( press_conv_thr,   ionode_id, intra_image_comm )
+        CALL mp_bcast( caimd,            ionode_id, intra_image_comm )
++       CALL mp_bcast( caimd_loading_mode,ionode_id, intra_image_comm )
+        CALL mp_bcast( caimd_stride,     ionode_id, intra_image_comm )
+        CALL mp_bcast( caimd_step_strain,ionode_id, intra_image_comm )
++       CALL mp_bcast( caimd_step_defgrad,ionode_id, intra_image_comm )
+        CALL mp_bcast( caimd_mask,       ionode_id, intra_image_comm )
+        CALL mp_bcast( treinit_gvecs,    ionode_id, intra_image_comm )
+        !
+@@ -1919,6 +1923,7 @@ MODULE read_namelists_module
+        INTEGER           :: i
+        LOGICAL           :: allowed = .FALSE.
+        REAL(DP)           :: event_increment
++       LOGICAL           :: strain_nonzero, defgrad_nonzero
+        !
+        !
+        IF( prog == 'CP' .AND. caimd ) &
+@@ -1941,6 +1946,12 @@ MODULE read_namelists_module
+           CALL errore( sub_name,' cell_nstepe out of range ',1)
+        IF( caimd_stride <= 0 ) &
+           CALL errore( sub_name,' caimd_stride out of range ',1)
++       SELECT CASE( TRIM( caimd_loading_mode ) )
++       CASE( 'legacy_strain', 'linear_defgrad' )
++          CONTINUE
++       CASE DEFAULT
++          CALL errore( sub_name, ' unknown caimd_loading_mode ', 1 )
++       END SELECT
+        DO i = 1, 6
+           IF( caimd_step_strain(i) /= caimd_step_strain(i) .OR. &
+               ABS( caimd_step_strain(i) ) >= HUGE( caimd_step_strain(i) ) * 0.1_DP ) &
+@@ -1953,6 +1964,25 @@ MODULE read_namelists_module
+              CALL errore( sub_name, &
+                           ' abs(caimd_stride*caimd_step_strain) exceeds 1.0d-2 ', i )
+        END DO
++       DO i = 1, 3
++          IF( caimd_step_defgrad(i,1) /= caimd_step_defgrad(i,1) .OR. &
++              ABS( caimd_step_defgrad(i,1) ) >= HUGE( caimd_step_defgrad(i,1) ) * 0.1_DP ) &
++             CALL errore( sub_name,' caimd_step_defgrad contains a non-finite value ', i )
++          IF( caimd_step_defgrad(i,2) /= caimd_step_defgrad(i,2) .OR. &
++              ABS( caimd_step_defgrad(i,2) ) >= HUGE( caimd_step_defgrad(i,2) ) * 0.1_DP ) &
++             CALL errore( sub_name,' caimd_step_defgrad contains a non-finite value ', 3 + i )
++          IF( caimd_step_defgrad(i,3) /= caimd_step_defgrad(i,3) .OR. &
++              ABS( caimd_step_defgrad(i,3) ) >= HUGE( caimd_step_defgrad(i,3) ) * 0.1_DP ) &
++             CALL errore( sub_name,' caimd_step_defgrad contains a non-finite value ', 6 + i )
++       END DO
++       strain_nonzero = ANY( ABS( caimd_step_strain ) > 0.0_DP )
++       defgrad_nonzero = ANY( ABS( caimd_step_defgrad ) > 0.0_DP )
++       IF( TRIM( caimd_loading_mode ) == 'legacy_strain' .AND. defgrad_nonzero ) &
++          CALL errore( sub_name, &
++                       ' caimd_step_defgrad requires caimd_loading_mode=''linear_defgrad'' ', 1 )
++       IF( TRIM( caimd_loading_mode ) == 'linear_defgrad' .AND. strain_nonzero ) &
++          CALL errore( sub_name, &
++                       ' caimd_step_strain requires caimd_loading_mode=''legacy_strain'' ', 1 )
+        !
+        RETURN
+        !
+diff --git a/PW/Doc/INPUT_PW.def b/PW/Doc/INPUT_PW.def
+index 52b64b2..4869672 100755
+--- a/PW/Doc/INPUT_PW.def
++++ b/PW/Doc/INPUT_PW.def
+@@ -3028,6 +3028,83 @@ input_description -distribution {Quantum ESPRESSO} -package PWscf -program pw.x
+                 }
+             }
+         }
++
++        var caimd -type LOGICAL {
++            default { .FALSE. }
++            info {
++                Enable PW-only constrained AIMD loading for
++                @ref calculation = 'vc-md' with Parrinello-Rahman
++                @ref cell_dynamics = 'pr'.  Restart is not implemented
++                for CAIMD in this phase.
++            }
++        }
++
++        var caimd_loading_mode -type CHARACTER {
++            default { 'legacy_strain' }
++            options {
++                opt -val 'legacy_strain' {
++                    Preserve the original CAIMD symmetric-strain protocol.
++                    The controlled components are selected by @ref caimd_mask
++                    and incremented by @ref caimd_stride * @ref caimd_step_strain.
++                }
++                opt -val 'linear_defgrad' {
++                    Apply a finite-deformation loading gradient that is linear
++                    in the nominal MD step count.  Let m be the one-based CAIMD
++                    event index and D=@ref caimd_step_defgrad.  The cumulative
++                    prescribed loading gradient is
++                    F_load(m)=I+m*@ref caimd_stride*D and the event map is
++                    A_event(m)=F_load(m)*inverse(F_load(m-1)).  The event map
++                    is applied incrementally to the current cell, so cell
++                    evolution accumulated between CAIMD events is preserved.
++                }
++            }
++        }
++
++        var caimd_stride -type INTEGER {
++            default { 1 }
++            info {
++                Positive interval, in ionic MD steps, between imposed CAIMD
++                events.  The event convention is steps
++                1, 1+caimd_stride, 1+2*caimd_stride, ...
++            }
++        }
++
++        var caimd_step_strain -type REAL -dimension ( 6 ) {
++            default { 0.D0 }
++            info {
++                Legacy symmetric tensor-strain increment per MD step, ordered
++                as (xx, yy, zz, yz, xz, xy).  Off-diagonal components are
++                tensor shear components.  This input is valid only with
++                @ref caimd_loading_mode = 'legacy_strain'.
++            }
++        }
++
++        var caimd_mask -type LOGICAL -dimension ( 6 ) {
++            default { .FALSE. }
++            info {
++                Legacy symmetric-strain control mask ordered as
++                (xx, yy, zz, yz, xz, xy).  In
++                @ref caimd_loading_mode = 'linear_defgrad', this mask does not
++                define loading or freeze zero entries of the deformation
++                gradient.
++            }
++        }
++
++        var caimd_step_defgrad -type REAL -dimension ( 3, 3 ) {
++            default { 0.D0 }
++            info {
++                Dimensionless deformation-gradient increment per MD step used
++                only with @ref caimd_loading_mode = 'linear_defgrad'.  Indexed
++                namelist syntax is supported, e.g.
++                caimd_step_defgrad(3,3)=-2.0d-6 for local-z engineering
++                compression or caimd_step_defgrad(1,3)=2.0d-6 for simple
++                shear in local x on planes normal to local z.  To convert a
++                strain rate in ps^-1, multiply by dt in ps; for example
++                0.001 ps^-1 * 0.002 ps = 2.0d-6 per MD step.  The input
++                structure must be pre-oriented so that the desired local
++                loading axes coincide with QE Cartesian axes.
++            }
++        }
+     }
+ 
+     #
+diff --git a/PW/src/caimd_module.f90 b/PW/src/caimd_module.f90
+index e4da495..48ca8f0 100644
+--- a/PW/src/caimd_module.f90
++++ b/PW/src/caimd_module.f90
+@@ -17,8 +17,10 @@ MODULE caimd_module
+   PRIVATE
+   !
+   LOGICAL  :: caimd_enabled_ = .FALSE.
++  CHARACTER(LEN=32) :: caimd_loading_mode_ = 'legacy_strain'
+   INTEGER  :: caimd_stride_ = 1
+   REAL(DP) :: caimd_step_strain_(6) = 0.0_DP
++  REAL(DP) :: caimd_step_defgrad_(3,3) = 0.0_DP
+   LOGICAL  :: caimd_mask_(6) = .FALSE.
+   REAL(DP) :: caimd_cumulative_strain_(6) = 0.0_DP
+   REAL(DP) :: caimd_reference_cell_(3,3) = 0.0_DP
+@@ -27,39 +29,63 @@ MODULE caimd_module
+   LOGICAL  :: caimd_last_event_ = .FALSE.
+   REAL(DP) :: caimd_last_increment_(6) = 0.0_DP
+   LOGICAL  :: caimd_output_initialized_ = .FALSE.
++  LOGICAL  :: caimd_defgrad_output_initialized_ = .FALSE.
+   LOGICAL  :: caimd_have_temperature_ = .FALSE.
+   LOGICAL  :: caimd_cumulative_warning_emitted_ = .FALSE.
+   REAL(DP) :: caimd_temperature_ = 0.0_DP
+   REAL(DP) :: caimd_last_velocity_jump_max_ = 0.0_DP
+   REAL(DP) :: caimd_last_velocity_jump_rms_ = 0.0_DP
++  REAL(DP) :: caimd_last_f_before_(3,3) = 0.0_DP
++  REAL(DP) :: caimd_last_f_after_(3,3) = 0.0_DP
++  REAL(DP) :: caimd_last_a_event_(3,3) = 0.0_DP
++  REAL(DP) :: caimd_last_green_lagrange_(3,3) = 0.0_DP
++  REAL(DP) :: caimd_last_det_f_before_ = 1.0_DP
++  REAL(DP) :: caimd_last_det_f_after_ = 1.0_DP
++  REAL(DP) :: caimd_last_det_a_event_ = 1.0_DP
++  INTEGER  :: caimd_last_event_index_ = 0
+   !
+   REAL(DP), PARAMETER :: caimd_max_event_strain = 1.0D-2
+   REAL(DP), PARAMETER :: caimd_max_condition = 1.0D12
+   REAL(DP), PARAMETER :: caimd_det_floor = 1.0D-18
+   REAL(DP), PARAMETER :: caimd_change_tol = 1.0D-14
++  REAL(DP), PARAMETER :: caimd_zero_tol = 0.0_DP
+   !
+   PUBLIC :: caimd_configure, caimd_enabled, caimd_controls_cell
+   PUBLIC :: caimd_project_tangent, caimd_apply_final_projection
+   PUBLIC :: caimd_write_premove, caimd_note_ionic_temperature
+-  PUBLIC :: caimd_step_strain, caimd_mask, caimd_stride
++  PUBLIC :: caimd_step_strain, caimd_step_defgrad, caimd_mask, caimd_stride
++  PUBLIC :: caimd_loading_mode
+   PUBLIC :: caimd_event_count, caimd_cumulative_strain
+   !
+ CONTAINS
+   !
+-  SUBROUTINE caimd_configure( enabled, stride, step_strain, mask, calculation, &
+-                              calc, cell_dofree, restart, fix_volume, fix_area )
++  SUBROUTINE caimd_configure( enabled, loading_mode, stride, step_strain,     &
++                              step_defgrad, mask, calculation, calc,         &
++                              cell_dofree, restart, fix_volume, fix_area )
+     !
+     LOGICAL, INTENT(IN) :: enabled, restart, fix_volume, fix_area
+     INTEGER, INTENT(IN) :: stride
+     REAL(DP), INTENT(IN) :: step_strain(6)
++    REAL(DP), INTENT(IN) :: step_defgrad(3,3)
+     LOGICAL, INTENT(IN) :: mask(6)
+-    CHARACTER(LEN=*), INTENT(IN) :: calculation, calc, cell_dofree
+-    INTEGER :: i
++    CHARACTER(LEN=*), INTENT(IN) :: loading_mode, calculation, calc, cell_dofree
++    INTEGER :: i, j
+     REAL(DP) :: event_inc(6)
++    LOGICAL :: strain_nonzero, defgrad_nonzero
+     !
+     caimd_enabled_ = enabled
++    SELECT CASE ( TRIM( loading_mode ) )
++    CASE ( 'legacy_strain' )
++       caimd_loading_mode_ = 'legacy_strain'
++    CASE ( 'linear_defgrad' )
++       caimd_loading_mode_ = 'linear_defgrad'
++    CASE DEFAULT
++       CALL errore( 'caimd_configure', &
++            'unknown caimd_loading_mode: ' // TRIM( loading_mode ), 1 )
++    END SELECT
+     caimd_stride_ = stride
+     caimd_step_strain_ = step_strain
++    caimd_step_defgrad_ = step_defgrad
+     caimd_mask_ = mask
+     caimd_cumulative_strain_ = 0.0_DP
+     caimd_reference_cell_ = 0.0_DP
+@@ -68,11 +94,25 @@ CONTAINS
+     caimd_last_event_ = .FALSE.
+     caimd_last_increment_ = 0.0_DP
+     caimd_output_initialized_ = .FALSE.
++    caimd_defgrad_output_initialized_ = .FALSE.
+     caimd_have_temperature_ = .FALSE.
+     caimd_cumulative_warning_emitted_ = .FALSE.
+     caimd_temperature_ = 0.0_DP
+     caimd_last_velocity_jump_max_ = 0.0_DP
+     caimd_last_velocity_jump_rms_ = 0.0_DP
++    caimd_last_f_before_ = 0.0_DP
++    caimd_last_f_after_ = 0.0_DP
++    caimd_last_a_event_ = 0.0_DP
++    caimd_last_green_lagrange_ = 0.0_DP
++    DO i = 1, 3
++       caimd_last_f_before_(i,i) = 1.0_DP
++       caimd_last_f_after_(i,i) = 1.0_DP
++       caimd_last_a_event_(i,i) = 1.0_DP
++    END DO
++    caimd_last_det_f_before_ = 1.0_DP
++    caimd_last_det_f_after_ = 1.0_DP
++    caimd_last_det_a_event_ = 1.0_DP
++    caimd_last_event_index_ = 0
+     !
+     IF ( stride <= 0 ) CALL errore( 'caimd_configure', &
+          'caimd_stride must be positive', 1 )
+@@ -88,6 +128,21 @@ CONTAINS
+           CALL errore( 'caimd_configure', &
+                'caimd event strain increment is non-finite', i )
+     END DO
++    DO j = 1, 3
++       DO i = 1, 3
++          IF ( .NOT. caimd_finite( step_defgrad(i,j) ) ) &
++             CALL errore( 'caimd_configure', &
++                  'caimd_step_defgrad contains a non-finite value', 3 * (j - 1) + i )
++       END DO
++    END DO
++    strain_nonzero = ANY( ABS( step_strain ) > caimd_zero_tol )
++    defgrad_nonzero = ANY( ABS( step_defgrad ) > caimd_zero_tol )
++    IF ( TRIM( caimd_loading_mode_ ) == 'legacy_strain' .AND. defgrad_nonzero ) &
++       CALL errore( 'caimd_configure', &
++            'caimd_step_defgrad requires caimd_loading_mode=''linear_defgrad''', 1 )
++    IF ( TRIM( caimd_loading_mode_ ) == 'linear_defgrad' .AND. strain_nonzero ) &
++       CALL errore( 'caimd_configure', &
++            'caimd_step_strain requires caimd_loading_mode=''legacy_strain''', 1 )
+     IF ( MAXVAL( ABS( event_inc ) ) > caimd_max_event_strain ) &
+        CALL errore( 'caimd_configure', &
+             'max abs(caimd_stride*caimd_step_strain) exceeds 1.0d-2', 1 )
+@@ -98,12 +153,14 @@ CONTAINS
+        CALL errore( 'caimd_configure', &
+             'caimd=.true. requires calculation=''vc-md'' and cell_dynamics=''pr''', 1 )
+     IF ( restart ) CALL errore( 'caimd_configure', &
+-         'caimd version 1 supports restart_mode=''from_scratch'' only', 1 )
++         'caimd legacy_strain and linear_defgrad modes support restart_mode=''from_scratch'' only', 1 )
+     IF ( TRIM( cell_dofree ) /= 'all' ) CALL errore( 'caimd_configure', &
+          'caimd version 1 requires cell_dofree=''all''', 1 )
+     IF ( fix_volume .OR. fix_area ) CALL errore( 'caimd_configure', &
+          'caimd version 1 does not support fixed-volume or fixed-area cell modes', 1 )
+     !
++    CALL caimd_print_configuration()
++    !
+   END SUBROUTINE caimd_configure
+   !
+   LOGICAL FUNCTION caimd_enabled()
+@@ -111,9 +168,17 @@ CONTAINS
+   END FUNCTION caimd_enabled
+   !
+   LOGICAL FUNCTION caimd_controls_cell()
+-    caimd_controls_cell = caimd_enabled_ .AND. ANY( caimd_mask_ )
++    caimd_controls_cell = caimd_enabled_ .AND. &
++       ( ( TRIM( caimd_loading_mode_ ) == 'legacy_strain' .AND. &
++           ANY( caimd_mask_ ) ) .OR. &
++         TRIM( caimd_loading_mode_ ) == 'linear_defgrad' )
+   END FUNCTION caimd_controls_cell
+   !
++  FUNCTION caimd_loading_mode() RESULT( loading_mode )
++    CHARACTER(LEN=32) :: loading_mode
++    loading_mode = caimd_loading_mode_
++  END FUNCTION caimd_loading_mode
++  !
+   INTEGER FUNCTION caimd_stride()
+     caimd_stride = caimd_stride_
+   END FUNCTION caimd_stride
+@@ -123,6 +188,11 @@ CONTAINS
+     step_strain = caimd_step_strain_
+   END FUNCTION caimd_step_strain
+   !
++  FUNCTION caimd_step_defgrad() RESULT( step_defgrad )
++    REAL(DP) :: step_defgrad(3,3)
++    step_defgrad = caimd_step_defgrad_
++  END FUNCTION caimd_step_defgrad
++  !
+   FUNCTION caimd_mask() RESULT( mask )
+     LOGICAL :: mask(6)
+     mask = caimd_mask_
+@@ -146,6 +216,7 @@ CONTAINS
+     INTEGER :: i
+     !
+     IF ( .NOT. caimd_controls_cell() ) RETURN
++    IF ( TRIM( caimd_loading_mode_ ) == 'linear_defgrad' ) RETURN
+     !
+     CALL caimd_inverse3( h, hinv, det, TRIM( label ) // ' inverse cell' )
+     k = MATMUL( x, hinv )
+@@ -182,6 +253,9 @@ CONTAINS
+               MAX( 1.0_DP, caimd_norm_inf( h_pr ) )
+     IF ( changed ) CALL caimd_transform_atomic_history( nat, h_pr, h_new, &
+                                                         ratd, rat2d, rat2di )
++    IF ( event_step .AND. TRIM( caimd_loading_mode_ ) == 'linear_defgrad' ) &
++       CALL caimd_transform_cell_history( caimd_last_a_event_, avecd, avec2d, &
++                                          avec2di )
+     h_candidate = h_new
+     CALL caimd_project_tangent( h_candidate, avecd, 'caimd final avecd' )
+     CALL caimd_project_tangent( h_candidate, avec2d, 'caimd final avec2d' )
+@@ -194,6 +268,8 @@ CONTAINS
+        caimd_cumulative_strain_ = caimd_cumulative_strain_ + inc
+        caimd_event_count_ = caimd_event_count_ + 1
+        CALL caimd_warn_large_cumulative_strain()
++       IF ( TRIM( caimd_loading_mode_ ) == 'linear_defgrad' ) &
++          CALL caimd_write_defgrad_event( ionic_step )
+     END IF
+     !
+   END SUBROUTINE caimd_apply_final_projection
+@@ -245,8 +321,11 @@ CONTAINS
+           OPEN( NEWUNIT = iun, FILE = TRIM( filename ), STATUS = 'NEW', &
+                 FORM = 'FORMATTED' )
+           WRITE( iun, '(A)' ) '# CAIMD_V1 stress-strain output'
++          WRITE( iun, '(A,A)' ) '# loading_mode: ', TRIM( caimd_loading_mode_ )
+           WRITE( iun, '(A)' ) '# units: time ps; strain dimensionless; stress GPa; volume bohr^3; temperature K'
+           WRITE( iun, '(A)' ) '# shear convention: tensor components yz xz xy; engineering shear is 2*tensor shear'
++          IF ( TRIM( caimd_loading_mode_ ) == 'linear_defgrad' ) &
++             WRITE( iun, '(A)' ) '# linear_defgrad event matrices are written to prefix.caimd_defgrad'
+           WRITE( iun, '(A)' ) '# columns: ionic_step time_ps imposed_events_done following_move_is_event ' // &
+                               'nominal_xx nominal_yy nominal_zz nominal_yz nominal_xz nominal_xy ' // &
+                               'actual_xx actual_yy actual_zz actual_yz actual_xz actual_xy ' // &
+@@ -274,10 +353,46 @@ CONTAINS
+     REAL(DP), INTENT(OUT) :: h_new(3,3), inc(6)
+     LOGICAL, INTENT(OUT) :: event_step
+     REAL(DP) :: href_inv(3,3), fpr(3,3), lpr(3,3), epr(3,3), enew(3,3)
+-    REAL(DP) :: vec(6), target(6), det
++    REAL(DP) :: vec(6), target(6), det, f_before_inv(3,3)
+     INTEGER :: i
+     !
+     CALL caimd_ensure_reference( h_old )
++    event_step = caimd_is_event_step( ionic_step )
++    inc = 0.0_DP
++    IF ( TRIM( caimd_loading_mode_ ) == 'linear_defgrad' ) THEN
++       h_new = h_pr
++       IF ( event_step ) THEN
++          caimd_last_event_index_ = caimd_event_count_ + 1
++          CALL caimd_build_f_load( caimd_event_count_, caimd_last_f_before_ )
++          CALL caimd_build_f_load( caimd_last_event_index_, caimd_last_f_after_ )
++          CALL caimd_inverse3( caimd_last_f_before_, f_before_inv, &
++                               caimd_last_det_f_before_, &
++                               'caimd linear_defgrad F_load before event' )
++          caimd_last_det_f_after_ = caimd_det3( caimd_last_f_after_ )
++          IF ( .NOT. caimd_finite( caimd_last_det_f_before_ ) .OR. &
++               caimd_last_det_f_before_ <= caimd_det_floor ) &
++             CALL errore( 'caimd_project_cell_increment', &
++                  'caimd linear_defgrad F_load before event has non-positive determinant', 1 )
++          IF ( .NOT. caimd_finite( caimd_last_det_f_after_ ) .OR. &
++               caimd_last_det_f_after_ <= caimd_det_floor ) &
++             CALL errore( 'caimd_project_cell_increment', &
++                  'caimd linear_defgrad F_load after event has non-positive determinant', 1 )
++          caimd_last_a_event_ = MATMUL( caimd_last_f_after_, f_before_inv )
++          caimd_last_det_a_event_ = caimd_det3( caimd_last_a_event_ )
++          IF ( .NOT. caimd_finite( caimd_last_det_a_event_ ) .OR. &
++               caimd_last_det_a_event_ <= caimd_det_floor ) &
++             CALL errore( 'caimd_project_cell_increment', &
++                  'caimd linear_defgrad A_event has non-positive determinant', 1 )
++          CALL caimd_green_lagrange( caimd_last_f_after_, &
++                                     caimd_last_green_lagrange_ )
++          ! QE stores lattice vectors as columns, so the physical affine
++          ! relation r_new=A*r_old is H_new=A*H_old for the cell matrix.
++          h_new = MATMUL( caimd_last_a_event_, h_pr )
++       END IF
++       CALL caimd_check_cell( h_new, 'caimd linear_defgrad projected cell' )
++       RETURN
++    END IF
++    !
+     CALL caimd_inverse3( caimd_reference_cell_, href_inv, det, &
+                          'caimd reference cell inverse' )
+     fpr = MATMUL( h_pr, href_inv )
+@@ -288,8 +403,6 @@ CONTAINS
+     epr = 0.5_DP * ( lpr + TRANSPOSE( lpr ) )
+     CALL caimd_mat_to_vec( epr, vec )
+     !
+-    event_step = caimd_is_event_step( ionic_step )
+-    inc = 0.0_DP
+     IF ( event_step ) THEN
+        DO i = 1, 6
+           IF ( caimd_mask_(i) ) &
+@@ -318,6 +431,109 @@ CONTAINS
+     !
+   END FUNCTION caimd_is_event_step
+   !
++  SUBROUTINE caimd_build_f_load( event_index, f_load )
++    !
++    INTEGER, INTENT(IN) :: event_index
++    REAL(DP), INTENT(OUT) :: f_load(3,3)
++    INTEGER :: i
++    !
++    f_load = REAL( event_index, DP ) * REAL( caimd_stride_, DP ) * &
++             caimd_step_defgrad_
++    DO i = 1, 3
++       f_load(i,i) = f_load(i,i) + 1.0_DP
++    END DO
++    !
++  END SUBROUTINE caimd_build_f_load
++  !
++  SUBROUTINE caimd_green_lagrange( f_load, e_green )
++    !
++    REAL(DP), INTENT(IN) :: f_load(3,3)
++    REAL(DP), INTENT(OUT) :: e_green(3,3)
++    INTEGER :: i
++    !
++    e_green = 0.5_DP * MATMUL( TRANSPOSE( f_load ), f_load )
++    DO i = 1, 3
++       e_green(i,i) = e_green(i,i) - 0.5_DP
++    END DO
++    !
++  END SUBROUTINE caimd_green_lagrange
++  !
++  SUBROUTINE caimd_transform_cell_history( a_event, avecd, avec2d, avec2di )
++    !
++    REAL(DP), INTENT(IN) :: a_event(3,3)
++    REAL(DP), INTENT(INOUT) :: avecd(3,3), avec2d(3,3), avec2di(3,3)
++    !
++    avecd = MATMUL( a_event, avecd )
++    avec2d = MATMUL( a_event, avec2d )
++    avec2di = MATMUL( a_event, avec2di )
++    !
++  END SUBROUTINE caimd_transform_cell_history
++  !
++  SUBROUTINE caimd_write_defgrad_event( ionic_step )
++    !
++    USE io_files,  ONLY : tmp_dir, prefix, delete_if_present
++    USE io_global, ONLY : ionode
++    !
++    INTEGER, INTENT(IN) :: ionic_step
++    INTEGER :: i, j, iun
++    CHARACTER(LEN=512) :: filename
++    !
++    IF ( TRIM( caimd_loading_mode_ ) /= 'linear_defgrad' ) RETURN
++    IF ( .NOT. ionode ) RETURN
++    !
++    filename = TRIM( tmp_dir ) // TRIM( prefix ) // '.caimd_defgrad'
++    IF ( .NOT. caimd_defgrad_output_initialized_ ) THEN
++       CALL delete_if_present( TRIM( filename ) )
++       OPEN( NEWUNIT = iun, FILE = TRIM( filename ), STATUS = 'NEW', &
++             FORM = 'FORMATTED' )
++       WRITE( iun, '(A)' ) '# CAIMD_LINEAR_DEFGRAD_V1 event output'
++       WRITE( iun, '(A)' ) '# F_load(m)=I+m*caimd_stride*caimd_step_defgrad'
++       WRITE( iun, '(A)' ) '# A_event(m)=F_load(m)*inverse(F_load(m-1))'
++       WRITE( iun, '(A)' ) '# matrix order: row-major 11 12 13 21 22 23 31 32 33'
++       WRITE( iun, '(A)' ) '# columns: ionic_step event_index det_F_before det_F_after det_A_event ' // &
++                           'F_before_11 F_before_12 F_before_13 F_before_21 F_before_22 F_before_23 ' // &
++                           'F_before_31 F_before_32 F_before_33 F_after_11 F_after_12 F_after_13 ' // &
++                           'F_after_21 F_after_22 F_after_23 F_after_31 F_after_32 F_after_33 ' // &
++                           'A_event_11 A_event_12 A_event_13 A_event_21 A_event_22 A_event_23 ' // &
++                           'A_event_31 A_event_32 A_event_33 E_11 E_12 E_13 E_21 E_22 E_23 ' // &
++                           'E_31 E_32 E_33 velocity_jump_max velocity_jump_rms'
++       caimd_defgrad_output_initialized_ = .TRUE.
++    ELSE
++       OPEN( NEWUNIT = iun, FILE = TRIM( filename ), STATUS = 'OLD', &
++             POSITION = 'APPEND', FORM = 'FORMATTED' )
++    END IF
++    WRITE( iun, '(I8,1X,I8,41(1X,ES24.16))' ) &
++       ionic_step, caimd_last_event_index_, caimd_last_det_f_before_, &
++       caimd_last_det_f_after_, caimd_last_det_a_event_, &
++       ((caimd_last_f_before_(i,j), j = 1, 3), i = 1, 3), &
++       ((caimd_last_f_after_(i,j), j = 1, 3), i = 1, 3), &
++       ((caimd_last_a_event_(i,j), j = 1, 3), i = 1, 3), &
++       ((caimd_last_green_lagrange_(i,j), j = 1, 3), i = 1, 3), &
++       caimd_last_velocity_jump_max_, caimd_last_velocity_jump_rms_
++    CLOSE( UNIT = iun, STATUS = 'KEEP' )
++    !
++  END SUBROUTINE caimd_write_defgrad_event
++  !
++  SUBROUTINE caimd_print_configuration()
++    !
++    USE io_global, ONLY : ionode, stdout
++    !
++    INTEGER :: i
++    !
++    IF ( .NOT. caimd_enabled_ ) RETURN
++    IF ( .NOT. ionode ) RETURN
++    WRITE( stdout, '(/,5X,A)' ) 'CAIMD loading configuration:'
++    WRITE( stdout, '(8X,A,A)' ) 'caimd_loading_mode = ', TRIM( caimd_loading_mode_ )
++    WRITE( stdout, '(8X,A,I8)' ) 'caimd_stride = ', caimd_stride_
++    WRITE( stdout, '(8X,A)' ) 'caimd_step_defgrad matrix, per MD step:'
++    DO i = 1, 3
++       WRITE( stdout, '(10X,3(1X,ES14.6))' ) caimd_step_defgrad_(i,1:3)
++    END DO
++    WRITE( stdout, '(8X,A)' ) 'event convention: steps 1, 1+stride, 1+2*stride, ...'
++    WRITE( stdout, '(8X,A)' ) 'restart support: not implemented; from_scratch only'
++    !
++  END SUBROUTINE caimd_print_configuration
++  !
+   SUBROUTINE caimd_transform_atomic_history( nat, h_from, h_to, ratd, rat2d, &
+                                              rat2di )
+     !
+@@ -449,15 +665,23 @@ CONTAINS
+     !
+   END SUBROUTINE caimd_check_cell
+   !
++  REAL(DP) FUNCTION caimd_det3( a )
++    !
++    REAL(DP), INTENT(IN) :: a(3,3)
++    !
++    caimd_det3 = a(1,1) * ( a(2,2) * a(3,3) - a(2,3) * a(3,2) ) - &
++                 a(1,2) * ( a(2,1) * a(3,3) - a(2,3) * a(3,1) ) + &
++                 a(1,3) * ( a(2,1) * a(3,2) - a(2,2) * a(3,1) )
++    !
++  END FUNCTION caimd_det3
++  !
+   SUBROUTINE caimd_inverse3( a, ainv, det, label )
+     !
+     REAL(DP), INTENT(IN) :: a(3,3)
+     REAL(DP), INTENT(OUT) :: ainv(3,3), det
+     CHARACTER(LEN=*), INTENT(IN) :: label
+     !
+-    det = a(1,1) * ( a(2,2) * a(3,3) - a(2,3) * a(3,2) ) - &
+-          a(1,2) * ( a(2,1) * a(3,3) - a(2,3) * a(3,1) ) + &
+-          a(1,3) * ( a(2,1) * a(3,2) - a(2,2) * a(3,1) )
++    det = caimd_det3( a )
+     IF ( .NOT. caimd_finite( det ) .OR. ABS( det ) <= caimd_det_floor ) &
+        CALL errore( 'caimd_inverse3', TRIM( label ) // ' is singular', 1 )
+     !
+diff --git a/PW/src/input.f90 b/PW/src/input.f90
+index 2b2411f..ab4c6b8 100644
+--- a/PW/src/input.f90
++++ b/PW/src/input.f90
+@@ -433,7 +433,9 @@ SUBROUTINE control_iosys()
+   USE input_parameters, ONLY : cell_parameters, cell_dynamics, press, wmass,  &
+                                cell_temperature, cell_factor, press_conv_thr, &
+                                cell_dofree, treinit_gvecs, caimd,             &
+-                               caimd_stride, caimd_step_strain, caimd_mask
++                               caimd_loading_mode, caimd_stride,              &
++                               caimd_step_strain, caimd_step_defgrad,         &
++                               caimd_mask
+   !
+   ! ... CELL NOSE HOOVER THERMOSTAT
+   ! 
+@@ -1304,8 +1306,9 @@ SUBROUTINE control_iosys()
+   ! CONSTRAINTS
+   !
+   CALL init_dofree ( cell_dofree )
+-  CALL caimd_configure( caimd, caimd_stride, caimd_step_strain, caimd_mask, &
+-                        calculation, calc, cell_dofree, restart,           &
++  CALL caimd_configure( caimd, caimd_loading_mode, caimd_stride,            &
++                        caimd_step_strain, caimd_step_defgrad, caimd_mask,  &
++                        calculation, calc, cell_dofree, restart,            &
+                         fix_volume, fix_area )
+   lconstrain = ( nconstr_inp > 0 )
+   IF ( lconstrain .AND. ( lbfgs .OR. lmovecell ) ) &
+@@ -1709,12 +1712,14 @@ SUBROUTINE iosys_end ( )
+   !! control variables, cell and atomic structure have been read and set
+   !
+   USE input_parameters,      ONLY : trism, lfcp, lgcscf
+-  USE input_parameters,      ONLY : caimd, caimd_mask, ion_temperature, &
++  USE input_parameters,      ONLY : caimd, caimd_loading_mode, caimd_mask, &
++                                    caimd_step_defgrad, ion_temperature,   &
+                                     cell_temperature
+   USE input_parameters,      ONLY : k_points, xk, wk, nk1, nk2, nk3,  &
+                                     k1, k2, k3, nkstot
+   USE input_parameters,      ONLY : ibrav, ecutwfc, ecutrho
+   !
++  USE kinds,                 ONLY : DP
+   USE control_flags,         ONLY : lconstrain, lxdm, llondon, ldftd3, &
+                                     do_makov_payne
+   USE cell_base,             ONLY : alat, at
+@@ -1730,13 +1735,18 @@ SUBROUTINE iosys_end ( )
+   !
+   IMPLICIT NONE
+   INTEGER :: ibrav_mp
++  LOGICAL :: active_caimd_controls
+   INTEGER, EXTERNAL :: at2ibrav
+   !
+   ! ... set up k-points (may require reciprocal lattice vectors bg)
+   !
+   CALL init_start_k ( nk1, nk2, nk3, k1, k2, k3, k_points, nkstot, xk, wk )
+   !
+-  IF ( caimd .AND. ANY( caimd_mask ) ) THEN
++  active_caimd_controls = caimd .AND. &
++       ( ( TRIM( caimd_loading_mode ) == 'legacy_strain' .AND. &
++           ANY( caimd_mask ) ) .OR. &
++         TRIM( caimd_loading_mode ) == 'linear_defgrad' )
++  IF ( active_caimd_controls ) THEN
+      IF ( ANY( if_pos(:,1:nat) /= 1 ) ) CALL errore( 'iosys', &
+           'active CAIMD does not support fixed atomic coordinates', 1 )
+      SELECT CASE ( TRIM( ion_temperature ) )
+diff --git a/test-suite/caimd/caimd_linear_defgrad_math.py b/test-suite/caimd/caimd_linear_defgrad_math.py
+new file mode 100644
+index 0000000..157f489
+--- /dev/null
++++ b/test-suite/caimd/caimd_linear_defgrad_math.py
+@@ -0,0 +1,238 @@
++#!/usr/bin/env python3
++"""Deterministic Phase 1 tests for CAIMD linear_defgrad mathematics.
++
++These tests intentionally do not run scientific AIMD.  They mirror the formulas
++implemented in PW/src/caimd_module.f90 and also check that the production source
++contains the required F_load, A_event, and incremental current-cell operations.
++"""
++
++from __future__ import annotations
++
++import argparse
++import math
++from pathlib import Path
++
++
++TOL = 1.0e-14
++DET_FLOOR = 1.0e-18
++
++
++def eye() -> list[list[float]]:
++    return [[1.0 if i == j else 0.0 for j in range(3)] for i in range(3)]
++
++
++def zeros() -> list[list[float]]:
++    return [[0.0 for _ in range(3)] for _ in range(3)]
++
++
++def matmul(a: list[list[float]], b: list[list[float]]) -> list[list[float]]:
++    return [[sum(a[i][k] * b[k][j] for k in range(3)) for j in range(3)] for i in range(3)]
++
++
++def transpose(a: list[list[float]]) -> list[list[float]]:
++    return [[a[j][i] for j in range(3)] for i in range(3)]
++
++
++def det3(a: list[list[float]]) -> float:
++    return (
++        a[0][0] * (a[1][1] * a[2][2] - a[1][2] * a[2][1])
++        - a[0][1] * (a[1][0] * a[2][2] - a[1][2] * a[2][0])
++        + a[0][2] * (a[1][0] * a[2][1] - a[1][1] * a[2][0])
++    )
++
++
++def inv3(a: list[list[float]]) -> list[list[float]]:
++    det = det3(a)
++    if not math.isfinite(det) or abs(det) <= DET_FLOOR:
++        raise ValueError("singular matrix")
++    return [
++        [
++            (a[1][1] * a[2][2] - a[1][2] * a[2][1]) / det,
++            -(a[0][1] * a[2][2] - a[0][2] * a[2][1]) / det,
++            (a[0][1] * a[1][2] - a[0][2] * a[1][1]) / det,
++        ],
++        [
++            -(a[1][0] * a[2][2] - a[1][2] * a[2][0]) / det,
++            (a[0][0] * a[2][2] - a[0][2] * a[2][0]) / det,
++            -(a[0][0] * a[1][2] - a[0][2] * a[1][0]) / det,
++        ],
++        [
++            (a[1][0] * a[2][1] - a[1][1] * a[2][0]) / det,
++            -(a[0][0] * a[2][1] - a[0][1] * a[2][0]) / det,
++            (a[0][0] * a[1][1] - a[0][1] * a[1][0]) / det,
++        ],
++    ]
++
++
++def f_load(event_index: int, stride: int, d: list[list[float]]) -> list[list[float]]:
++    f = eye()
++    factor = float(event_index * stride)
++    for i in range(3):
++        for j in range(3):
++            f[i][j] += factor * d[i][j]
++    return f
++
++
++def green_lagrange(f: list[list[float]]) -> list[list[float]]:
++    c = matmul(transpose(f), f)
++    e = [[0.5 * c[i][j] for j in range(3)] for i in range(3)]
++    for i in range(3):
++        e[i][i] -= 0.5
++    return e
++
++
++def a_event(event_index: int, stride: int, d: list[list[float]]) -> list[list[float]]:
++    before = f_load(event_index - 1, stride, d)
++    after = f_load(event_index, stride, d)
++    if det3(before) <= DET_FLOOR:
++        raise ValueError("F_load before event has non-positive determinant")
++    if det3(after) <= DET_FLOOR:
++        raise ValueError("F_load after event has non-positive determinant")
++    a = matmul(after, inv3(before))
++    if det3(a) <= DET_FLOOR:
++        raise ValueError("A_event has non-positive determinant")
++    return a
++
++
++def event_steps(stride: int, count: int) -> list[int]:
++    return [1 + i * stride for i in range(count)]
++
++
++def validate_controls(mode: str = "legacy_strain", step_strain: list[float] | None = None,
++                      step_defgrad: list[list[float]] | None = None, stride: int = 1) -> None:
++    step_strain = [0.0] * 6 if step_strain is None else step_strain
++    step_defgrad = zeros() if step_defgrad is None else step_defgrad
++    if stride <= 0:
++        raise ValueError("caimd_stride must be positive")
++    if mode not in {"legacy_strain", "linear_defgrad"}:
++        raise ValueError("unknown caimd_loading_mode")
++    if any(not math.isfinite(x) for x in step_strain):
++        raise ValueError("non-finite caimd_step_strain")
++    if any(not math.isfinite(x) for row in step_defgrad for x in row):
++        raise ValueError("non-finite caimd_step_defgrad")
++    if mode == "legacy_strain" and any(abs(x) > 0.0 for row in step_defgrad for x in row):
++        raise ValueError("caimd_step_defgrad requires linear_defgrad")
++    if mode == "linear_defgrad" and any(abs(x) > 0.0 for x in step_strain):
++        raise ValueError("caimd_step_strain requires legacy_strain")
++
++
++def assert_close(name: str, value: float, expected: float, tol: float = TOL) -> None:
++    if abs(value - expected) > tol:
++        raise AssertionError(f"{name}: got {value:.17g}, expected {expected:.17g}")
++
++
++def assert_matrix_close(name: str, a: list[list[float]], b: list[list[float]], tol: float = TOL) -> None:
++    for i in range(3):
++        for j in range(3):
++            assert_close(f"{name}[{i+1},{j+1}]", a[i][j], b[i][j], tol)
++
++
++def test_source_formula_presence(root: Path) -> None:
++    src = (root / "PW/src/caimd_module.f90").read_text(errors="ignore")
++    required = [
++        "caimd_build_f_load",
++        "REAL( event_index, DP ) * REAL( caimd_stride_, DP )",
++        "caimd_last_a_event_ = MATMUL( caimd_last_f_after_, f_before_inv )",
++        "h_new = MATMUL( caimd_last_a_event_, h_pr )",
++        "caimd_green_lagrange",
++        "caimd_transform_cell_history",
++        "TRIM( caimd_loading_mode_ ) == 'linear_defgrad' )",
++    ]
++    missing = [item for item in required if item not in src]
++    if missing:
++        raise AssertionError(f"production formula source checks missing: {missing}")
++
++
++def run_tests(root: Path) -> None:
++    validate_controls()
++    test_source_formula_presence(root)
++
++    d = zeros()
++    assert_matrix_close("identity before first event", f_load(0, 10, d), eye())
++
++    d = zeros()
++    d[0][2] = 2.0e-6
++    f = f_load(10000, 10, d)
++    assert_close("simple shear F13", f[0][2], 0.20)
++    assert_close("simple shear det", det3(f), 1.0)
++    e = green_lagrange(f)
++    assert_close("simple shear E13", e[0][2], 0.10)
++    assert_close("simple shear E31", e[2][0], 0.10)
++    assert_close("simple shear E33", e[2][2], 0.02, tol=1.0e-13)
++
++    d = zeros()
++    d[2][2] = -2.0e-6
++    f = f_load(7500, 10, d)
++    assert_close("compression F33", f[2][2], 0.85)
++    assert_close("compression det", det3(f), 0.85)
++    e = green_lagrange(f)
++    assert_close("compression E33", e[2][2], -0.13875)
++    a = a_event(7500, 10, d)
++    expected = (1.0 - 7500 * 10 * 2.0e-6) / (1.0 - 7499 * 10 * 2.0e-6)
++    assert_close("incremental compression A33", a[2][2], expected)
++
++    for sign in (1.0, -1.0):
++        d = zeros()
++        d[0][2] = sign * 2.0e-6
++        current = eye()
++        for m in range(1, 10001):
++            current = matmul(a_event(m, 10, d), current)
++        assert_matrix_close(f"repeated shear sign {sign}", current, f_load(10000, 10, d), tol=5.0e-13)
++
++    for value in (2.0e-6, -2.0e-6):
++        d = zeros()
++        d[2][2] = value
++        assert det3(f_load(100, 10, d)) > 0.0
++
++    d = zeros()
++    d[2][2] = -0.2
++    try:
++        a_event(1, 10, d)
++    except ValueError:
++        pass
++    else:
++        raise AssertionError("singular or inverted compression was not rejected")
++
++    d = zeros()
++    d[0][2] = 2.0e-6
++    try:
++        validate_controls("legacy_strain", step_defgrad=d)
++    except ValueError:
++        pass
++    else:
++        raise AssertionError("legacy mode accepted caimd_step_defgrad")
++    try:
++        validate_controls("linear_defgrad", step_strain=[1.0e-6, 0.0, 0.0, 0.0, 0.0, 0.0])
++    except ValueError:
++        pass
++    else:
++        raise AssertionError("linear_defgrad accepted caimd_step_strain")
++    try:
++        validate_controls("not_a_mode")
++    except ValueError:
++        pass
++    else:
++        raise AssertionError("invalid loading mode was not rejected")
++
++    h_current = [[1.01, 0.02, 0.0], [0.00, 0.98, 0.03], [0.01, 0.00, 1.04]]
++    d = zeros()
++    d[0][2] = 2.0e-6
++    incremental = matmul(a_event(100, 10, d), h_current)
++    reset_like = f_load(100, 10, d)
++    if max(abs(incremental[i][j] - reset_like[i][j]) for i in range(3) for j in range(3)) < 1.0e-6:
++        raise AssertionError("incremental current-cell update collapsed to reference reset")
++
++    if event_steps(10, 4) != [1, 11, 21, 31]:
++        raise AssertionError("stride-10 event convention changed")
++
++
++def main() -> None:
++    parser = argparse.ArgumentParser()
++    parser.add_argument("--source-root", type=Path, default=Path.cwd())
++    args = parser.parse_args()
++    run_tests(args.source_root.resolve())
++    print("CAIMD linear_defgrad deterministic math tests passed")
++
++
++if __name__ == "__main__":
++    main()
+diff --git a/caimd_linear_defgrad_phase1/IMPLEMENTATION_REPORT.md b/caimd_linear_defgrad_phase1/IMPLEMENTATION_REPORT.md
+new file mode 100644
+index 0000000..d143294
+--- /dev/null
++++ b/caimd_linear_defgrad_phase1/IMPLEMENTATION_REPORT.md
+@@ -0,0 +1,275 @@
++# CAIMD Linear Deformation-Gradient Phase 1 Implementation Report
++
++Status: `CAIMD_LINEAR_DEFGRAD_PHASE1_IMPLEMENTED`
++
++## Repository Identity
++
++- Repository root: `/Users/mengqicheng/Downloads/Learning/qe-7.5`
++- Active branch: `main`
++- HEAD before change: `af7ebfc757c32e0b4f050ed9f2208e01020b2ee3`
++- Source identity: local QE 7.5 CAIMD tree corresponding to the
++  `qe-7.5-caimd-thermostat-af7ebfc` executable lineage.
++- Initial Git state: tracked tree clean, with pre-existing untracked
++  `examples/` result/workflow directories.
++- No commit, tag, push, Slurm submission, scientific AIMD validation, or
++  production executable overwrite was performed.
++
++## Existing CAIMD Conventions Recorded
++
++- Existing source map inspected: `Modules/input_parameters.f90`,
++  `Modules/read_namelists.f90`, `PW/src/input.f90`,
++  `PW/src/caimd_module.f90`, `PW/src/vcsubs.f90`, `PW/src/vcsmd.f90`,
++  `PW/src/run_pwscf.f90`, and `test-suite/caimd/caimd_validation.py`.
++- Existing input variables were `caimd`, `caimd_stride`,
++  `caimd_step_strain(6)`, and `caimd_mask(6)` in `&CELL`.
++- Existing event convention is unchanged: events occur at ionic steps
++  `1, 1+stride, 1+2*stride, ...`.
++- Existing six-component legacy order is unchanged:
++  `(xx, yy, zz, yz, xz, xy)`.
++- QE stores the cell matrix with lattice vectors as columns.  A physical
++  affine relation `r_new = A * r_old` is represented as
++  `H_new = A * H_old`.
++- Existing CAIMD preserves fractional positions and transforms fractional
++  velocity-like histories so peculiar Cartesian ionic velocities are preserved
++  across imposed cell events.
++
++## Files Changed
++
++- `Modules/input_parameters.f90`
++- `Modules/read_namelists.f90`
++- `PW/src/input.f90`
++- `PW/src/caimd_module.f90`
++- `PW/Doc/INPUT_PW.def`
++- `CAIMD_IMPLEMENTATION.md`
++- `test-suite/caimd/caimd_linear_defgrad_math.py`
++- `examples/caimd_linear_defgrad_phase1/README.md`
++- `examples/caimd_linear_defgrad_phase1/local_z_engineering_compression.in.fragment`
++- `examples/caimd_linear_defgrad_phase1/local_x_on_local_z_simple_shear.in.fragment`
++
++Evidence files are under `caimd_linear_defgrad_phase1/evidence/`.
++
++## Input API Added
++
++```fortran
++caimd_loading_mode = 'legacy_strain'   ! default
++caimd_loading_mode = 'linear_defgrad'
++caimd_step_defgrad(3,3) = 0.0d0        ! default
++```
++
++`caimd_step_defgrad` supports indexed namelist syntax such as
++`caimd_step_defgrad(1,3)=2.0d-6` and `caimd_step_defgrad(3,3)=-2.0d-6`.
++
++`legacy_strain` remains the default.  Existing inputs that omit
++`caimd_loading_mode` and use `caimd_step_strain/caimd_mask` keep the previous
++behavior.
++
++## Mathematical Definition Implemented
++
++Let `m` be the one-based CAIMD event index, `s=caimd_stride`,
++`D=caimd_step_defgrad`, and `I` be the identity matrix.
++
++```text
++F_load(m) = I + (m * s) D
++F_load(0) = I
++A_event(m) = F_load(m) * inverse(F_load(m-1))
++```
++
++At a `linear_defgrad` event, the current PR candidate cell is updated by:
++
++```text
++H_projected = A_event(m) * H_PR_candidate
++```
++
++The implementation intentionally does not use `F_load(m) * H_reference` as a
++replacement cell, so ordinary PR cell evolution accumulated between events is
++preserved.
++
++The Green-Lagrange diagnostic helper computes:
++
++```text
++E = 0.5 * (transpose(F_load) * F_load - I)
++```
++
++This diagnostic is not used as the driver in `linear_defgrad` mode.
++
++## Position, Velocity, And PR-Cell Behavior
++
++- Fractional atomic positions are preserved when the cell is affinely mapped.
++- Fractional velocity, acceleration, and previous-acceleration histories are
++  transformed through the existing CAIMD path to preserve peculiar Cartesian
++  ionic velocities.
++- In `linear_defgrad` mode, cell velocity and acceleration histories are
++  left-multiplied by the same `A_event` as the cell at the event.
++- The legacy symmetric tangent projection is skipped in `linear_defgrad` mode.
++  Therefore zero entries of `caimd_step_defgrad` do not freeze the corresponding
++  PR cell degrees of freedom.
++- `caimd_mask(6)` remains a legacy symmetric-strain control.  In
++  `linear_defgrad` mode it does not define loading and does not freeze zero
++  deformation-gradient entries.
++
++## Runtime Validation
++
++The implementation rejects:
++
++- unknown `caimd_loading_mode`;
++- non-positive `caimd_stride`;
++- non-finite `caimd_step_strain`;
++- non-finite `caimd_step_defgrad`;
++- non-finite or oversized legacy event strain increments;
++- nonzero `caimd_step_defgrad` in `legacy_strain` mode;
++- nonzero `caimd_step_strain` in `linear_defgrad` mode;
++- unsupported CAIMD calculation scope;
++- restart mode other than `from_scratch`;
++- non-`all` `cell_dofree`;
++- fixed-volume or fixed-area modes;
++- fixed atomic coordinates for active CAIMD controls;
++- unsupported ionic or cell thermostats for active CAIMD controls;
++- singular, nearly singular, non-finite, or non-positive `F_load` and
++  `A_event` determinants in `linear_defgrad` mode.
++
++The determinant floor remains the existing CAIMD double-precision threshold:
++`1.0d-18`.
++
++## Output And Provenance
++
++Initialization prints the selected loading mode, stride,
++`caimd_step_defgrad` matrix, event convention, and restart support status.
++
++The legacy `prefix.caimd` data rows remain 26 columns for parser compatibility.
++Header lines are additive and include the selected loading mode.
++
++For `linear_defgrad`, event matrices are written to:
++
++```text
++tmp_dir/prefix.caimd_defgrad
++```
++
++Rows record ionic step, event index, `F_load` before and after the event,
++`A_event`, determinants, Green-Lagrange diagnostic components, and velocity
++residual diagnostics.
++
++## Deterministic Test Results
++
++Command log paths:
++
++- `caimd_linear_defgrad_phase1/evidence/test_py_compile.log`
++- `caimd_linear_defgrad_phase1/evidence/test_linear_defgrad_math.log`
++- `caimd_linear_defgrad_phase1/evidence/test_local_smoke.log`
++- `caimd_linear_defgrad_phase1/evidence/test_caimd_validation_list_cases.log`
++- `caimd_linear_defgrad_phase1/evidence/test_git_diff_check.log`
++
++Results:
++
++- Python syntax checks passed.
++- `test-suite/caimd/caimd_linear_defgrad_math.py` passed.
++- Local short `pw.x` smoke tests for D13 parsing, D33 parsing, zero-D identity
++  events, short compression, short shear, and invalid determinant rejection
++  passed.
++- Existing CAIMD validation harness case listing passed.
++- `git diff --check` passed.
++
++Key deterministic values verified:
++
++- `F_load(0)=I`.
++- Explicit zero-D `linear_defgrad` inputs are active CAIMD controls and write
++  identity `F_load`/`A_event` diagnostics.
++- Simple shear with `stride=10`, `D(1,3)=2.0e-6`, `m=10000` gives
++  `F_load(1,3)=0.20` and `det(F_load)=1.0`.
++- Uniaxial compression with `stride=10`, `D(3,3)=-2.0e-6`, `m=7500` gives
++  `F_load(3,3)=0.85` and `det(F_load)=0.85`.
++- Simple-shear Green-Lagrange diagnostic gives `E_xz=E_zx=0.10` and
++  `E_zz=0.02`.
++- Compression Green-Lagrange diagnostic gives `E_zz=-0.13875`.
++- Incremental compression map satisfies
++  `A_event(3,3)=[1-m*stride*dc]/[1-(m-1)*stride*dc]`.
++- Repeated simple-shear incremental maps recover the cumulative linear shear
++  within floating-point tolerance.
++- Positive and negative shear and normal loading are supported when the
++  determinant remains positive.
++- Singular/inverted compression, simultaneous legacy and defgrad loading
++  definitions, and invalid mode are rejected.
++- Legacy default mode remains `legacy_strain`.
++- Applying `A_event` to a perturbed current cell is not equivalent to resetting
++  to `F_load * H_reference`.
++- Stride-10 event indices remain `1, 11, 21, ...`.
++
++## Build Results
++
++Command log paths:
++
++- `caimd_linear_defgrad_phase1/evidence/build_configure.log`
++- `caimd_linear_defgrad_phase1/evidence/build_qe_pw_exe.log`
++
++Build tree:
++
++```text
++/private/tmp/qe_linear_defgrad_build
++```
++
++Commands:
++
++```text
++cmake -S . -B /private/tmp/qe_linear_defgrad_build -DQE_ENABLE_MPI=OFF -DQE_ENABLE_OPENMP=OFF -DQE_ENABLE_TEST=OFF
++cmake --build /private/tmp/qe_linear_defgrad_build --target qe_pw_exe -j 4
++```
++
++Result: local serial `qe_pw_exe` build succeeded and produced:
++
++```text
++/private/tmp/qe_linear_defgrad_build/bin/pw.x
++```
++
++The build emitted existing QE/macOS compiler/linker warnings, but no
++linear-defgrad CAIMD compile or link failure.
++
++## Evidence Artifacts
++
++- Complete material patch:
++  `caimd_linear_defgrad_phase1/evidence/linear_defgrad_phase1.patch`
++- Pre-change hashes:
++  `caimd_linear_defgrad_phase1/evidence/pre_hashes.sha256`
++- Post-change hashes:
++  `caimd_linear_defgrad_phase1/evidence/post_hashes.sha256`
++- Test logs:
++  `caimd_linear_defgrad_phase1/evidence/test_*.log`
++- Local smoke summary:
++  `caimd_linear_defgrad_phase1/evidence/local_smoke_summary.json`
++- Build logs:
++  `caimd_linear_defgrad_phase1/evidence/build_*.log`
++
++## Backward Compatibility
++
++`legacy_strain` is the default.  The legacy small symmetric-strain path, mask
++semantics, six-component order, event timing, tangent projection, `.caimd`
++26-column data rows, and old `caimd_step_strain` validation are preserved for
++legacy inputs.
++
++The new `linear_defgrad` path is active when `caimd=.true.` and
++`caimd_loading_mode='linear_defgrad'`, including the zero-matrix
++`caimd_step_defgrad` case.  A zero-D input therefore behaves as an explicit
++identity-loading CAIMD control and writes identity deformation-gradient
++diagnostics.
++
++## Known Limitations
++
++- Restart remains unsupported.
++- No scientific AIMD validation was run in this phase.
++- No Miller-index parsing or structure rotation was implemented.
++- No schedule-file parsing or arbitrary nonlinear loading paths were added.
++- No thermostat, stress, force, timestep, or PR equation redesign was done.
++- The generated PW input `.txt/.xml/.html` documentation was not regenerated
++  from `PW/Doc/INPUT_PW.def` in this phase.
++
++## Explicit Phase 2 Requirements
++
++The following are not completed in this task:
++
++- 64-atom 3000 K short AIMD validation;
++- `[111]`-oriented structure generation and verification;
++- `(111)[11-2]` shear-direction verification using atomic coordinates;
++- partial-cell-response scientific validation;
++- comparison with the reference stress-strain curve;
++- long-run restart and segmentation;
++- 75000-step compression;
++- 100000-step shear;
++- production readiness.
+diff --git a/caimd_linear_defgrad_phase1/local_smoke_linear_defgrad.py b/caimd_linear_defgrad_phase1/local_smoke_linear_defgrad.py
+new file mode 100644
+index 0000000..7b3527d
+--- /dev/null
++++ b/caimd_linear_defgrad_phase1/local_smoke_linear_defgrad.py
+@@ -0,0 +1,234 @@
++#!/usr/bin/env python3
++"""Local non-scientific smoke tests for CAIMD linear_defgrad input/runtime paths."""
++
++from __future__ import annotations
++
++import json
++import math
++import shutil
++import subprocess
++import sys
++from pathlib import Path
++
++
++ROOT = Path(__file__).resolve().parents[1]
++sys.path.insert(0, str(ROOT / "test-suite" / "caimd"))
++
++from caimd_validation import qe_input  # noqa: E402
++
++
++def floats(parts: list[str]) -> list[float]:
++    return [float(part.replace("D", "E").replace("d", "e")) for part in parts]
++
++
++def parse_defgrad(path: Path) -> list[dict[str, object]]:
++    rows = []
++    if not path.exists():
++        return rows
++    for line in path.read_text(errors="ignore").splitlines():
++        if not line.strip() or line.lstrip().startswith("#"):
++            continue
++        parts = line.split()
++        values = floats(parts[2:])
++        rows.append(
++            {
++                "ionic_step": int(parts[0]),
++                "event_index": int(parts[1]),
++                "det_f_before": values[0],
++                "det_f_after": values[1],
++                "det_a_event": values[2],
++                "f_before": values[3:12],
++                "f_after": values[12:21],
++                "a_event": values[21:30],
++                "green_lagrange": values[30:39],
++                "velocity_jump_max": values[39],
++                "velocity_jump_rms": values[40],
++            }
++        )
++    return rows
++
++
++def assert_close(name: str, value: float, expected: float, tol: float = 1.0e-12) -> None:
++    if abs(value - expected) > tol:
++        raise AssertionError(f"{name}: got {value:.16e}, expected {expected:.16e}")
++
++
++def assert_identity(name: str, values: list[float], tol: float = 1.0e-12) -> None:
++    expected = [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0]
++    for idx, (value, ref) in enumerate(zip(values, expected), 1):
++        assert_close(f"{name}[{idx}]", value, ref, tol)
++
++
++def run_case(pw: Path, work_root: Path, pseudo_dir: Path, name: str, caimd: str, nstep: int,
++             expect_success: bool = True) -> dict[str, object]:
++    run_dir = work_root / name
++    if run_dir.exists():
++        shutil.rmtree(run_dir)
++    run_dir.mkdir(parents=True)
++    input_path = run_dir / f"{name}.in"
++    input_path.write_text(
++        qe_input(
++            name,
++            "vc-md",
++            pseudo_dir,
++            nstep=nstep,
++            caimd=caimd,
++            velocities=True,
++            extra_system="nosym=.true., noinv=.true.,",
++            dt=5.0,
++            wmass=200.0,
++        )
++    )
++    proc = subprocess.run(
++        [str(pw), "-in", str(input_path)],
++        cwd=run_dir,
++        text=True,
++        stdout=subprocess.PIPE,
++        stderr=subprocess.STDOUT,
++        timeout=180,
++    )
++    out_path = run_dir / f"{name}.out"
++    out_path.write_text(proc.stdout)
++    ok = proc.returncode == 0 and "JOB DONE" in proc.stdout
++    if expect_success and not ok:
++        raise AssertionError(f"{name} failed unexpectedly; return code {proc.returncode}")
++    if not expect_success and ok:
++        raise AssertionError(f"{name} succeeded unexpectedly")
++    return {
++        "name": name,
++        "returncode": proc.returncode,
++        "job_done": "JOB DONE" in proc.stdout,
++        "run_dir": str(run_dir),
++        "stdout": str(out_path),
++        "defgrad_rows": parse_defgrad(run_dir / "tmp" / f"{name}.caimd_defgrad"),
++    }
++
++
++def require_matrix_echo(result: dict[str, object], row1: str, row2: str, row3: str) -> None:
++    stdout = Path(result["stdout"]).read_text(errors="ignore")
++    if "caimd_step_defgrad matrix, per MD step" not in stdout:
++        raise AssertionError(f"{result['name']}: missing initialization matrix echo")
++    for row in (row1, row2, row3):
++        if row not in stdout:
++            raise AssertionError(f"{result['name']}: missing matrix row {row!r}")
++
++
++def main() -> None:
++    pw = Path(sys.argv[1]) if len(sys.argv) > 1 else Path("/private/tmp/qe_linear_defgrad_build/bin/pw.x")
++    pseudo_dir = ROOT / "pseudo"
++    work_root = Path("/private/tmp/qe_linear_defgrad_local_smoke")
++    work_root.mkdir(parents=True, exist_ok=True)
++    cases = []
++
++    cases.append(
++        run_case(
++            pw,
++            work_root,
++            pseudo_dir,
++            "parser_d13",
++            "caimd=.true., caimd_loading_mode='linear_defgrad', caimd_stride=1, caimd_step_defgrad(1,3)=2.0d-6,",
++            1,
++        )
++    )
++    require_matrix_echo(
++        cases[-1],
++        "0.000000E+00   0.000000E+00   2.000000E-06",
++        "0.000000E+00   0.000000E+00   0.000000E+00",
++        "0.000000E+00   0.000000E+00   0.000000E+00",
++    )
++
++    cases.append(
++        run_case(
++            pw,
++            work_root,
++            pseudo_dir,
++            "parser_d33",
++            "caimd=.true., caimd_loading_mode='linear_defgrad', caimd_stride=1, caimd_step_defgrad(3,3)=-2.0d-6,",
++            1,
++        )
++    )
++    require_matrix_echo(
++        cases[-1],
++        "0.000000E+00   0.000000E+00   0.000000E+00",
++        "0.000000E+00   0.000000E+00   0.000000E+00",
++        "0.000000E+00   0.000000E+00  -2.000000E-06",
++    )
++
++    cases.append(
++        run_case(
++            pw,
++            work_root,
++            pseudo_dir,
++            "zero_identity",
++            "caimd=.true., caimd_loading_mode='linear_defgrad', caimd_stride=1,",
++            2,
++        )
++    )
++    if len(cases[-1]["defgrad_rows"]) != 2:
++        raise AssertionError("zero_identity: expected 2 identity events")
++    for row in cases[-1]["defgrad_rows"]:
++        assert_identity("zero F_before", row["f_before"])
++        assert_identity("zero F_after", row["f_after"])
++        assert_identity("zero A_event", row["a_event"])
++
++    cases.append(
++        run_case(
++            pw,
++            work_root,
++            pseudo_dir,
++            "short_compression",
++            "caimd=.true., caimd_loading_mode='linear_defgrad', caimd_stride=10, caimd_step_defgrad(3,3)=-2.0d-6,",
++            12,
++        )
++    )
++    rows = cases[-1]["defgrad_rows"]
++    if [row["ionic_step"] for row in rows] != [1, 11]:
++        raise AssertionError(f"short_compression: wrong event steps {rows}")
++    assert_close("short compression final F33", rows[-1]["f_after"][8], 0.99996)
++    expected_a33 = (1.0 - 2 * 10 * 2.0e-6) / (1.0 - 1 * 10 * 2.0e-6)
++    assert_close("short compression A33", rows[-1]["a_event"][8], expected_a33)
++
++    cases.append(
++        run_case(
++            pw,
++            work_root,
++            pseudo_dir,
++            "short_shear",
++            "caimd=.true., caimd_loading_mode='linear_defgrad', caimd_stride=10, caimd_step_defgrad(1,3)=2.0d-6,",
++            12,
++        )
++    )
++    rows = cases[-1]["defgrad_rows"]
++    if [row["ionic_step"] for row in rows] != [1, 11]:
++        raise AssertionError(f"short_shear: wrong event steps {rows}")
++    assert_close("short shear final F13", rows[-1]["f_after"][2], 0.00004)
++    assert_close("short shear det", rows[-1]["det_f_after"], 1.0)
++
++    invalid = run_case(
++        pw,
++        work_root,
++        pseudo_dir,
++        "invalid_determinant",
++        "caimd=.true., caimd_loading_mode='linear_defgrad', caimd_stride=1, caimd_step_defgrad(3,3)=-2.0d0,",
++        1,
++        expect_success=False,
++    )
++    invalid_stdout = Path(invalid["stdout"]).read_text(errors="ignore")
++    if "F_load after event has non-positive determinant" not in invalid_stdout:
++        raise AssertionError("invalid_determinant: missing determinant rejection")
++    cases.append(invalid)
++
++    summary = {
++        "status": "LOCAL_LINEAR_DEFGRAD_SMOKE_PASS",
++        "pw": str(pw),
++        "work_root": str(work_root),
++        "cases": cases,
++    }
++    out = ROOT / "caimd_linear_defgrad_phase1" / "evidence" / "local_smoke_summary.json"
++    out.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n")
++    print(json.dumps(summary, indent=2, sort_keys=True))
++
++
++if __name__ == "__main__":
++    main()
++
+diff --git a/examples/caimd_linear_defgrad_phase1/README.md b/examples/caimd_linear_defgrad_phase1/README.md
+new file mode 100644
+index 0000000..4f9077c
+--- /dev/null
++++ b/examples/caimd_linear_defgrad_phase1/README.md
+@@ -0,0 +1,10 @@
++# CAIMD Linear Deformation-Gradient Phase 1 Fragments
++
++These are non-production `&CELL` fragments for the Phase 1
++`caimd_loading_mode='linear_defgrad'` interface.  They are documentation
++examples only and were not executed as AIMD validations.
++
++The input structure must be pre-oriented outside QE so the intended local axes
++coincide with QE Cartesian axes.  QE does not parse Miller indices or rotate the
++structure for this mode.
++
+diff --git a/examples/caimd_linear_defgrad_phase1/local_z_engineering_compression.in.fragment b/examples/caimd_linear_defgrad_phase1/local_z_engineering_compression.in.fragment
+new file mode 100644
+index 0000000..f352c57
+--- /dev/null
++++ b/examples/caimd_linear_defgrad_phase1/local_z_engineering_compression.in.fragment
+@@ -0,0 +1,13 @@
++! Non-production fragment only.  Not executed in Phase 1.
++! Pre-orient the structure externally so local z is parallel to [111].
++! With dt=2 fs and strain rate 0.001 ps^-1:
++!   dc = 0.001 ps^-1 * 0.002 ps = 2.0d-6 per MD step.
++! With caimd_stride=10, 7500 events correspond to 75000 MD steps and
++! 15% engineering compression: F_load(3,3)=1-0.15=0.85.
++&CELL
++  caimd = .true.
++  caimd_loading_mode = 'linear_defgrad'
++  caimd_stride = 10
++  caimd_step_defgrad(3,3) = -2.0d-6
++/
++
+diff --git a/examples/caimd_linear_defgrad_phase1/local_x_on_local_z_simple_shear.in.fragment b/examples/caimd_linear_defgrad_phase1/local_x_on_local_z_simple_shear.in.fragment
+new file mode 100644
+index 0000000..f4ff3ba
+--- /dev/null
++++ b/examples/caimd_linear_defgrad_phase1/local_x_on_local_z_simple_shear.in.fragment
+@@ -0,0 +1,15 @@
++! Non-production fragment only.  Not executed in Phase 1.
++! Pre-orient the structure externally so local x is parallel to [11-2]
++! and local z is parallel to [111].
++! With dt=2 fs and shear rate 0.001 ps^-1:
++!   dgamma = 0.001 ps^-1 * 0.002 ps = 2.0d-6 per MD step.
++! With caimd_stride=10, 10000 events correspond to 100000 MD steps and
++! gamma=0.20 via F_load(1,3)=0.20.
++! This is not equivalent to a symmetric caimd_step_strain xz component.
++&CELL
++  caimd = .true.
++  caimd_loading_mode = 'linear_defgrad'
++  caimd_stride = 10
++  caimd_step_defgrad(1,3) = 2.0d-6
++/
++

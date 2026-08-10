@@ -1,0 +1,28 @@
+
+     Program PWSCF v.7.5 starts on 23Jul2026 at 14:36:58 
+        Git branch: main
+        Last git commit: af7ebfc757c32e0b4f050ed9f2208e01020b2ee3
+        Last git commit date: Wed Jul 22 12:51:53 2026 +0200
+        Last git commit subject: Support Nose thermostat with active CAIMD
+
+     This program is part of the open-source Quantum ESPRESSO suite
+     for quantum simulation of materials; please cite
+         "P. Giannozzi et al., J. Phys.:Condens. Matter 21 395502 (2009);
+         "P. Giannozzi et al., J. Phys.:Condens. Matter 29 465901 (2017);
+         "P. Giannozzi et al., J. Chem. Phys. 152 154105 (2020);
+          URL http://www.quantum-espresso.org", 
+     in publications or presentations arising from this work. More details at
+     http://www.quantum-espresso.org/quote
+
+     Serial version
+     0 MiB available memory on the printing compute node when the environment starts
+
+     Reading input from reject_event_large.in
+
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+     Error in routine  cell_checkin (1):
+      abs(caimd_stride*caimd_step_strain) exceeds 1.0d-2
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+     stopping ...
+STOP 1

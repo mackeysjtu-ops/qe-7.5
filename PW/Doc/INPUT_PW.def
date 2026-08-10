@@ -3028,6 +3028,83 @@ input_description -distribution {Quantum ESPRESSO} -package PWscf -program pw.x 
                 }
             }
         }
+
+        var caimd -type LOGICAL {
+            default { .FALSE. }
+            info {
+                Enable PW-only constrained AIMD loading for
+                @ref calculation = 'vc-md' with Parrinello-Rahman
+                @ref cell_dynamics = 'pr'.  Restart is not implemented
+                for CAIMD in this phase.
+            }
+        }
+
+        var caimd_loading_mode -type CHARACTER {
+            default { 'legacy_strain' }
+            options {
+                opt -val 'legacy_strain' {
+                    Preserve the original CAIMD symmetric-strain protocol.
+                    The controlled components are selected by @ref caimd_mask
+                    and incremented by @ref caimd_stride * @ref caimd_step_strain.
+                }
+                opt -val 'linear_defgrad' {
+                    Apply a finite-deformation loading gradient that is linear
+                    in the nominal MD step count.  Let m be the one-based CAIMD
+                    event index and D=@ref caimd_step_defgrad.  The cumulative
+                    prescribed loading gradient is
+                    F_load(m)=I+m*@ref caimd_stride*D and the event map is
+                    A_event(m)=F_load(m)*inverse(F_load(m-1)).  The event map
+                    is applied incrementally to the current cell, so cell
+                    evolution accumulated between CAIMD events is preserved.
+                }
+            }
+        }
+
+        var caimd_stride -type INTEGER {
+            default { 1 }
+            info {
+                Positive interval, in ionic MD steps, between imposed CAIMD
+                events.  The event convention is steps
+                1, 1+caimd_stride, 1+2*caimd_stride, ...
+            }
+        }
+
+        var caimd_step_strain -type REAL -dimension ( 6 ) {
+            default { 0.D0 }
+            info {
+                Legacy symmetric tensor-strain increment per MD step, ordered
+                as (xx, yy, zz, yz, xz, xy).  Off-diagonal components are
+                tensor shear components.  This input is valid only with
+                @ref caimd_loading_mode = 'legacy_strain'.
+            }
+        }
+
+        var caimd_mask -type LOGICAL -dimension ( 6 ) {
+            default { .FALSE. }
+            info {
+                Legacy symmetric-strain control mask ordered as
+                (xx, yy, zz, yz, xz, xy).  In
+                @ref caimd_loading_mode = 'linear_defgrad', this mask does not
+                define loading or freeze zero entries of the deformation
+                gradient.
+            }
+        }
+
+        var caimd_step_defgrad -type REAL -dimension ( 3, 3 ) {
+            default { 0.D0 }
+            info {
+                Dimensionless deformation-gradient increment per MD step used
+                only with @ref caimd_loading_mode = 'linear_defgrad'.  Indexed
+                namelist syntax is supported, e.g.
+                caimd_step_defgrad(3,3)=-2.0d-6 for local-z engineering
+                compression or caimd_step_defgrad(1,3)=2.0d-6 for simple
+                shear in local x on planes normal to local z.  To convert a
+                strain rate in ps^-1, multiply by dt in ps; for example
+                0.001 ps^-1 * 0.002 ps = 2.0d-6 per MD step.  The input
+                structure must be pre-oriented so that the desired local
+                loading axes coincide with QE Cartesian axes.
+            }
+        }
     }
 
     #

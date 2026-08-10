@@ -1,0 +1,34 @@
+{
+  "audit_utc": "2026-07-28T23:52:24Z",
+  "search_base": "/leonardo/home/userexternal/mcheng00/workspace/Diamond/",
+  "pattern": "diamond8_vcrelax_qe75_vs_qe74_ibrav_*",
+  "n_candidates": 1,
+  "singlephase_excluded": true,
+  "selected_remote_workdir": "/leonardo/home/userexternal/mcheng00/workspace/Diamond/diamond8_vcrelax_qe75_vs_qe74_ibrav_20260728T205518Z",
+  "required_files_present": [
+    "inputs/diamond8_vcrelax_qe75.in",
+    "inputs/diamond8_vcrelax_qe74.in",
+    "scripts/run_qe75_vcrelax.slurm",
+    "scripts/run_qe74_vcrelax.slurm",
+    "scripts/analyze_vcrelax.py",
+    "SUBMISSION_RECORD.json",
+    "DOWNSTREAM_NOT_SUBMITTED.txt",
+    "qe75/",
+    "qe74/"
+  ],
+  "job_ids": {
+    "JOB75": 50605866,
+    "JOB74": 50605867
+  },
+  "job_names": {
+    "JOB75": "d8_vcr75_ibrav",
+    "JOB74": "d8_vcr74_ibrav"
+  },
+  "executable_sha_match": {
+    "qe75": true,
+    "qe74": true
+  },
+  "pseudo_sha_match": true,
+  "eight_carbon_contract": true,
+  "decision": "SELECTED_UNIQUE"
+}

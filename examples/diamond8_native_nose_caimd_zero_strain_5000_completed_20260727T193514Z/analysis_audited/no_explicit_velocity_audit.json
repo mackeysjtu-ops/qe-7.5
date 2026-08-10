@@ -1,0 +1,30 @@
+{
+  "native_path": "vcinit->ranv(300 K); ranv zeroes total momentum",
+  "cases": {
+    "A": {
+      "forbidden_hits": {},
+      "atomic_velocities_header": false,
+      "velocity_rows": 0,
+      "restart_mode": "from_scratch",
+      "ion_temperature": "nose",
+      "tempw": 300.0
+    },
+    "B": {
+      "forbidden_hits": {},
+      "atomic_velocities_header": false,
+      "velocity_rows": 0,
+      "restart_mode": "from_scratch",
+      "ion_temperature": "nose",
+      "tempw": 300.0
+    },
+    "C": {
+      "forbidden_hits": {},
+      "atomic_velocities_header": false,
+      "velocity_rows": 0,
+      "restart_mode": "from_scratch",
+      "ion_temperature": "nose",
+      "tempw": 300.0
+    }
+  },
+  "explicit_velocities_absent_in_all": true
+}

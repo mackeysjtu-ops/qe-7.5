@@ -1,0 +1,24 @@
+^D-- Enable sanitizer QE_ENABLE_SANITIZER=none
+-- C preprocessor used by qe_preprocess_source in qeHelpers.cmake: /usr/bin/cpp
+-- Source files are cloned from a git repository.
+   sed supports -E
+   Git branch: main
+   Git commit hash: af7ebfc757c32e0b4f050ed9f2208e01020b2ee3-dirty
+-- Trying to find LAPACK from ARM Performance Library
+-- Could NOT find BLAS (missing: BLAS_LIBRARIES) 
+-- Could NOT find LAPACK (missing: LAPACK_LIBRARIES) 
+    Reason given by package: LAPACK could not be found because dependency BLAS could not be found.
+
+-- Trying to find alternative LAPACK libraries
+Project C_FLAGS:  -O3 -DNDEBUG
+Project Fortran_FLAGS:  -fallow-argument-mismatch -O3 -DNDEBUG -O3
+Project INCLUDE_DIRECTORIES: /Users/mengqicheng/Downloads/Learning/qe-7.5/include
+Project EXE_LINKER_FLAGS:  
+Project SHARED_LINKER_FLAGS:  
+-- Installing Wannier90 via submodule
+-- Installing MBD via submodule
+-- Installing DeviceXlib via submodule
+-- Could NOT find VendorFFTW (missing: VendorFFTW_LIBRARIES VendorFFTW_INCLUDE_DIRS VendorFFTW_ID) 
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /tmp/qe_linear_defgrad_build

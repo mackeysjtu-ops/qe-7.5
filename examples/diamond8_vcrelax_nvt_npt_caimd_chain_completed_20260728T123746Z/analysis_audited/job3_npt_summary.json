@@ -1,0 +1,8 @@
+{
+  "stage": "npt",
+  "slurm_state": "CANCELLED",
+  "exit_code": "0:0",
+  "ran": false,
+  "classification": "NPT_INCOMPLETE",
+  "reason": "CANCELLED by unsatisfied afterok dependency (upstream JOB1 failed); this stage never executed"
+}

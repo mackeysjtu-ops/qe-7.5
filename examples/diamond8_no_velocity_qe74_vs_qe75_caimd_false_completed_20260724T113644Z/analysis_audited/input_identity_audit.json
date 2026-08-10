@@ -1,0 +1,32 @@
+{
+  "namelist_differences_outside_allowed_set": {},
+  "allowed_differences": [
+    "CELL.caimd",
+    "CONTROL.outdir",
+    "CONTROL.prefix"
+  ],
+  "cell_identical": true,
+  "positions_identical": true,
+  "species_masses_identical": true,
+  "kpoints_identical": true,
+  "units_identical": true,
+  "n_atoms": {
+    "qe74": 8,
+    "qe75": 8
+  },
+  "structure": {
+    "cell_determinant_bohr3": 306.27103749144356,
+    "min_CC_bohr": 2.9187884068060264,
+    "min_CC_angstrom": 1.5445563083296239,
+    "max_CC_bohr": 18.689364791557683,
+    "mean_NN_CC_bohr": 2.9187884068060264
+  },
+  "input_sha256": {
+    "qe74": "99ae1077a3eab5a738e59c9e6d2d2758ecdb094337adc6c897cf5c6dc7b40382",
+    "qe75": "a7ad97b873f1fda24892695802164e7b6e86e2ceb06e6f5193d2238980f4fd39"
+  },
+  "pseudo_sha256": "9c06aa642d22981491b32a18ec129086fe8366164984930389e4fc071c978639",
+  "pseudo_expected": "9c06aa642d22981491b32a18ec129086fe8366164984930389e4fc071c978639",
+  "pseudo_matches": true,
+  "physical_settings_identical": true
+}

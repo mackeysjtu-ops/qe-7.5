@@ -16,10 +16,26 @@ The CAIMD input names live in the PW/CP shared `&CELL` namelist:
 
 ```fortran
 caimd                  ! logical, default .false.
+caimd_loading_mode     ! character, default 'legacy_strain'
 caimd_stride           ! integer, default 1
 caimd_step_strain(6)   ! real, default 0.0
+caimd_step_defgrad(3,3)! real, default 0.0
 caimd_mask(6)          ! logical, default .false.
 ```
+
+`caimd_loading_mode='legacy_strain'` is the default and preserves the original
+small symmetric-strain protocol exactly.  `caimd_step_defgrad` must remain zero
+in this mode.
+
+`caimd_loading_mode='linear_defgrad'` adds a finite-deformation loading path.
+In this mode `caimd_step_strain` must remain zero.  The legacy
+`caimd_mask(6)` does not define the deformation-gradient loading path and does
+not freeze zero entries of the deformation-gradient matrix.  Nonzero entries of
+`caimd_step_defgrad(3,3)` are the prescribed loading components; all other cell
+degrees of freedom continue their ordinary PR evolution between imposed events.
+An explicitly selected `linear_defgrad` mode with zero `caimd_step_defgrad`
+still follows the CAIMD event path and records identity `F_load`/`A_event`
+diagnostics.
 
 The six-component order is:
 
@@ -46,6 +62,45 @@ This is a per-event hard limit. CAIMD V1 also emits a one-time warning on the
 I/O rank when the maximum absolute cumulative nominal masked strain first
 exceeds `1.0d-2`. The cumulative warning is diagnostic only; it does not alter
 the trajectory.
+
+For `linear_defgrad`, let `m` be the one-based CAIMD event index, `s` be
+`caimd_stride`, `D` be `caimd_step_defgrad`, and `I` be the 3x3 identity.  The
+cumulative prescribed loading deformation gradient is
+
+```text
+F_load(m) = I + (m * s) D
+F_load(0) = I
+```
+
+At event `m`, CAIMD applies only the incremental affine map
+
+```text
+A_event(m) = F_load(m) * inverse(F_load(m-1))
+```
+
+to the current PR candidate cell:
+
+```text
+H_projected = A_event(m) * H_PR_candidate
+```
+
+It intentionally does not replace the current cell with
+`F_load(m) * H_reference`, because that would erase ordinary PR cell evolution
+accumulated between CAIMD events.
+
+`caimd_step_defgrad` is dimensionless per MD step.  A strain rate in ps^-1 is
+converted as
+
+```text
+per-step increment = strain_rate_ps^-1 * dt_ps
+```
+
+For a later 2 fs timestep example, `0.001 ps^-1 * 0.002 ps = 2.0e-6`.
+Local-z engineering compression uses `caimd_step_defgrad(3,3)=-dc`, while
+simple shear in local x on planes normal to local z uses
+`caimd_step_defgrad(1,3)=dgamma`.  The input structure must be pre-oriented so
+the desired crystallographic directions align with the QE Cartesian axes; QE
+does not parse Miller indices or rotate structures for CAIMD.
 
 ## Supported Boundary
 
@@ -101,8 +156,11 @@ namelist. It must not search through `ATOMIC_SPECIES`, `CELL_PARAMETERS`,
 
 ## Physical Convention
 
-QE stores the cell matrix as columns of lattice vectors. CAIMD uses the total
-deformation gradient
+QE stores the cell matrix as columns of lattice vectors.  Therefore a physical
+affine relation `r_new = A * r_old` is represented internally as
+`H_new = A * H_old`.
+
+In `legacy_strain` mode, CAIMD uses the total deformation gradient
 
 ```text
 F = H * inverse(H_ref)
@@ -127,6 +185,17 @@ H_projected = (I + E_projected) * H_ref
 
 This is a first-version small-strain protocol, not a finite-strain constitutive
 framework.
+
+In `linear_defgrad` mode, the driver is instead the finite deformation-gradient
+increment `A_event(m)`.  It is applied by left-multiplying the current PR
+candidate cell.  The diagnostic Green-Lagrange strain
+
+```text
+E = 0.5 * (transpose(F_load) * F_load - I)
+```
+
+is computed for reporting and validation only; it is not used to drive the
+cell.
 
 ## PR Coupling And History Projection
 
@@ -162,6 +231,12 @@ rat2di_projected = inverse(H_projected) * H_candidate * rat2di_candidate
 
 The same transformation principle applies to the stored acceleration histories.
 Atomic thermal motion is not zeroed.
+
+For `linear_defgrad` events, the cell velocity and acceleration histories are
+left-multiplied by the same `A_event` used for the cell.  Between events no
+legacy symmetric tangent projection is applied in `linear_defgrad` mode, so
+zero entries of `caimd_step_defgrad` do not freeze the corresponding PR cell
+degrees of freedom.
 
 With `ion_temperature='nose'`, the ordinary QE Nose-Hoover friction term is
 applied in `vcmove` before the CAIMD final projection. After projection, CAIMD
@@ -213,7 +288,7 @@ CAIMD writes a premove diagnostic file:
 tmp_dir/prefix.caimd
 ```
 
-The file has 26 columns:
+The file keeps the legacy 26 data columns for parser compatibility:
 
 ```text
 ionic_step
@@ -248,6 +323,17 @@ Important semantics:
   they should be at roundoff scale; they are not physical velocity jumps to be
   interpreted as a thermostat or impulse.
 
+In `linear_defgrad` mode, event matrices are written additively to
+
+```text
+tmp_dir/prefix.caimd_defgrad
+```
+
+with a versioned header and rows containing the ionic step, event index,
+`F_load` before and after the event, `A_event`, determinants, the
+Green-Lagrange diagnostic, and the affine velocity residuals.  The ordinary
+`.caimd` data schema is not changed.
+
 Because QE XML step output occurs before `move_ions` and `.cel` trajectory
 output occurs after the move, stress-strain analysis should pair `.caimd`
 stress/strain rows with the premove cell, not blindly with the following `.cel`
@@ -277,11 +363,17 @@ unexpected MD history at the start of `vcsmd`.
 CAIMD V1 requires:
 
 - positive `caimd_stride`;
+- recognized `caimd_loading_mode`;
+- zero `caimd_step_defgrad` in `legacy_strain` mode;
+- zero `caimd_step_strain` in `linear_defgrad` mode;
 - finite `caimd_step_strain` values;
+- finite `caimd_step_defgrad` values;
 - finite event increments;
 - per-event increment bound `abs(stride * step_strain) <= 1.0d-2`;
 - positive projected-cell determinant above the CAIMD determinant floor;
 - projected-cell condition number below the CAIMD condition bound;
+- positive `det(F_load(m))` and `det(A_event(m))` above the CAIMD determinant
+  floor in `linear_defgrad` mode;
 - explicit error paths for singular or ill-conditioned 3x3 inversions.
 
 ## Implementation Files

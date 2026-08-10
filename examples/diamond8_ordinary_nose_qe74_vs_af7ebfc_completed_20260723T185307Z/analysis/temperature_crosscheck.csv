@@ -1,0 +1,16 @@
+run,step,time_ps,source,temperature_K,ekin_Ry
+qe74,0,0.0,input_cartesian_velocities_21dof,300.0000000000004,0.019950912849770814
+qe75_af7ebfc,0,0.0,input_cartesian_velocities_21dof,300.0000000000004,0.019950912849770814
+qe75_af7ebfc,1,0.0,eal_eka_21dof,300.0013104697996,0.019951
+qe75_af7ebfc,26,0.05,eal_eka_21dof,623.5955263642454,0.041471
+qe75_af7ebfc,130,0.258,eal_eka_21dof,2358.989804345755,0.15688
+qe75_af7ebfc,1000,1.998,eal_eka_21dof,4231.686070493259,0.28142
+qe75_af7ebfc,1000,1.998,terminal_md_ratd_direct_21dof,4231.742927310058,0.28142378115132294
+qe75_af7ebfc,1,0.0,qe_stdout_T,233.3,0.01995091
+qe75_af7ebfc,26,0.05,qe_stdout_T,293.3,0.04149147
+qe75_af7ebfc,130,0.258,qe_stdout_T,344.1,0.15739328
+qe75_af7ebfc,1000,1.998,qe_stdout_T,3328.6,0.29814289
+qe75_af7ebfc,1,0.0,tv_file_T,233.33,
+qe75_af7ebfc,26,0.05,tv_file_T,293.25,
+qe75_af7ebfc,130,0.258,tv_file_T,344.07,
+qe75_af7ebfc,1000,1.998,tv_file_T,3328.6,

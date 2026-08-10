@@ -1,0 +1,17 @@
+{
+  "audit_utc": "2026-07-28T12:39:17Z",
+  "handoff_01_to_02": {
+    "occurred": false,
+    "reason": "JOB1 crashed; no final_structure.json produced (parse-time abort)"
+  },
+  "handoff_02_to_03": {
+    "occurred": false
+  },
+  "handoff_03_to_04": {
+    "occurred": false
+  },
+  "handoff_zero_to_nonzero": {
+    "occurred": false
+  },
+  "note": "No structure handoff occurred; the chain failed at JOB1 input parsing before any structure was produced."
+}

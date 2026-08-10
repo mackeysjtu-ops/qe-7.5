@@ -1,0 +1,30 @@
+{
+  "ndega_source": "PW/src/input.f90:2019 ndega=0 default -> get_ndof()",
+  "get_ndof_source": "PW/src/dynamics_module.f90:2523 -> 3*nat-3 = 21 (no fixed atoms/constraints)",
+  "nose_target": "gkbt = ndega*tempw*k_B (Modules/ions_nose.f90:161) -> controls <2*eka> to 21*k_B*300",
+  "measurement_divisor": "3N-3 = 21 (same as ndega)",
+  "implication": "Because ndega (21) equals the measurement divisor (21), a correctly equilibrated 300 K Nose gives measured mean ~300 K. No DOF/factor-of-two correction converts 300 K into ~170 K.",
+  "crosscheck_A_final5ps": {
+    "A": {
+      "final5ps_mean_eka_Ry": 0.32626213519999997,
+      "T_with_3Nm3_div21": 4905.973039754184,
+      "T_with_3N_div24": 4292.726409784911,
+      "T_with_3Np1_div27": 3815.756808697699,
+      "note": "None of these divisor choices reconcile a below-target eka with 300 K unless eka itself is at target."
+    },
+    "B": {
+      "final5ps_mean_eka_Ry": 0.33031478000000003,
+      "T_with_3Nm3_div21": 4966.9122784320425,
+      "T_with_3N_div24": 4346.048243628037,
+      "T_with_3Np1_div27": 3863.1539943360326,
+      "note": "None of these divisor choices reconcile a below-target eka with 300 K unless eka itself is at target."
+    },
+    "C": {
+      "final5ps_mean_eka_Ry": 0.03477882188,
+      "T_with_3Nm3_div21": 522.9658734167842,
+      "T_with_3N_div24": 457.5951392396862,
+      "T_with_3Np1_div27": 406.7512348797211,
+      "note": "None of these divisor choices reconcile a below-target eka with 300 K unless eka itself is at target."
+    }
+  }
+}

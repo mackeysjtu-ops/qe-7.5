@@ -1,0 +1,38 @@
+{
+  "stdout_prints_nose_control": {
+    "A": true,
+    "B": true,
+    "C": true
+  },
+  "source_facts": {
+    "tnosep_set_true": "PW/src/input.f90:1147 (ion_temperature='nose' sets tnosep=.true.)",
+    "ndega": "get_ndof()=3N-3=21 (input.f90:2019, dynamics_module.f90:2523)",
+    "nose_target_gkbt": "21*tempw*k_B (ions_nose.f90:161); controls <2*eka> to 300 K target",
+    "friction_every_step": "vcsubs.f90 vcmove applies rat2d -= HaddT_to_RyddT*vnhp(1,atm2nhp)*ratd unconditionally when tnosep; ions_nosevel before / ions_noseupd after vcmove",
+    "rescaling_branch_gated_off": "vcsubs.f90:1015 `if (mod(nst,ntcheck)==0 .and. .not. tnosep)` -> with tnosep=.true. the velocity-rescaling branch never runs; Nose is NOT gated behind ntcheck",
+    "nose_chain_energy_written": false,
+    "nose_chain_energy_note": "ions_nose_energy/xnhp0/vnhp are computed in vcsmd but never written to any output file"
+  },
+  "runtime_evidence": {
+    "A": {
+      "nose_active_in_stdout": true,
+      "reached_300K_target_final5ps": false,
+      "final5ps_mean_K": 4905.973039754185,
+      "max_T_K": 8981.69428879399
+    },
+    "B": {
+      "nose_active_in_stdout": true,
+      "reached_300K_target_final5ps": false,
+      "final5ps_mean_K": 4966.912278432042,
+      "max_T_K": 8384.428384739314
+    },
+    "C": {
+      "nose_active_in_stdout": true,
+      "reached_300K_target_final5ps": false,
+      "final5ps_mean_K": 522.9658734167842,
+      "max_T_K": 1185.1337418949927
+    }
+  },
+  "classification": "CONFIRMED_ACTIVE_BUT_INEFFECTIVE",
+  "evidence_limit": "Nose chain energy is not written by QE, so a direct measurement of thermostat energy exchange is unavailable; activity is inferred from source (unconditional per-step friction, correct ndega, tnosep true) and from the trajectory failing to sit at 300 K."
+}

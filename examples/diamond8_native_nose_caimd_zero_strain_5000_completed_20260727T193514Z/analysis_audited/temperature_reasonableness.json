@@ -1,0 +1,35 @@
+{
+  "A": {
+    "A_instantaneous_fluctuations_reasonable_for_8_atoms": true,
+    "instantaneous_std_K": 2472.2252378194416,
+    "B_late_time_mean_compatible_with_300K": false,
+    "final_half_block_mean_K": 4894.680084805442,
+    "final_half_block_sem_K": 73.4795845507545,
+    "final5ps_mean_K": 4905.973039754185,
+    "final2p5ps_mean_K": 4786.374049073702,
+    "C_thermostat_scientifically_validated": false,
+    "plain_language": "The trajectory does NOT stay at 300 K: after ~2-3 ps it heats to a final-5 ps mean of 4906 K (max 8982 K). Numerically it runs, but it is thermodynamically far above the requested 300 K."
+  },
+  "B": {
+    "A_instantaneous_fluctuations_reasonable_for_8_atoms": true,
+    "instantaneous_std_K": 2498.044773196353,
+    "B_late_time_mean_compatible_with_300K": false,
+    "final_half_block_mean_K": 4948.009383971136,
+    "final_half_block_sem_K": 48.026741271298285,
+    "final5ps_mean_K": 4966.912278432042,
+    "final2p5ps_mean_K": 4957.478785267284,
+    "C_thermostat_scientifically_validated": false,
+    "plain_language": "The trajectory does NOT stay at 300 K: after ~2-3 ps it heats to a final-5 ps mean of 4967 K (max 8384 K). Numerically it runs, but it is thermodynamically far above the requested 300 K."
+  },
+  "C": {
+    "A_instantaneous_fluctuations_reasonable_for_8_atoms": true,
+    "instantaneous_std_K": 190.78026728201516,
+    "B_late_time_mean_compatible_with_300K": false,
+    "final_half_block_mean_K": 547.0869655001912,
+    "final_half_block_sem_K": 68.18926554278802,
+    "final5ps_mean_K": 522.9658734167842,
+    "final2p5ps_mean_K": 599.7423597623281,
+    "C_thermostat_scientifically_validated": false,
+    "plain_language": "The trajectory does NOT stay at 300 K: after ~2-3 ps it heats to a final-5 ps mean of 523 K (max 1185 K). Numerically it runs, but it is thermodynamically far above the requested 300 K."
+  }
+}

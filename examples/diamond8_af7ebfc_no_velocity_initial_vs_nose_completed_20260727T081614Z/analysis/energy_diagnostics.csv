@@ -1,0 +1,3 @@
+run,quantity,status,initial_Ry,final_Ry,drift_total_Ry,drift_Ry_per_ps,drift_eV_per_atom_per_ps,bounded,corr_with_temperature
+control,edyn (.e col3 = ekint + ut),extended PR total at press=0,0.019951,0.02216,0.002209,0.001105605606,0.001880316323,True,0.105608205
+nose,edyn (.e col3 = ekint + ut),PARTIAL - excludes Nose chain energy (not written by QE),0.019951,0.022094,0.002143,0.001072572573,0.001824136659,True,0.09653145527

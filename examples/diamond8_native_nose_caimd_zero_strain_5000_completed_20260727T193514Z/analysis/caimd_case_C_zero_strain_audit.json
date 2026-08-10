@@ -1,0 +1,43 @@
+{
+  "case": "C",
+  "all_masks_true_in_input": true,
+  "caimd_file_present": true,
+  "caimd_rows": 5000,
+  "caimd_ncols_seen": [
+    26
+  ],
+  "schema_26_columns_ok": true,
+  "event_count_final": 4999,
+  "n_event_flags_true": 5000,
+  "max_abs_nominal_xx": 0.0,
+  "max_abs_actual_xx": 0.0,
+  "max_abs_nominal_yy": 0.0,
+  "max_abs_actual_yy": 2.220446049250313e-16,
+  "max_abs_nominal_zz": 0.0,
+  "max_abs_actual_zz": 1.1102230246251565e-16,
+  "max_abs_nominal_yz": 0.0,
+  "max_abs_actual_yz": 3.6138790850127925e-18,
+  "max_abs_nominal_xz": 0.0,
+  "max_abs_actual_xz": 1.9755418678427536e-17,
+  "max_abs_nominal_xy": 0.0,
+  "max_abs_actual_xy": 1.1231345159513133e-17,
+  "max_abs_nominal_minus_actual": 2.220446049250313e-16,
+  "max_velocity_jump_max": 0.0,
+  "max_velocity_jump_rms": 0.0,
+  "temperature_diag_range_K": [
+    40.61349436058463,
+    1185.1336471974653
+  ],
+  "determinant_range_bohr3": [
+    306.27103783218973,
+    306.27103783218973
+  ],
+  "determinant_always_positive": true,
+  "condition_number_range": [
+    1.0000000012402281,
+    1.0000000012402281
+  ],
+  "max_skew_norm": 2.1464554419741031e-16,
+  "max_abs_strain_from_cel": 2.220446049250313e-16,
+  "nominal_all_zero": true
+}

@@ -1,0 +1,2 @@
+comparison,common_steps,status,reason
+qe74_vs_qe75_af7ebfc,0,not_available,QE 7.4.1 failed during input parsing before any trajectory/eal/cell records were written.

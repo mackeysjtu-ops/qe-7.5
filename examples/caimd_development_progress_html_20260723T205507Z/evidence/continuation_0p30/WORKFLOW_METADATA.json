@@ -1,0 +1,26 @@
+{
+  "branch": "main",
+  "build_cache": "/private/tmp/qe_diamond8_af7ebfc_build/CMakeCache.txt",
+  "created_utc": "2026-07-23T11:19:07Z",
+  "ensemble_description": "thermostatted constrained-strain Parrinello-Rahman dynamics",
+  "head": "af7ebfc757c32e0b4f050ed9f2208e01020b2ee3",
+  "head_oneline": "af7ebfc Support Nose thermostat with active CAIMD",
+  "linked_libraries": [
+    "/private/tmp/qe_diamond8_af7ebfc_build/bin/pw.x:",
+    "\t/opt/local/lib/libfftw3.3.dylib (compatibility version 10.0.0, current version 10.10.0)",
+    "\t/System/Library/Frameworks/Accelerate.framework/Versions/A/Accelerate (compatibility version 1.0.0, current version 4.0.0)",
+    "\t/opt/homebrew/opt/gcc/lib/gcc/11/libgfortran.5.dylib (compatibility version 6.0.0, current version 6.0.0)",
+    "\t/opt/homebrew/opt/gcc/lib/gcc/11/libgcc_s.1.1.dylib (compatibility version 1.0.0, current version 1.1.0)",
+    "\t/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1356.0.0)"
+  ],
+  "local_only": true,
+  "platform": "macOS-26.5.2-arm64-arm-64bit",
+  "pseudo": "/Users/mengqicheng/Downloads/Learning/qe-7.5/pseudo/C.UPF",
+  "pseudo_sha256": "9c06aa642d22981491b32a18ec129086fe8366164984930389e4fc071c978639",
+  "pw_executable": "/private/tmp/qe_diamond8_af7ebfc_build/bin/pw.x",
+  "pw_sha256": "7f7f5f815f53983c3b41dfab1570d96e8f8816d56cdcc574a3a2e33fcf492303",
+  "python": "3.9.7 | packaged by conda-forge | (default, Sep 29 2021, 19:24:02) \n[Clang 11.1.0 ]",
+  "remote_operations": "forbidden and not used by this workflow script",
+  "repo_root": "/Users/mengqicheng/Downloads/Learning/qe-7.5",
+  "workflow_root": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_continuation_0p30_20260723T102331Z"
+}

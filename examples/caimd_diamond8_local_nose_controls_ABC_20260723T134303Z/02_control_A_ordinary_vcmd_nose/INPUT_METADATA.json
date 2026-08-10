@@ -1,0 +1,30 @@
+{
+  "caimd": false,
+  "caimd_mask": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+  ],
+  "caimd_step_strain": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "control": "A",
+  "dt_fs": 2.0,
+  "dt_qe": 41.341381006,
+  "fnosep_THz": 50.0,
+  "input": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_controls_ABC_20260723T134303Z/02_control_A_ordinary_vcmd_nose/qe.in",
+  "nhpcl": 4,
+  "nstep": 5000,
+  "prefix": "diamond8_control_A_ordinary_vcmd_nose",
+  "tempw_K": 300.0,
+  "title": "ordinary PW vc-md Nose, CAIMD disabled",
+  "wmass": 2000000.0
+}

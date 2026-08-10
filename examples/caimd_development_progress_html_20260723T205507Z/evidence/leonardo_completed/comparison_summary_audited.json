@@ -1,0 +1,487 @@
+{
+  "executable_provenance": {
+    "job_id": "50127909",
+    "local_workflow_metadata": {
+      "common_state_source": {
+        "ionic_degrees_of_freedom": 21,
+        "path": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_controls_ABC_20260723T134303Z/01_common_state/COMMON_STATE.json",
+        "source_files": {
+          "cel": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/01_common_equilibration/tmp/diamond8_common_equil.cel",
+          "eal": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/01_common_equilibration/diamond8_common_equil.eal",
+          "md": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/01_common_equilibration/tmp/diamond8_common_equil.md",
+          "pos": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/01_common_equilibration/tmp/diamond8_common_equil.pos"
+        },
+        "source_step": 2000,
+        "starting_temperature_K": 300.00000000000006,
+        "units": {
+          "cell": "bohr, QE internal avec rows with lattice vectors in columns",
+          "cell_parameters_for_qe": "bohr, rows are transpose of QE internal avec",
+          "positions": "crystal fractional reconstructed from synchronized .cel/.pos",
+          "temperature": "K, 3N-3 ionic DOF",
+          "velocities": "a.u. Cartesian written to ATOMIC_VELOCITIES"
+        },
+        "velocity_scaling_factor": 0.7325209676741878
+      },
+      "created_utc": "2026-07-23T18:15:25Z",
+      "local_branch": "main",
+      "local_control_workflow": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_controls_ABC_20260723T134303Z",
+      "local_git_status": [
+        "## main",
+        "?? examples/caimd_diamond8_local_nose_continuation_0p30_20260723T102331Z/",
+        "?? examples/caimd_diamond8_local_nose_controls_ABC_20260723T134303Z/",
+        "?? examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/",
+        "?? examples/diamond8_ordinary_nose_qe74_vs_qe75_af7ebfc_20260723T175625Z/"
+      ],
+      "local_head": "af7ebfc",
+      "local_head_full": "af7ebfc757c32e0b4f050ed9f2208e01020b2ee3",
+      "local_pw_provenance": {
+        "path": "/private/tmp/qe_diamond8_af7ebfc_build/bin/pw.x",
+        "sha256": "7f7f5f815f53983c3b41dfab1570d96e8f8816d56cdcc574a3a2e33fcf492303"
+      },
+      "local_repo_root": "/Users/mengqicheng/Downloads/Learning/qe-7.5",
+      "parameters": {
+        "conv_thr": 0.0001,
+        "dt_fs": 2.0,
+        "dt_qe": 41.34137333665,
+        "ecutrho": 120.0,
+        "ecutwfc": 25.0,
+        "electron_maxstep": 40,
+        "fnosep": 50.0,
+        "mixing_beta": 0.3,
+        "nhpcl": 4,
+        "nstep": 1000,
+        "simulated_time_ps": 2.0,
+        "tempw_K": 300.0,
+        "wmass": 2000000.0
+      },
+      "pseudo": {
+        "bundle_path": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/diamond8_ordinary_nose_qe74_vs_qe75_af7ebfc_20260723T175625Z/pseudo/C.UPF",
+        "sha256": "9c06aa642d22981491b32a18ec129086fe8366164984930389e4fc071c978639",
+        "source": "/Users/mengqicheng/Downloads/Learning/qe-7.5/pseudo/C.UPF"
+      },
+      "qe74_module": "quantum-espresso/7.4.1--hpcx-mpi--2.19--nvhpc--24.5-openblas",
+      "qe75_af7ebfc_executable": "/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-thermostat-af7ebfc/install-current-gpu/bin/pw.x",
+      "remote_workdir": "/leonardo/home/userexternal/mcheng00/workspace/Diamond/diamond8_ordinary_nose_qe74_vs_qe75_af7ebfc_20260723T175625Z"
+    },
+    "notes": [
+      "The pre-submit --version files are empty because the submission helper used timeout protection around pw.x --version.",
+      "Runtime stdout records the PWSCF version actually launched for each process."
+    ],
+    "qe74": {
+      "executable": "/leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/nvhpc-24.5/quantum-espresso-7.4.1-jfm6pcx2dqkcfcwywdgoyao3m3ncvc5a/bin/pw.x",
+      "module": "quantum-espresso/7.4.1--hpcx-mpi--2.19--nvhpc--24.5-openblas",
+      "module_environment_excerpt": [
+        "module=quantum-espresso/7.4.1--hpcx-mpi--2.19--nvhpc--24.5-openblas",
+        "executable=/leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/nvhpc-24.5/quantum-espresso-7.4.1-jfm6pcx2dqkcfcwywdgoyao3m3ncvc5a/bin/pw.x",
+        "srun_command=srun --mpi=pmix_v3 -n 1 /leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/nvhpc-24.5/quantum-espresso-7.4.1-jfm6pcx2dqkcfcwywdgoyao3m3ncvc5a/bin/pw.x -in /leonardo/home/userexternal/mcheng00/workspace/Diamond/diamond8_ordinary_nose_qe74_vs_qe75_af7ebfc_20260723T175625Z/inputs/qe74.in",
+        "Currently Loaded Modulefiles:",
+        " 1) profile/base(default)                                                  ",
+        " 2) profile/chem-phys                                                      ",
+        " 3) glibc/2.28--gcc--12.2.0-gi6mmti <aL>                                   ",
+        " 4) hpcx-mpi/2.19(default) <aL>                                            ",
+        " 5) fftw/3.3.10--hpcx-mpi--2.19--nvhpc--24.5 <aL>                          ",
+        " 6) libxc/7.0.0--nvhpc--24.5 <aL>                                          ",
+        " 7) openblas/0.3.26--nvhpc--24.5 <aL>                                      ",
+        " 8) quantum-espresso/7.4.1--hpcx-mpi--2.19--nvhpc--24.5-openblas(default)  ",
+        "",
+        "Key:"
+      ],
+      "official_module_evidence": true,
+      "pre_submit_version_output": "",
+      "runtime_stdout_version": "7.4.1",
+      "sha256": "beb956cce572605941b791c37bc4dd30ac6cee714e18be7b93fd4ff0e47f4aca"
+    },
+    "qe75_af7ebfc": {
+      "executable": "/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-thermostat-af7ebfc/install-current-gpu/bin/pw.x",
+      "expected_sha256": "89d4fda827d2cc22a3b4c1670e90dc40ce629af42096c785b55c70c355a10e7d",
+      "module_environment_excerpt": [
+        "executable=/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-thermostat-af7ebfc/install-current-gpu/bin/pw.x",
+        "loader=/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-thermostat-af7ebfc/scripts/load_build_environment.sh",
+        "srun_command=srun --mpi=pmix_v3 -n 1 /leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-thermostat-af7ebfc/install-current-gpu/bin/pw.x -in /leonardo/home/userexternal/mcheng00/workspace/Diamond/diamond8_ordinary_nose_qe74_vs_qe75_af7ebfc_20260723T175625Z/inputs/qe75_af7ebfc.in",
+        "Currently Loaded Modulefiles:",
+        " 1) profile/base(default)                                ",
+        " 2) profile/chem-phys                                    ",
+        " 3) nvhpc/24.5(default)                                  ",
+        " 4) hpcx-mpi/2.19(default)                               ",
+        " 5) glibc/2.28--gcc--12.2.0-gi6mmti <aL>                 ",
+        " 6) fftw/3.3.10--hpcx-mpi--2.19--nvhpc--24.5             ",
+        " 7) libxc/7.0.0--nvhpc--24.5                             ",
+        " 8) openblas/0.3.26--nvhpc--24.5                         ",
+        " 9) netlib-scalapack/2.2.0--hpcx-mpi--2.19--nvhpc--24.5  ",
+        "10) nghttp2/1.57.0-634bffh <aL>                          ",
+        "11) zlib-ng/2.1.6-jkgunjc <aL>                           ",
+        "12) curl/8.7.1(default) <aL>                             ",
+        "13) gmake/4.4.1-phqmvks <aL>                             ",
+        "14) ncurses/6.5-svfl57u <aL>                             "
+      ],
+      "path_matches_required": true,
+      "pre_submit_version_output": "",
+      "runtime_stdout_version": "7.5",
+      "sha256": "89d4fda827d2cc22a3b4c1670e90dc40ce629af42096c785b55c70c355a10e7d"
+    },
+    "runtime_hostname": "lrdn2602.leonardo.local",
+    "runtime_node": "lrdn2602",
+    "submission_timestamp_from_scontrol": "2026-07-23T20:17:06",
+    "workdir": "/leonardo/home/userexternal/mcheng00/workspace/Diamond/diamond8_ordinary_nose_qe74_vs_qe75_af7ebfc_20260723T175625Z"
+  },
+  "git_commit_or_push": false,
+  "git_status_initial_and_final_context": {
+    "git_diff_check": {
+      "command": "git diff --check",
+      "output": "",
+      "returncode": 0
+    },
+    "git_status_short": {
+      "command": "git status --short",
+      "output": "?? examples/caimd_diamond8_local_nose_continuation_0p30_20260723T102331Z/\n?? examples/caimd_diamond8_local_nose_controls_ABC_20260723T134303Z/\n?? examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/\n?? examples/diamond8_ordinary_nose_qe74_vs_af7ebfc_completed_20260723T185307Z/\n?? examples/diamond8_ordinary_nose_qe74_vs_qe75_af7ebfc_20260723T175625Z/\n",
+      "returncode": 0
+    }
+  },
+  "input_identity": {
+    "caimd_absent": true,
+    "max_cell_abs_diff": 0.0,
+    "max_position_abs_diff": 0.0,
+    "max_velocity_abs_diff": 0.0,
+    "normalized_diff_path": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/diamond8_ordinary_nose_qe74_vs_af7ebfc_completed_20260723T185307Z/analysis/input_normalized.diff",
+    "physical_inputs_identical": true,
+    "pseudo_sha256": "9c06aa642d22981491b32a18ec129086fe8366164984930389e4fc071c978639",
+    "qe74": {
+      "input_direct_temperature": {
+        "center_of_mass_max_abs_au": 3.5236570605778894e-19,
+        "center_of_mass_velocity_au": [
+          -1.2874900798265365e-19,
+          -3.5236570605778894e-19,
+          -2.744386749103933e-19
+        ],
+        "ekin_Ry": 0.019950912849770814,
+        "ndof": 21,
+        "temperature_K": 300.0000000000004
+      },
+      "lexical_caimd_hits": [],
+      "mass_amu": 12.0107,
+      "nat": 8,
+      "path": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/diamond8_ordinary_nose_qe74_vs_af7ebfc_completed_20260723T185307Z/inputs/qe74.in",
+      "pseudo": "C.UPF",
+      "sha256": "fb36b256662bc48b4486ab0f71e71e6c66324e91de590229c6cb1c8cf2ef35d6",
+      "structured_caimd_hits": []
+    },
+    "qe75_af7ebfc": {
+      "input_direct_temperature": {
+        "center_of_mass_max_abs_au": 3.5236570605778894e-19,
+        "center_of_mass_velocity_au": [
+          -1.2874900798265365e-19,
+          -3.5236570605778894e-19,
+          -2.744386749103933e-19
+        ],
+        "ekin_Ry": 0.019950912849770814,
+        "ndof": 21,
+        "temperature_K": 300.0000000000004
+      },
+      "lexical_caimd_hits": [],
+      "mass_amu": 12.0107,
+      "nat": 8,
+      "path": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/diamond8_ordinary_nose_qe74_vs_af7ebfc_completed_20260723T185307Z/inputs/qe75_af7ebfc.in",
+      "pseudo": "C.UPF",
+      "sha256": "33b584fc5ecccae84138d4bdce6de85872a218a8693deb2544bc80ed293ed51d",
+      "structured_caimd_hits": []
+    }
+  },
+  "job_id": "50127909",
+  "local_mirror": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/diamond8_ordinary_nose_qe74_vs_af7ebfc_completed_20260723T185307Z",
+  "minimum_next_test": "Pristine unmodified QE 7.5 with the exact same input and common state, because official QE 7.4.1 rejected ion_temperature='nose' before testing dynamics.",
+  "no_submission_no_wait_confirmation": "No sbatch, cancel, sleep, watch, polling loop, or repeated Slurm query was used in this inspection run.",
+  "overall_status": "PARTIAL",
+  "qe_source_modified": false,
+  "raw_remote_files_modified": false,
+  "remote_workdir": "/leonardo/home/userexternal/mcheng00/workspace/Diamond/diamond8_ordinary_nose_qe74_vs_qe75_af7ebfc_20260723T175625Z",
+  "runs": {
+    "qe74": {
+      "ave_rows": 0,
+      "avec_rows": 0,
+      "cell_instability_relation": "No usable trajectory for cell/heating ordering.",
+      "cell_metrics_summary": {},
+      "cell_records": 0,
+      "classification": "NUMERICAL_FAILURE",
+      "completed_requested_steps": false,
+      "e_rows": 0,
+      "eal_rows": 0,
+      "energy_drift_Ry_per_ps": null,
+      "energy_drift_eV_per_atom_per_ps": null,
+      "final100_mean_temperature_K": null,
+      "first100_mean_temperature_K": null,
+      "first_above_1000K": null,
+      "first_above_2000K": null,
+      "first_above_600K": null,
+      "fraction_above_2000K": null,
+      "fraction_above_600K": null,
+      "job_done": false,
+      "key": "qe74",
+      "label": "Official QE 7.4.1",
+      "last_record_time_ps": null,
+      "longest_consecutive_above_2000K": 0,
+      "longest_consecutive_above_600K": 0,
+      "md_exists": false,
+      "p_rows": 0,
+      "position_records": 0,
+      "printed_vel_first_temperature_K": null,
+      "printed_vel_last_temperature_K": null,
+      "printed_vel_note": "PW .vel remains at the input velocities in this vc-md run and is not the vcsmd ratd physical velocity history.",
+      "qe_error": [
+        "Error in routine iosys (1):",
+        "unknown ion_temperature nose"
+      ],
+      "requested_nstep": 1000,
+      "return_code": 1,
+      "runtime_version": "7.4.1",
+      "stdout_temperature_records": 0,
+      "stdout_terminal_minus_eal_K": null,
+      "stress_records": 0,
+      "temperature_statistics_eal_21dof": {
+        "final": null,
+        "finite": true,
+        "initial": null,
+        "linear_drift_per_ps": null,
+        "max": null,
+        "mean": null,
+        "min": null,
+        "record_count": 0,
+        "std": null
+      },
+      "terminal_direct_from_md": null,
+      "terminal_direct_minus_eal_K": null,
+      "tv_rows": 0,
+      "vel_records_printed_pw_global": 0
+    },
+    "qe75_af7ebfc": {
+      "ave_rows": 1000,
+      "avec_rows": 1000,
+      "cell_instability_relation": "Heating begins before significant cell deformation or cell singularity.",
+      "cell_metrics_summary": {
+        "condition_max": 1.0169748808001722,
+        "max_cc_distance_max_bohr": 4.911546423726299,
+        "min_cc_distance_min_bohr": 2.1952429507797633,
+        "strain_frobenius_max": 0.011947210228429404,
+        "volume_final_bohr3": 258.6161656234766,
+        "volume_final_fractional_change": 0.003024848736545213,
+        "volume_initial_bohr3": 257.83624996852376,
+        "volume_max_bohr3": 258.6161656234766,
+        "volume_min_bohr3": 257.39428826984636
+      },
+      "cell_records": 1000,
+      "classification": "PHYSICAL_HEATING",
+      "completed_requested_steps": true,
+      "e_rows": 1000,
+      "eal_rows": 1000,
+      "energy_drift_Ry_per_ps": 0.024971862761862765,
+      "energy_drift_eV_per_atom_per_ps": 0.04246993768092827,
+      "final100_mean_temperature_K": 5040.901674890301,
+      "first100_mean_temperature_K": 401.45080379577814,
+      "first_above_1000K": {
+        "step": 127,
+        "time_ps": 0.252,
+        "value": 1120.3998618166893
+      },
+      "first_above_2000K": {
+        "step": 130,
+        "time_ps": 0.258,
+        "value": 2358.989804345755
+      },
+      "first_above_600K": {
+        "step": 26,
+        "time_ps": 0.05,
+        "value": 623.5955263642454
+      },
+      "fraction_above_2000K": 0.869,
+      "fraction_above_600K": 0.879,
+      "job_done": true,
+      "key": "qe75_af7ebfc",
+      "label": "QE 7.5 af7ebfc ordinary, no CAIMD input",
+      "last_record_time_ps": 1.998,
+      "longest_consecutive_above_2000K": 824,
+      "longest_consecutive_above_600K": 876,
+      "md_exists": true,
+      "p_rows": 1000,
+      "position_records": 1000,
+      "printed_vel_first_temperature_K": 12185.84409508054,
+      "printed_vel_last_temperature_K": 12185.84409508054,
+      "printed_vel_note": "PW .vel remains at the input velocities in this vc-md run and is not the vcsmd ratd physical velocity history.",
+      "qe_error": [],
+      "requested_nstep": 1000,
+      "return_code": 0,
+      "runtime_version": "7.5",
+      "stdout_temperature_records": 1000,
+      "stdout_terminal_minus_eal_K": -903.0860704932588,
+      "stdout_terminal_temperature_K": 3328.6,
+      "stress_records": 1000,
+      "temperature_statistics_eal_21dof": {
+        "final": 4231.686070493259,
+        "finite": true,
+        "initial": 300.0013104697996,
+        "linear_drift_per_ps": 1778.7076099702485,
+        "max": 8123.838804792437,
+        "mean": 4201.45228096483,
+        "min": 184.5780204509443,
+        "record_count": 1000,
+        "std": 1835.4411346932802
+      },
+      "terminal_direct_from_md": {
+        "cartesian_velocity_au": [
+          [
+            0.00010471649593152808,
+            -0.00066460129255325,
+            0.0021194458481197716
+          ],
+          [
+            0.003140590525382624,
+            -0.0007690193278486173,
+            -0.0029155633053425814
+          ],
+          [
+            -0.0006754708482104494,
+            1.3232656817577836e-06,
+            7.923463034477802e-05
+          ],
+          [
+            -0.000418020802029715,
+            0.0036027898794698415,
+            -0.0005546111234389731
+          ],
+          [
+            -0.0016025014272965689,
+            -0.0015163002108723412,
+            0.0021974037676145337
+          ],
+          [
+            -0.00013482595184792693,
+            -0.0005835186642134747,
+            -0.00010906765071388789
+          ],
+          [
+            0.0010295549395889661,
+            -8.723276263958657e-05,
+            -0.0005450541118523448
+          ],
+          [
+            -0.0014440429315179975,
+            1.6559112973631936e-05,
+            -0.00027178805473214505
+          ]
+        ],
+        "center_of_mass_velocity_au": [
+          5.754403030466815e-17,
+          -2.5482562701672e-16,
+          -1.0612984015917482e-16
+        ],
+        "ekin_Ry": 0.28142378115132294,
+        "float_count": 245,
+        "format_interpretation": "vcsmd restart WRITE(4,*) rati, ratd, rat2d, rat2di, tauold; ratd converted by final .cel cell matrix",
+        "ratd_fractional_velocity": [
+          [
+            7.258866849247783e-05,
+            0.00022074490169815707,
+            -0.00026388727911657076
+          ],
+          [
+            1.0733219410640973e-05,
+            0.0001824020281676271,
+            0.0006603598616964479
+          ],
+          [
+            -5.550095289266299e-05,
+            -5.652677092399106e-05,
+            -7.132853617757374e-05
+          ],
+          [
+            0.00032222709644113905,
+            -0.0004741123090805887,
+            3.329295540013622e-05
+          ],
+          [
+            -0.00016938911813588146,
+            0.00016489916569644572,
+            -0.0004282817957917306
+          ],
+          [
+            -8.31729708619016e-05,
+            4.54493944344503e-05,
+            1.946624974260567e-06
+          ],
+          [
+            4.799271336616677e-05,
+            6.81148548946796e-05,
+            0.0001634691971669892
+          ],
+          [
+            -0.00014547865582021556,
+            -0.00015097126488656685,
+            -9.557102815180733e-05
+          ]
+        ],
+        "source": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/diamond8_ordinary_nose_qe74_vs_af7ebfc_completed_20260723T185307Z/qe75_af7ebfc_no_caimd/tmp/diamond8_qe75_af7ebfc.md",
+        "step": 1000,
+        "temperature_K": 4231.742927310058,
+        "time_ps": 1.998
+      },
+      "terminal_direct_minus_eal_K": 0.05685681679915433,
+      "tv_rows": 1000,
+      "vel_records_printed_pw_global": 1000
+    }
+  },
+  "slurm_state": [
+    {
+      "elapsed": "00:02:58",
+      "end": "2026-07-23T20:20:05",
+      "exit_code": "0:0",
+      "job_id": "50127909",
+      "job_name": "diamond8_nose_qe74_qe75",
+      "node": "lrdn2602",
+      "start": "2026-07-23T20:17:07",
+      "state": "COMPLETED"
+    },
+    {
+      "elapsed": "00:02:58",
+      "end": "2026-07-23T20:20:05",
+      "exit_code": "0:0",
+      "job_id": "50127909.ba+",
+      "job_name": "batch",
+      "node": "lrdn2602",
+      "start": "2026-07-23T20:17:07",
+      "state": "COMPLETED"
+    },
+    {
+      "elapsed": "00:02:58",
+      "end": "2026-07-23T20:20:05",
+      "exit_code": "0:0",
+      "job_id": "50127909.ex+",
+      "job_name": "extern",
+      "node": "lrdn2602",
+      "start": "2026-07-23T20:17:07",
+      "state": "COMPLETED"
+    },
+    {
+      "elapsed": "00:00:01",
+      "end": "2026-07-23T20:17:40",
+      "exit_code": "1:0",
+      "job_id": "50127909.0",
+      "job_name": "pw.x",
+      "node": "lrdn2602",
+      "start": "2026-07-23T20:17:39",
+      "state": "FAILED"
+    },
+    {
+      "elapsed": "00:01:53",
+      "end": "2026-07-23T20:20:05",
+      "exit_code": "0:0",
+      "job_id": "50127909.1",
+      "job_name": "pw.x",
+      "node": "lrdn2602",
+      "start": "2026-07-23T20:18:12",
+      "state": "COMPLETED"
+    }
+  ],
+  "source_format_audit": {
+    "eal_columns_from_PW_src_vcsmd": "uta, eka, eta, utl, ekla, etl, nst",
+    "md_restart_format_from_PW_src_vcsmd": "rati, ratd, rat2d, rat2di, tauold",
+    "temperature_formula_from_PW_src_vcsubs": "2*eka/(3*(nat-1)*k_B) = 21 DOF for nat=8"
+  }
+}

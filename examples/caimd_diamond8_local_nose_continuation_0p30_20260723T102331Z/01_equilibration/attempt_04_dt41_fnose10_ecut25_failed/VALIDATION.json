@@ -1,0 +1,78 @@
+{
+  "caimd": {
+    "exists": false
+  },
+  "caimd_temperature_K": null,
+  "cell_condition_number_final": 2.933012384098562,
+  "cell_condition_sane": true,
+  "cell_condition_sanity_max": 1000000.0,
+  "completed_expected_steps": true,
+  "dynamics_time_blocks": 500,
+  "expected_steps": 500,
+  "expected_time_increment_ps": 0.002,
+  "geometry_error": null,
+  "geometry_finite": true,
+  "job_done": true,
+  "minimum_periodic_C_C_distance_bohr_final": 1.3477976129630975,
+  "minimum_periodic_C_C_distance_sane": true,
+  "minimum_periodic_C_C_distance_sanity_bounds_bohr": [
+    0.8,
+    20.0
+  ],
+  "observed_time_increment_ps": 0.002,
+  "prefix": "diamond8_equil",
+  "pressure_kbar_final": -412.55,
+  "pressure_kbar_stats": {
+    "count": 500,
+    "drift_per_step": 0.8233754104616413,
+    "final_200_mean": -468.6577500000001,
+    "finite": true,
+    "first_200_mean": -714.4018999999997,
+    "max": -309.74,
+    "mean": -595.2552599999998,
+    "min": -773.97,
+    "std": 123.59336967706804
+  },
+  "returncode": 0,
+  "run_dir": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_continuation_0p30_20260723T102331Z/01_equilibration",
+  "stdout_temperature_K": {
+    "count": 500,
+    "drift_per_step": 1.6236784179136723,
+    "final_200_mean": 678.6354999999998,
+    "finite": true,
+    "first_200_mean": 186.22199999999992,
+    "max": 901.0,
+    "mean": 420.98920000000004,
+    "min": 117.8,
+    "std": 238.5573039824185
+  },
+  "stress_block_count": 500,
+  "temperature_analysis_K": {
+    "count": 500,
+    "drift_per_step": 1.6236784179136723,
+    "final_200_mean": 678.6354999999998,
+    "finite": true,
+    "first_200_mean": 186.22199999999992,
+    "max": 901.0,
+    "mean": 420.98920000000004,
+    "min": 117.8,
+    "std": 238.5573039824185
+  },
+  "temperature_analysis_source": "stdout_T_K",
+  "temperature_classification": "FAIL",
+  "time_increment_sane": true,
+  "trajectory_blocks": {
+    "cel": 500,
+    "pos": 500,
+    "vel": 500
+  },
+  "valid": false,
+  "validated_utc": "2026-07-23T10:58:22Z",
+  "volume_bohr3_final": 261.6983068184196,
+  "volume_positive": true,
+  "volume_sane": true,
+  "volume_sanity_bounds_bohr3": [
+    10.0,
+    5000.0
+  ]
+}

@@ -1,0 +1,471 @@
+{
+  "common_start_state": {
+    "atom_labels": [
+      "C",
+      "C",
+      "C",
+      "C",
+      "C",
+      "C",
+      "C",
+      "C"
+    ],
+    "cartesian_positions_bohr": [
+      [
+        -0.21325689271917,
+        0.13265912514428,
+        -0.0269343340799
+      ],
+      [
+        4.064667027195,
+        -2.438838001553,
+        -1.6517076340766
+      ],
+      [
+        3.5558302438821,
+        2.1406167508383,
+        -0.75821698488212
+      ],
+      [
+        3.6350542547642,
+        0.1963285710962,
+        2.3290198793298
+      ],
+      [
+        2.5565140398649,
+        -0.47987249623634,
+        -0.03310875155643
+      ],
+      [
+        6.9014554524967,
+        -1.9840586162485,
+        -0.9621731987371
+      ],
+      [
+        6.2016328089017,
+        2.3003000185911,
+        -1.3941794596658
+      ],
+      [
+        6.3766855780784,
+        0.14610267036189,
+        2.5419551106256
+      ]
+    ],
+    "cartesian_velocities_au": [
+      [
+        0.0002990536032414814,
+        -0.0013966452104147058,
+        -0.0004918066377080143
+      ],
+      [
+        -0.0008490748115049055,
+        2.062198320709861e-05,
+        0.00027931092330735484
+      ],
+      [
+        0.00022992291816845836,
+        0.0012355337195283748,
+        0.0002228512724724084
+      ],
+      [
+        -0.00019230603844642361,
+        2.592965747110466e-05,
+        -0.0005005386681080806
+      ],
+      [
+        0.0004831233663895963,
+        -0.0001958161785350075,
+        0.0005953369645956617
+      ],
+      [
+        0.00047876624095110986,
+        0.0007818635782171239,
+        -0.0001260194981564904
+      ],
+      [
+        -0.00019842407723657564,
+        -0.00012659631694071673,
+        0.0002029724187709686
+      ],
+      [
+        -0.0002510612015635388,
+        -0.0003448912325302414,
+        -0.0001821067751745804
+      ]
+    ],
+    "cell_condition_number": 1.0031446425964379,
+    "cell_matrix_bohr_avec_rows": [
+      [
+        3.68070792,
+        3.67710499,
+        3.66838126
+      ],
+      [
+        4.50271099,
+        -4.49567944,
+        -0.00261887
+      ],
+      [
+        2.60719452,
+        2.60011085,
+        -5.19242049
+      ]
+    ],
+    "cell_parameters_bohr_rows_for_qe": [
+      [
+        3.68070792,
+        4.50271099,
+        2.60719452
+      ],
+      [
+        3.67710499,
+        -4.49567944,
+        2.60011085
+      ],
+      [
+        3.66838126,
+        -0.00261887,
+        -5.19242049
+      ]
+    ],
+    "cell_singular_values_bohr": [
+      6.3764242044913555,
+      6.361406465863848,
+      6.356435486698374
+    ],
+    "extraction_utc": "2026-07-23T12:16:15Z",
+    "fractional_positions": [
+      [
+        0.9936962168184323,
+        0.964187488924897,
+        0.984088855350297
+      ],
+      [
+        0.991700892646657,
+        0.5338341693541996,
+        0.581250742021986
+      ],
+      [
+        0.5112588082704013,
+        0.03566366923431342,
+        0.420593371750097
+      ],
+      [
+        0.4998834625892023,
+        0.45697658749626757,
+        0.03128855388913494
+      ],
+      [
+        0.17612037886003012,
+        0.28299887937148727,
+        0.23652115566092563
+      ],
+      [
+        0.34318656421491855,
+        0.7846117741767228,
+        0.7505179757447785
+      ],
+      [
+        0.7279469072866761,
+        0.216983789654684,
+        0.742671083818528
+      ],
+      [
+        0.7562067667035919,
+        0.7247436431773444,
+        0.25306826366153273
+      ]
+    ],
+    "maximum_periodic_C_C_distance_bohr": 4.553499939467151,
+    "minimum_periodic_C_C_distance_bohr": 2.683309253043553,
+    "record_indices": {
+      "cel_block_index_1based": 2000,
+      "md_record": "last written PR history",
+      "pos_block_index_1based": 2000
+    },
+    "source_files": {
+      "cel": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/01_common_equilibration/tmp/diamond8_common_equil.cel",
+      "eal": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/01_common_equilibration/diamond8_common_equil.eal",
+      "md": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/01_common_equilibration/tmp/diamond8_common_equil.md",
+      "pos": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/01_common_equilibration/tmp/diamond8_common_equil.pos"
+    },
+    "source_prefix": "diamond8_common_equil",
+    "source_run_dir": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/01_common_equilibration",
+    "source_step": 2000,
+    "temperature_from_velocities": {
+      "center_of_mass_max_abs_au": 3.7882150961585613e-16,
+      "center_of_mass_velocity_au": [
+        -9.970255415540918e-17,
+        3.7882150961585613e-16,
+        -9.652109840552203e-17
+      ],
+      "ekin_Ry": 0.03718113565275726,
+      "ndof_3N_minus_3": 21,
+      "ndof_3N_plus_cell": 27,
+      "temperature_3N_minus_3_K": 559.0892396663107,
+      "temperature_3N_plus_cell_K": 434.84718640713066
+    },
+    "terminal_ratd_lattice_velocity": [
+      [
+        -0.00015944546513238002,
+        0.00015091646910108539,
+        9.022783197773028e-05
+      ],
+      [
+        -5.674927823041874e-05,
+        -6.135927187358982e-05,
+        -0.00011301246503444843
+      ],
+      [
+        0.00017226728555073953,
+        -0.00010228574280343045,
+        -7.640216994974918e-06
+      ],
+      [
+        -4.653338901919127e-05,
+        -5.24011125024233e-05,
+        4.679289178496317e-05
+      ],
+      [
+        6.006555440601605e-05,
+        0.00010373498827672756,
+        -3.254973515532688e-05
+      ],
+      [
+        0.00012212396518807939,
+        -5.163426296223448e-05,
+        5.973430391336869e-05
+      ],
+      [
+        -1.9052516662627276e-05,
+        9.102924106099355e-06,
+        -4.409839775341146e-05
+      ],
+      [
+        -7.267615610000272e-05,
+        3.926008657306859e-06,
+        5.457872621264143e-07
+      ]
+    ],
+    "units": {
+      "cell": "bohr, QE internal avec rows with lattice vectors in columns",
+      "positions": "crystal fractional, reconstructed from Cartesian .pos and .cel",
+      "velocities": "a.u. Cartesian"
+    },
+    "velocity_units": "a.u. Cartesian, computed as QE avec * terminal ratd from .md",
+    "volume_bohr3": 257.8362589538133
+  },
+  "valid": true,
+  "validation": {
+    "active_caimd": false,
+    "caimd": {
+      "exists": false
+    },
+    "caimd_temperature_K": null,
+    "cell_blocks": 2000,
+    "cell_condition_number": {
+      "count": 2000,
+      "final_500_mean": 1.0027944975546732,
+      "finite": true,
+      "first_500_mean": 1.000095512154334,
+      "max": 1.0031446425964379,
+      "mean": 1.0013638171202766,
+      "min": 1.0000000015367205,
+      "std": 0.001064441800839109
+    },
+    "cell_condition_sane_all": true,
+    "cell_determinant_bohr3": {
+      "count": 2000,
+      "final_500_mean": 267.4150888731015,
+      "finite": true,
+      "first_500_mean": 305.04602487804993,
+      "max": 306.2710188038857,
+      "mean": 288.77989843439144,
+      "min": 257.8362589538133,
+      "std": 14.842044839508588
+    },
+    "classification": "WARN",
+    "completed_expected_steps": true,
+    "eal_ionic_temperature_3N_minus_3_K": {
+      "block500_max_mean": 296.67145982585964,
+      "block500_min_mean": 177.6277339630961,
+      "count": 2000,
+      "drift_K_per_ps": 38.22305303269425,
+      "final_500_mean": 296.67145982585964,
+      "finite": true,
+      "first_500_mean": 177.6277339630961,
+      "fraction_above_600K": 0.0,
+      "fraction_below_150K": 0.163,
+      "longest_above_2000K_steps": 0,
+      "longest_above_600K_steps": 0,
+      "longest_below_150K_steps": 8,
+      "max": 559.1473474923312,
+      "mean": 215.59478242367328,
+      "min": 34.07813993873525,
+      "rolling100_max": 385.10283002355357,
+      "rolling100_min": 157.05326486030933,
+      "rolling25_max": 410.11657269075823,
+      "rolling25_min": 152.94205448023183,
+      "std": 74.42361401504472
+    },
+    "elapsed_s": 327.92113494873047,
+    "expected_steps": 2000,
+    "first_failing_observable": null,
+    "job_done": true,
+    "maximum_C_C_available": true,
+    "maximum_periodic_C_C_distance_bohr": {
+      "count": 2000,
+      "final_500_mean": 4.583627785668585,
+      "finite": true,
+      "first_500_mean": 4.719578242205541,
+      "max": 4.766718028888487,
+      "mean": 4.642900726105348,
+      "min": 4.470469731027689,
+      "std": 0.06698067515290142
+    },
+    "minimum_C_C_sane_all": true,
+    "minimum_periodic_C_C_distance_bohr": {
+      "count": 2000,
+      "final_500_mean": 2.72927549881863,
+      "finite": true,
+      "first_500_mean": 2.8585018524349293,
+      "max": 2.901729319473604,
+      "mean": 2.815624758659105,
+      "min": 2.6295652346927203,
+      "std": 0.05770759189658684
+    },
+    "prefix": "diamond8_common_equil",
+    "pressure_kbar_stats": {
+      "count": 2000,
+      "final_500_mean": -402.36126,
+      "finite": true,
+      "first_500_mean": -741.89224,
+      "max": -235.45,
+      "mean": -585.80691,
+      "min": -779.66,
+      "std": 144.86664057764267
+    },
+    "qe_error_lines": [],
+    "returncode": 0,
+    "run_dir": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/01_common_equilibration",
+    "stdout_temperature_K": {
+      "block500_max_mean": 843.8364,
+      "block500_min_mean": 158.626,
+      "count": 2000,
+      "drift_K_per_ps": 229.37496338124083,
+      "final_500_mean": 843.8364,
+      "finite": true,
+      "first_500_mean": 158.626,
+      "fraction_above_600K": 0.327,
+      "fraction_below_150K": 0.114,
+      "longest_above_2000K_steps": 0,
+      "longest_above_600K_steps": 654,
+      "longest_below_150K_steps": 228,
+      "max": 1002.9,
+      "mean": 463.24345,
+      "min": 116.4,
+      "rolling100_max": 970.5549999999997,
+      "rolling100_min": 130.27400000000006,
+      "rolling25_max": 995.0159999999992,
+      "rolling25_min": 125.51199999999997,
+      "std": 268.9331652420309
+    },
+    "stress_block_count": 2000,
+    "stress_component_statistics_GPa": {
+      "xx": {
+        "count": 2000,
+        "final_500_mean": -39.699006000000004,
+        "finite": true,
+        "first_500_mean": -74.271484,
+        "max": -4.871,
+        "mean": -58.334823,
+        "min": -83.986,
+        "std": 15.799398171692205
+      },
+      "xy": {
+        "count": 2000,
+        "final_500_mean": 6.507638,
+        "finite": true,
+        "first_500_mean": 0.199166,
+        "max": 26.835,
+        "mean": 1.6547225,
+        "min": -18.158,
+        "std": 5.887773509357654
+      },
+      "xz": {
+        "count": 2000,
+        "final_500_mean": -4.8920699999999995,
+        "finite": true,
+        "first_500_mean": 2.619724,
+        "max": 13.634,
+        "mean": -0.27515649999999997,
+        "min": -28.660000000000004,
+        "std": 6.010229464172541
+      },
+      "yy": {
+        "count": 2000,
+        "final_500_mean": -43.452256,
+        "finite": true,
+        "first_500_mean": -74.330018,
+        "max": -16.032,
+        "mean": -59.3727545,
+        "min": -82.889,
+        "std": 14.902335993904773
+      },
+      "yz": {
+        "count": 2000,
+        "final_500_mean": 4.523734,
+        "finite": true,
+        "first_500_mean": 0.6732,
+        "max": 23.98,
+        "mean": 1.5253915,
+        "min": -13.404,
+        "std": 4.906229725586415
+      },
+      "zz": {
+        "count": 2000,
+        "final_500_mean": -37.557072,
+        "finite": true,
+        "first_500_mean": -73.96624,
+        "max": -6.9799999999999995,
+        "mean": -58.0345255,
+        "min": -82.886,
+        "std": 16.108637498011735
+      }
+    },
+    "temperature_analysis_K": {
+      "block500_max_mean": 296.67145982585964,
+      "block500_min_mean": 177.6277339630961,
+      "count": 2000,
+      "drift_K_per_ps": 38.22305303269425,
+      "final_500_mean": 296.67145982585964,
+      "finite": true,
+      "first_500_mean": 177.6277339630961,
+      "fraction_above_600K": 0.0,
+      "fraction_below_150K": 0.163,
+      "longest_above_2000K_steps": 0,
+      "longest_above_600K_steps": 0,
+      "longest_below_150K_steps": 8,
+      "max": 559.1473474923312,
+      "mean": 215.59478242367328,
+      "min": 34.07813993873525,
+      "rolling100_max": 385.10283002355357,
+      "rolling100_min": 157.05326486030933,
+      "rolling25_max": 410.11657269075823,
+      "rolling25_min": 152.94205448023183,
+      "std": 74.42361401504472
+    },
+    "temperature_analysis_source": "eal_ionic_3N_minus_3_K",
+    "temperature_classification": "WARN",
+    "trajectory_blocks": {
+      "cel": 2000,
+      "pos": 2000,
+      "vel": 2000
+    },
+    "valid": true,
+    "validated_utc": "2026-07-23T12:16:15Z",
+    "volume_positive_all": true,
+    "volume_sane_all": true
+  }
+}

@@ -1,0 +1,11 @@
+run,comparison,lag_steps,value_or_max_abs_diff_K
+control,T_instant_3Np1 vs reported .tv (lag 0),0,309.9886699
+control,T_running_avg(2*avk/3(N+1)) vs reported .tv (lag 0),0,233.33
+control,direct .md ratd x terminal .cel (3N-3),0,143.42689
+control,eal instantaneous terminal (3N-3),0,143.4355421
+control,direct-vs-eal terminal abs diff,0,0.008652103861
+nose,T_instant_3Np1 vs reported .tv (lag 0),0,313.4586788
+nose,T_running_avg(2*avk/3(N+1)) vs reported .tv (lag 0),0,233.33
+nose,direct .md ratd x terminal .cel (3N-3),0,144.6142648
+nose,eal instantaneous terminal (3N-3),0,144.6234577
+nose,direct-vs-eal terminal abs diff,0,0.009192850429

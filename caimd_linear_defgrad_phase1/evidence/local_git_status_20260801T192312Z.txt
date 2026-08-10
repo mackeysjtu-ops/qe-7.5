@@ -1,0 +1,24 @@
+## main
+ M CAIMD_IMPLEMENTATION.md
+ M Modules/input_parameters.f90
+ M Modules/read_namelists.f90
+ M PW/Doc/INPUT_PW.def
+ M PW/src/caimd_module.f90
+ M PW/src/input.f90
+?? caimd_linear_defgrad_phase1/
+?? examples/caimd_development_progress_html_20260723T205507Z/
+?? examples/caimd_diamond8_local_nose_continuation_0p30_20260723T102331Z/
+?? examples/caimd_diamond8_local_nose_controls_ABC_20260723T134303Z/
+?? examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/
+?? examples/caimd_linear_defgrad_phase1/
+?? examples/diamond8_af7ebfc_no_velocity_initial_vs_nose_completed_20260727T081614Z/
+?? examples/diamond8_native_nose_caimd_zero_strain_5000_completed_20260727T193514Z/
+?? examples/diamond8_no_velocity_qe74_vs_qe75_caimd_false_completed_20260724T113644Z/
+?? examples/diamond8_ordinary_nose_qe74_vs_af7ebfc_completed_20260723T185307Z/
+?? examples/diamond8_ordinary_nose_qe74_vs_qe75_af7ebfc_20260723T175625Z/
+?? examples/diamond8_vcrelax_nvt_npt_caimd_chain_AUDIT_BLOCKED_20260728T064656Z/
+?? examples/diamond8_vcrelax_nvt_npt_caimd_chain_completed_20260728T070746Z/
+?? examples/diamond8_vcrelax_nvt_npt_caimd_chain_completed_20260728T123746Z/
+?? examples/diamond8_vcrelax_qe75_vs_qe74_completed_20260728T234619Z/
+?? test-suite/caimd/__pycache__/
+?? test-suite/caimd/caimd_linear_defgrad_math.py

@@ -1,0 +1,6 @@
+The NVT/NPT/CAIMD chain has not been submitted.
+After both vc-relax jobs complete, audit both results.
+Proceed only if the custom QE 7.5 vc-relax passes and is consistent with the official QE 7.4.1 reference.
+Use the QE 7.5 final relaxed structure for the downstream chain.
+If QE 7.4.1 passes but QE 7.5 fails, do not continue automatically.
+If both pass but differ materially, do not continue automatically.

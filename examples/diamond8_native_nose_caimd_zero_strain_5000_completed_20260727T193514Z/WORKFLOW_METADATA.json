@@ -1,0 +1,117 @@
+{
+  "workflow": "diamond8_native_nose_caimd_zero_strain_5000",
+  "created_utc": "2026-07-27T15:26:03Z",
+  "remote_workdir": "/leonardo/home/userexternal/mcheng00/workspace/Diamond/diamond8_native_nose_caimd_zero_strain_5000_20260727T151734Z",
+  "purpose": "three 5000-step (10 ps) native-init Nose trajectories: CASE A caimd=.false. (control), CASE B caimd=.true. all masks .false. (no-op), CASE C caimd=.true. all masks .true. step_strain=0 (zero-strain hold). Tests whether native init + Nose + active zero-strain CAIMD stays bounded/approaches 300 K over 10 ps.",
+  "changing_variable": "CAIMD lines in &CELL only (A false / B enabled-noop / C active-zero-strain)",
+  "local_repository": {
+    "root": "/Users/mengqicheng/Downloads/Learning/qe-7.5",
+    "branch": "main",
+    "head": "af7ebfc757c32e0b4f050ed9f2208e01020b2ee3",
+    "head_subject": "Support Nose thermostat with active CAIMD",
+    "status_short": [
+      "?? examples/caimd_development_progress_html_20260723T205507Z/",
+      "?? examples/caimd_diamond8_local_nose_continuation_0p30_20260723T102331Z/",
+      "?? examples/caimd_diamond8_local_nose_controls_ABC_20260723T134303Z/",
+      "?? examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/",
+      "?? examples/diamond8_af7ebfc_no_velocity_initial_vs_nose_completed_20260727T081614Z/",
+      "?? examples/diamond8_no_velocity_qe74_vs_qe75_caimd_false_completed_20260724T113644Z/",
+      "?? examples/diamond8_ordinary_nose_qe74_vs_af7ebfc_completed_20260723T185307Z/",
+      "?? examples/diamond8_ordinary_nose_qe74_vs_qe75_af7ebfc_20260723T175625Z/"
+    ],
+    "source_modified": false,
+    "rebuilt": false,
+    "commit_created": false,
+    "pushed": false
+  },
+  "executable": {
+    "path": "/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-thermostat-af7ebfc/install-current-gpu/bin/pw.x",
+    "sha256": "89d4fda827d2cc22a3b4c1670e90dc40ce629af42096c785b55c70c355a10e7d",
+    "sha256_matches_expected": true,
+    "version": "7.5 (from run banner; login-node --version probe fails with MPI init error for this GPU build)",
+    "remote_src_current_head": "af7ebfc757c32e0b4f050ed9f2208e01020b2ee3",
+    "ldd_missing_libraries": 0
+  },
+  "reference_workflows": [
+    "examples/diamond8_no_velocity_qe74_vs_qe75_caimd_false_completed_20260724T113644Z",
+    "examples/diamond8_af7ebfc_no_velocity_initial_vs_nose_completed_20260727T081614Z"
+  ],
+  "reference_values_verified": {
+    "nose_native_1000step_mean_K": 169.696,
+    "nose_native_1000step_final200_K": 173.237,
+    "nose_native_1000step_max_K": 300.001,
+    "control_native_1000step_mean_K": 169.858
+  },
+  "structure": {
+    "system": "ideal undeformed 8-atom diamond conventional cell",
+    "n_atoms": 8,
+    "cell_determinant_bohr3": 306.2710374914435,
+    "min_periodic_CC_bohr": 2.9187884068060264,
+    "note": "identical cell/positions/ordering in all three inputs"
+  },
+  "parameters": {
+    "calculation": "vc-md",
+    "restart_mode": "from_scratch",
+    "ion_dynamics": "beeman",
+    "cell_dynamics": "pr",
+    "cell_dofree": "all",
+    "press": 0.0,
+    "wmass": 2000000.0,
+    "cell_temperature": "not_controlled",
+    "ion_temperature": "nose",
+    "tempw_K": 300.0,
+    "fnosep_THz": 50.0,
+    "nhpcl": 4,
+    "ecutwfc_Ry": 25.0,
+    "ecutrho_Ry": 120.0,
+    "kpoints": "gamma",
+    "nosym": true,
+    "noinv": true,
+    "conv_thr": 0.0001,
+    "electron_maxstep": 40,
+    "mixing_beta": 0.3,
+    "dt_qe": 41.34137333665,
+    "dt_fs": 2.0,
+    "nstep": 5000,
+    "simulated_time_ps": 10.0
+  },
+  "caimd_settings": {
+    "A": "caimd=.false.",
+    "B": "caimd=.true., stride=1, mask(1:6)=.false., step_strain(1:6)=0.0",
+    "C": "caimd=.true., stride=1, mask(1:6)=.true., step_strain(1:6)=0.0"
+  },
+  "all_step_strain_zero": true,
+  "cutoff_caveat": "ecutwfc=25 Ry retained for strict comparison with prior results; absolute pressures are Pulay-dominated, not converged.",
+  "inputs": {
+    "A": {
+      "path": "inputs/case_A_caimd_false_nose_5000.in",
+      "sha256": "d5bcf664401a8c913a89137a35dafa2ae842349658cda39055bd20ce9ed012f1"
+    },
+    "B": {
+      "path": "inputs/case_B_caimd_true_all_false_nose_5000.in",
+      "sha256": "22a771a676f7f8bd9e75201fecdf560d34fb6e8775958cbe73fca042d5a49f3d"
+    },
+    "C": {
+      "path": "inputs/case_C_caimd_true_all_fixed_zero_strain_nose_5000.in",
+      "sha256": "fbb05826b8e787b9c9feb31e1b0950a0d3b25ca62d555c79f5ae0c5be2a7175d"
+    }
+  },
+  "pseudopotential": {
+    "file": "pseudo/C.UPF",
+    "sha256": "9c06aa642d22981491b32a18ec129086fe8366164984930389e4fc071c978639",
+    "expected": "9c06aa642d22981491b32a18ec129086fe8366164984930389e4fc071c978639"
+  },
+  "slurm": {
+    "script": "scripts/run_long_zero_strain.slurm",
+    "account": "ICT26_CMSP_0",
+    "partition": "boost_usr_prod",
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus_per_task": 8,
+    "gpus_per_node": 1,
+    "time": "04:00:00",
+    "launch": "srun --mpi=pmix_v3 -n 1 <pw.x> -in <input>",
+    "ordering": "A, B, C sequential; all run even if one fails (no errexit)"
+  },
+  "analysis_validation": "scripts/analyze_long_zero_strain.py dry-run against real 1000-step Nose/control trajectories + a real 26-column .caimd stream: reproduced bounded ~170 K plateau, parsed the CAIMD 26-column schema (det>0, skew 2e-9, velocity_jump 3e-18), and exercised the no-op event detector."
+}

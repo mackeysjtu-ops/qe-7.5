@@ -1,0 +1,84 @@
+{
+  "results": [
+    {
+      "command": [
+        "/Users/mengqicheng/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "-m",
+        "py_compile",
+        "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/scripts/four_dof_workflow.py"
+      ],
+      "elapsed_s": 0.03629279136657715,
+      "index": 1,
+      "output_path": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/evidence/regression_01.out",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "bash",
+        "-n",
+        "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/scripts/run_four_dof_workflow.sh"
+      ],
+      "elapsed_s": 0.0039310455322265625,
+      "index": 2,
+      "output_path": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/evidence/regression_02.out",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "elapsed_s": 0.016768932342529297,
+      "index": 3,
+      "output_path": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/evidence/regression_03.out",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/Users/mengqicheng/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "/Users/mengqicheng/Downloads/Learning/qe-7.5/test-suite/caimd/caimd_validation.py",
+        "--mode",
+        "local",
+        "--current-exe",
+        "/private/tmp/qe_diamond8_af7ebfc_build/bin/pw.x",
+        "--pseudo",
+        "/Users/mengqicheng/Downloads/Learning/qe-7.5/pseudo/C.UPF",
+        "--work-root",
+        "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/evidence/caimd_harness_targeted",
+        "--run-id",
+        "targeted_active_nose",
+        "--cases",
+        "active_nose_zero,active_nose_stride2_xx,active_nose_shear_xy"
+      ],
+      "elapsed_s": 0.4662740230560303,
+      "index": 4,
+      "output_path": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/evidence/regression_04.out",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/Users/mengqicheng/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "/Users/mengqicheng/Downloads/Learning/qe-7.5/test-suite/caimd/caimd_validation.py",
+        "--mode",
+        "local",
+        "--current-exe",
+        "/private/tmp/qe_diamond8_af7ebfc_build/bin/pw.x",
+        "--pseudo",
+        "/Users/mengqicheng/Downloads/Learning/qe-7.5/pseudo/C.UPF",
+        "--work-root",
+        "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/evidence/caimd_harness_complete",
+        "--run-id",
+        "complete_local"
+      ],
+      "elapsed_s": 3.4611809253692627,
+      "index": 5,
+      "output_path": "/Users/mengqicheng/Downloads/Learning/qe-7.5/examples/caimd_diamond8_local_nose_four_dof_tests_0p03_20260723T115714Z/evidence/regression_05.out",
+      "returncode": 0
+    }
+  ],
+  "valid": true
+}

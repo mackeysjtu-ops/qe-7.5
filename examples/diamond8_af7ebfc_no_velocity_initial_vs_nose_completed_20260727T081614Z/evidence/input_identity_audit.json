@@ -1,0 +1,74 @@
+{
+  "max_differences": {
+    "cell_bohr": 0.0,
+    "positions_crystal": 0.0,
+    "atom_ordering_identical": true,
+    "masses_amu": 0.0,
+    "ecutwfc": 0.0,
+    "ecutrho": 0.0,
+    "timestep_dt": 0.0,
+    "nstep": 0.0,
+    "press": 0.0,
+    "wmass": 0.0,
+    "scf_parameters": {
+      "ELECTRONS.conv_thr": 0.0,
+      "ELECTRONS.electron_maxstep": 0.0,
+      "ELECTRONS.mixing_beta": 0.0
+    },
+    "tempw": 0.0
+  },
+  "kpoints": {
+    "control": "gamma",
+    "nose": "gamma",
+    "identical": true
+  },
+  "units": {
+    "cell": [
+      "bohr",
+      "bohr"
+    ],
+    "positions": [
+      "crystal",
+      "crystal"
+    ],
+    "identical": true
+  },
+  "intended_differences": {
+    "ion_temperature": [
+      "initial",
+      "nose"
+    ],
+    "fnosep(1)": [
+      "<absent>",
+      "50.0"
+    ],
+    "nhpcl": [
+      "<absent>",
+      "4"
+    ],
+    "prefix": [
+      "'diamond8_control_initial'",
+      "'diamond8_test_nose'"
+    ]
+  },
+  "namelist_differences_outside_allowed_set": {},
+  "structure": {
+    "n_atoms": {
+      "control": 8,
+      "nose": 8
+    },
+    "cell_determinant_bohr3": 306.2710374914435,
+    "determinant_positive": true,
+    "min_periodic_CC_bohr": 2.9187884068060264,
+    "min_periodic_CC_angstrom": 1.5445563083296239,
+    "undeformed_ideal_structure": true
+  },
+  "checksums": {
+    "control_sha256": "501d5f5cb73e2f102758b9d50b2d7ab1a29b1a9bb022f53d0b04a9e098aa235b",
+    "nose_sha256": "95e4ac6a623e8408456e548cbc66ab2244efb2db3b19a9c8627eaa799f4bb8fa",
+    "pseudo_sha256": "9c06aa642d22981491b32a18ec129086fe8366164984930389e4fc071c978639",
+    "pseudo_expected": "9c06aa642d22981491b32a18ec129086fe8366164984930389e4fc071c978639",
+    "pseudo_matches": true
+  },
+  "all_checks_passed": true
+}

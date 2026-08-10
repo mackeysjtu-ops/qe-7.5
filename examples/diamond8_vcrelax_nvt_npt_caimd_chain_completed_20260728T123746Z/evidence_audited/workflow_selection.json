@@ -1,0 +1,19 @@
+{
+  "audit_utc": "2026-07-28T12:39:17Z",
+  "search_scope": "/leonardo/.../Diamond/",
+  "singlephase_excluded": true,
+  "singlephase_exclusion_note": "SinglePhase H/O lambda workflow (1152 atoms, 3000 K, fixed-O, jobs 50468684/85/86/91) not inspected or cited.",
+  "selected_remote_workdir": "/leonardo/home/userexternal/mcheng00/workspace/Diamond/diamond8_vcrelax_nvt_npt_caimd_chain_20260728T120614Z",
+  "n_candidates": 1,
+  "selection_evidence": {
+    "four_slurm_scripts": true,
+    "DEPENDENCY_CHAIN.json": true,
+    "SUBMISSION_REPORT.md": true,
+    "job1_input_8C": true,
+    "ecut_80_320": true,
+    "kpoints_2x2x2": true,
+    "executable_sha256_matches": true,
+    "pseudo_sha256_matches": true
+  },
+  "decision": "SELECTED_UNIQUE"
+}

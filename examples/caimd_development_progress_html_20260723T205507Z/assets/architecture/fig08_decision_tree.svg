@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 760" font-family="system-ui, -apple-system, 'PingFang SC', 'Hiragino Sans GB', sans-serif">
+  <style>
+    .t { fill: #0b0b0b; font-size: 14px; }
+    .sub { fill: #52514e; font-size: 11.5px; }
+    .box { fill: #ffffff; stroke: #c3c2b7; stroke-width: 1.4; }
+    .p1 { stroke: #2a78d6; stroke-width: 2.2; }
+    .branch { fill: #f6f6f4; stroke: #c3c2b7; }
+    .arrow { stroke: #898781; stroke-width: 1.6; fill: none; marker-end: url(#ah3); }
+    .lab { fill: #52514e; font-size: 11px; }
+    .prio { font-size: 10.5px; fill: #ffffff; font-weight: 700; }
+  </style>
+  <defs>
+    <marker id="ah3" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+      <path d="M0,0 L8,4.5 L0,9 z" fill="#898781"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="900" height="760" fill="#fcfcfb"/>
+  <text x="24" y="34" class="t" font-size="17" font-weight="700">图 8 · 当前诊断决策树（按科学优先级）</text>
+
+  <!-- P1 -->
+  <rect x="230" y="60" width="440" height="76" rx="10" class="box p1"/>
+  <rect x="246" y="72" width="36" height="20" rx="4" fill="#2a78d6"/><text x="264" y="86" class="prio" text-anchor="middle">P1</text>
+  <text x="450" y="88" class="t" text-anchor="middle" font-weight="700">决定性对照：pristine QE 7.5 vs af7ebfc</text>
+  <text x="450" y="108" class="sub" text-anchor="middle">同一普通 vc-md + Nose 输入；无 CAIMD 关键字；首选省略 ATOMIC_VELOCITIES</text>
+  <text x="450" y="124" class="sub" text-anchor="middle">（两个可执行程序都走各自原生 from_scratch 初始化）</text>
+
+  <path class="arrow" d="M340,136 L250,190"/>
+  <text x="250" y="168" class="lab">pristine 也升温</text>
+  <path class="arrow" d="M560,136 L650,190"/>
+  <text x="576" y="168" class="lab">pristine 稳定在 300 K</text>
+
+  <!-- left branch -->
+  <rect x="80" y="190" width="340" height="70" rx="10" class="branch"/>
+  <text x="250" y="216" class="t" text-anchor="middle">问题在上游 QE 7.5 vc-md+Nose 行为/参数域</text>
+  <text x="250" y="236" class="sub" text-anchor="middle">CAIMD 源码修改暂被排除为升温原因；</text>
+  <text x="250" y="250" class="sub" text-anchor="middle">进入 Nose 参数研究（P3）</text>
+
+  <!-- right branch -->
+  <rect x="480" y="190" width="340" height="70" rx="10" class="branch"/>
+  <text x="650" y="216" class="t" text-anchor="middle">af7ebfc 引入了回归</text>
+  <text x="650" y="236" class="sub" text-anchor="middle">在 af7ebfc 的修改集内二分定位（velocity 桥接、</text>
+  <text x="650" y="250" class="sub" text-anchor="middle">Nose 刷新、诊断钩子……），修复后重新验证</text>
+
+  <!-- P2 -->
+  <path class="arrow" d="M250,260 L390,310"/>
+  <path class="arrow" d="M650,260 L510,310"/>
+  <rect x="230" y="310" width="440" height="76" rx="10" class="box"/>
+  <rect x="246" y="322" width="36" height="20" rx="4" fill="#2a78d6"/><text x="264" y="336" class="prio" text-anchor="middle">P2</text>
+  <text x="450" y="338" class="t" text-anchor="middle" font-weight="700">速度消费诊断 V0 / V1 / V2（两个可执行程序）</text>
+  <text x="450" y="358" class="sub" text-anchor="middle">V0 无 ATOMIC_VELOCITIES；V1 显式速度；V2 反号速度</text>
+  <text x="450" y="374" class="sub" text-anchor="middle">比较第一条提交的 .md 中的 ratd → 判定 vcinit 是否真正消费输入速度</text>
+
+  <path class="arrow" d="M450,386 L450,420"/>
+
+  <!-- P3 -->
+  <rect x="230" y="420" width="440" height="76" rx="10" class="box"/>
+  <rect x="246" y="432" width="36" height="20" rx="4" fill="#2a78d6"/><text x="264" y="446" class="prio" text-anchor="middle">P3</text>
+  <text x="450" y="448" class="t" text-anchor="middle" font-weight="700">保守 Nose 参数矩阵（在等价性确立之后）</text>
+  <text x="450" y="468" class="sub" text-anchor="middle">降低 fnosep；缩短 dt；缩短 Nose 链 nhpcl；可选固定胞 md vs PR 对照</text>
+  <text x="450" y="484" class="sub" text-anchor="middle">目标：获得稳定的普通 vc-md + Nose 300 K 基线（尚无单一参数被证明是原因）</text>
+
+  <path class="arrow" d="M450,496 L450,530"/>
+
+  <!-- P4 -->
+  <rect x="230" y="530" width="440" height="86" rx="10" class="box"/>
+  <rect x="246" y="542" width="36" height="20" rx="4" fill="#2a78d6"/><text x="264" y="556" class="prio" text-anchor="middle">P4</text>
+  <text x="450" y="558" class="t" text-anchor="middle" font-weight="700">重启 CAIMD 验证阶梯（基线稳定后）</text>
+  <text x="450" y="578" class="sub" text-anchor="middle">① 零载荷 active CAIMD → ② 全约束 3% 加载 → ③ 横向法向自由加载 →</text>
+  <text x="450" y="594" class="sub" text-anchor="middle">④ 完整 PR 加载；每级对照温度 / 应变跟踪 / 胞稳定性</text>
+
+  <path class="arrow" d="M450,616 L450,650"/>
+
+  <!-- P5 -->
+  <rect x="230" y="650" width="440" height="66" rx="10" class="box"/>
+  <rect x="246" y="662" width="36" height="20" rx="4" fill="#2a78d6"/><text x="264" y="676" class="prio" text-anchor="middle">P5</text>
+  <text x="470" y="678" class="t" text-anchor="middle" font-weight="700">如需精确延拓：设计显式 restart 方案</text>
+  <text x="450" y="698" class="sub" text-anchor="middle">需持久化 CAIMD 协议状态 + Nose 链变量（xnhp0/xnhpm/xnhpp/vnhp、链映射）</text>
+
+  <text x="24" y="744" class="sub">线框蓝色 = 最高优先级决定性测试。依据：controls ABC / four-DOF / Leonardo 50127909 证据与 THERMOSTAT_CAIMD_AUDIT.md。</text>
+</svg>

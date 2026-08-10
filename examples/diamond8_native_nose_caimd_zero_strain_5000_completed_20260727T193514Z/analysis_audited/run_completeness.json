@@ -1,0 +1,50 @@
+{
+  "A": {
+    "return_code": 0,
+    "slurm_step": "50434898.0",
+    "slurm_step_state": "COMPLETED 0:0",
+    "job_done": true,
+    "runtime_version": "7.5",
+    "first_error": null,
+    "scf_failure_count": 0,
+    "completed_ionic_steps": 5000,
+    "requested_steps": 5000,
+    "final_valid_nst": 4999,
+    "completed_time_ps": 9.998,
+    "requested_time_ps": 10.0,
+    "nose_active_in_stdout": true,
+    "classification": "COMPLETE_5000"
+  },
+  "B": {
+    "return_code": 0,
+    "slurm_step": "50434898.1",
+    "slurm_step_state": "COMPLETED 0:0",
+    "job_done": true,
+    "runtime_version": "7.5",
+    "first_error": null,
+    "scf_failure_count": 0,
+    "completed_ionic_steps": 5000,
+    "requested_steps": 5000,
+    "final_valid_nst": 4999,
+    "completed_time_ps": 9.998,
+    "requested_time_ps": 10.0,
+    "nose_active_in_stdout": true,
+    "classification": "COMPLETE_5000"
+  },
+  "C": {
+    "return_code": 0,
+    "slurm_step": "50434898.2",
+    "slurm_step_state": "COMPLETED 0:0",
+    "job_done": true,
+    "runtime_version": "7.5",
+    "first_error": null,
+    "scf_failure_count": 0,
+    "completed_ionic_steps": 5000,
+    "requested_steps": 5000,
+    "final_valid_nst": 4999,
+    "completed_time_ps": 9.998,
+    "requested_time_ps": 10.0,
+    "nose_active_in_stdout": true,
+    "classification": "COMPLETE_5000"
+  }
+}

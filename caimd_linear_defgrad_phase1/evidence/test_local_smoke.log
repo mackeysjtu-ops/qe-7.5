@@ -1,0 +1,484 @@
+^D{
+  "cases": [
+    {
+      "defgrad_rows": [
+        {
+          "a_event": [
+            1.0,
+            0.0,
+            2e-06,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "det_a_event": 1.0,
+          "det_f_after": 1.0,
+          "det_f_before": 1.0,
+          "event_index": 1,
+          "f_after": [
+            1.0,
+            0.0,
+            2e-06,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "f_before": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "green_lagrange": [
+            0.0,
+            0.0,
+            1e-06,
+            0.0,
+            0.0,
+            0.0,
+            1e-06,
+            0.0,
+            1.999955756559757e-12
+          ],
+          "ionic_step": 1,
+          "velocity_jump_max": 3.030437198788175e-20,
+          "velocity_jump_rms": 2.874925156281326e-20
+        }
+      ],
+      "job_done": true,
+      "name": "parser_d13",
+      "returncode": 0,
+      "run_dir": "/private/tmp/qe_linear_defgrad_local_smoke/parser_d13",
+      "stdout": "/private/tmp/qe_linear_defgrad_local_smoke/parser_d13/parser_d13.out"
+    },
+    {
+      "defgrad_rows": [
+        {
+          "a_event": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.999998
+          ],
+          "det_a_event": 0.999998,
+          "det_f_after": 0.999998,
+          "det_f_before": 1.0,
+          "event_index": 1,
+          "f_after": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.999998
+          ],
+          "f_before": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "green_lagrange": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            -1.9999979999352213e-06
+          ],
+          "ionic_step": 1,
+          "velocity_jump_max": 4.0657581468206416e-20,
+          "velocity_jump_rms": 3.95120669503109e-20
+        }
+      ],
+      "job_done": true,
+      "name": "parser_d33",
+      "returncode": 0,
+      "run_dir": "/private/tmp/qe_linear_defgrad_local_smoke/parser_d33",
+      "stdout": "/private/tmp/qe_linear_defgrad_local_smoke/parser_d33/parser_d33.out"
+    },
+    {
+      "defgrad_rows": [
+        {
+          "a_event": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "det_a_event": 1.0,
+          "det_f_after": 1.0,
+          "det_f_before": 1.0,
+          "event_index": 1,
+          "f_after": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "f_before": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "green_lagrange": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "ionic_step": 1,
+          "velocity_jump_max": 0.0,
+          "velocity_jump_rms": 0.0
+        },
+        {
+          "a_event": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "det_a_event": 1.0,
+          "det_f_after": 1.0,
+          "det_f_before": 1.0,
+          "event_index": 2,
+          "f_after": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "f_before": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "green_lagrange": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "ionic_step": 2,
+          "velocity_jump_max": 0.0,
+          "velocity_jump_rms": 0.0
+        }
+      ],
+      "job_done": true,
+      "name": "zero_identity",
+      "returncode": 0,
+      "run_dir": "/private/tmp/qe_linear_defgrad_local_smoke/zero_identity",
+      "stdout": "/private/tmp/qe_linear_defgrad_local_smoke/zero_identity/zero_identity.out"
+    },
+    {
+      "defgrad_rows": [
+        {
+          "a_event": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.99998
+          ],
+          "det_a_event": 0.99998,
+          "det_f_after": 0.99998,
+          "det_f_before": 1.0,
+          "event_index": 1,
+          "f_after": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.99998
+          ],
+          "f_before": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "green_lagrange": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            -1.9999800000003454e-05
+          ],
+          "ionic_step": 1,
+          "velocity_jump_max": 3.8332335417084355e-20,
+          "velocity_jump_rms": 3.319677625758101e-20
+        },
+        {
+          "a_event": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.9999799995999918
+          ],
+          "det_a_event": 0.9999799995999918,
+          "det_f_after": 0.99996,
+          "det_f_before": 0.99998,
+          "event_index": 2,
+          "f_after": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.99996
+          ],
+          "f_before": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.99998
+          ],
+          "green_lagrange": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            -3.999920000002932e-05
+          ],
+          "ionic_step": 11,
+          "velocity_jump_max": 5.421010862427522e-20,
+          "velocity_jump_rms": 3.8332335417084355e-20
+        }
+      ],
+      "job_done": true,
+      "name": "short_compression",
+      "returncode": 0,
+      "run_dir": "/private/tmp/qe_linear_defgrad_local_smoke/short_compression",
+      "stdout": "/private/tmp/qe_linear_defgrad_local_smoke/short_compression/short_compression.out"
+    },
+    {
+      "defgrad_rows": [
+        {
+          "a_event": [
+            1.0,
+            0.0,
+            1.9999999999999998e-05,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "det_a_event": 1.0,
+          "det_f_after": 1.0,
+          "det_f_before": 1.0,
+          "event_index": 1,
+          "f_after": [
+            1.0,
+            0.0,
+            1.9999999999999998e-05,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "f_before": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "green_lagrange": [
+            0.0,
+            0.0,
+            9.999999999999999e-06,
+            0.0,
+            0.0,
+            0.0,
+            9.999999999999999e-06,
+            0.0,
+            2.000000165480742e-10
+          ],
+          "ionic_step": 1,
+          "velocity_jump_max": 3.8332335417084355e-20,
+          "velocity_jump_rms": 3.455230021364548e-20
+        },
+        {
+          "a_event": [
+            1.0,
+            0.0,
+            1.9999999999999998e-05,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "det_a_event": 1.0,
+          "det_f_after": 1.0,
+          "det_f_before": 1.0,
+          "event_index": 2,
+          "f_after": [
+            1.0,
+            0.0,
+            3.9999999999999996e-05,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "f_before": [
+            1.0,
+            0.0,
+            1.9999999999999998e-05,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "green_lagrange": [
+            0.0,
+            0.0,
+            1.9999999999999998e-05,
+            0.0,
+            0.0,
+            0.0,
+            1.9999999999999998e-05,
+            0.0,
+            7.999999551699943e-10
+          ],
+          "ionic_step": 11,
+          "velocity_jump_max": 1.877893248421449e-19,
+          "velocity_jump_rms": 1.580482678012436e-19
+        }
+      ],
+      "job_done": true,
+      "name": "short_shear",
+      "returncode": 0,
+      "run_dir": "/private/tmp/qe_linear_defgrad_local_smoke/short_shear",
+      "stdout": "/private/tmp/qe_linear_defgrad_local_smoke/short_shear/short_shear.out"
+    },
+    {
+      "defgrad_rows": [],
+      "job_done": false,
+      "name": "invalid_determinant",
+      "returncode": 1,
+      "run_dir": "/private/tmp/qe_linear_defgrad_local_smoke/invalid_determinant",
+      "stdout": "/private/tmp/qe_linear_defgrad_local_smoke/invalid_determinant/invalid_determinant.out"
+    }
+  ],
+  "pw": "/private/tmp/qe_linear_defgrad_build/bin/pw.x",
+  "status": "LOCAL_LINEAR_DEFGRAD_SMOKE_PASS",
+  "work_root": "/private/tmp/qe_linear_defgrad_local_smoke"
+}

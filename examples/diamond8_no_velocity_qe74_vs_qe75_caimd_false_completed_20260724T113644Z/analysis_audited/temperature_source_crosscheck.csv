@@ -1,0 +1,19 @@
+run,comparison,lag_steps,max_abs_diff_or_value_K
+qe74,T_instant_3Np1 vs .tv,0,327.0547523
+qe74,T_running_avk_3Np1 vs .tv,0,0.01062876007
+qe74,T_instant_3Np1 vs .tv,1,327.4847523
+qe74,T_running_avk_3Np1 vs .tv,1,203.95
+qe74,stdout_T vs .tv,0,0.05
+qe74,stdout_Ekin vs .e ekint,0,5e-07
+qe74,direct_md_ratd_x_terminal_cel_3Nm3,0,121.1061316
+qe74,direct_md_ratd_x_md_aveci_3Nm3,0,121.1136452
+qe74,eal_T_instant_3Nm3_terminal,0,121.2410689
+qe75,T_instant_3Np1 vs .tv,0,309.9898394
+qe75,T_running_avk_3Np1 vs .tv,0,233.33
+qe75,T_instant_3Np1 vs .tv,1,310.3698394
+qe75,T_running_avk_3Np1 vs .tv,1,203.95
+qe75,stdout_T vs .tv,0,0.05
+qe75,stdout_Ekin vs .e ekint,0,5e-07
+qe75,direct_md_ratd_x_terminal_cel_3Nm3,0,141.7383333
+qe75,direct_md_ratd_x_md_aveci_3Nm3,0,141.7470461
+qe75,eal_T_instant_3Nm3_terminal,0,141.773964

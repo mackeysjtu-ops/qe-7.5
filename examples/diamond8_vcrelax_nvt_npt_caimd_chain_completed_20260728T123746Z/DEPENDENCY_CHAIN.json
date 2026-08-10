@@ -1,0 +1,19 @@
+{
+  "remote_root": "/leonardo/home/userexternal/mcheng00/workspace/Diamond/diamond8_vcrelax_nvt_npt_caimd_chain_20260728T120614Z",
+  "submission_timestamp_utc": "2026-07-28T12:08:47Z",
+  "executable_path": "/leonardo/home/userexternal/mcheng00/software/qe-7.5-caimd-thermostat-af7ebfc/install-current-gpu/bin/pw.x",
+  "executable_sha256": "89d4fda827d2cc22a3b4c1670e90dc40ce629af42096c785b55c70c355a10e7d",
+  "pseudopotential_sha256": "9c06aa642d22981491b32a18ec129086fe8366164984930389e4fc071c978639",
+  "jobs": {
+    "JOB1": {"id": 50558068, "name": "d8_vcrelax", "script": "scripts/01_vc_relax.slurm", "dependency": null},
+    "JOB2": {"id": 50558069, "name": "d8_fixed_nvt", "script": "scripts/02_fixed_nvt.slurm", "dependency": "afterok:50558068"},
+    "JOB3": {"id": 50558070, "name": "d8_free_npt", "script": "scripts/03_free_npt.slurm", "dependency": "afterok:50558069"},
+    "JOB4": {"id": 50558071, "name": "d8_caimd_zn", "script": "scripts/04_caimd_zero_nonzero.slurm", "dependency": "afterok:50558070"}
+  },
+  "expected_outputs": {
+    "job1": "01_vc_relax/FINAL_VCRELAX_REPORT.md, final_structure.json",
+    "job2": "02_fixed_nvt/FINAL_NVT_REPORT.md, analysis_summary.json",
+    "job3": "03_free_npt/FINAL_NPT_REPORT.md, analysis_summary.json",
+    "job4": "04_caimd/zero_strain/FINAL_ZERO_STRAIN_REPORT.md, 04_caimd/small_nonzero_strain/FINAL_NONZERO_STRAIN_REPORT.md, FINAL_CHAIN_REPORT.md"
+  }
+}

@@ -1,0 +1,22 @@
+af7ebfc757c32e0b4f050ed9f2208e01020b2ee3|af7ebfc|2026-07-22T12:51:53+02:00|Support Nose thermostat with active CAIMD
+13ba2ebbb43ff296305ae42183699fda995079da|13ba2eb|2026-07-18T17:49:58+02:00|Validate 300 K vc-md initialization
+7b5e4f0355230e05fa328506374e58b4c73218a8|7b5e4f0|2026-07-18T17:29:28+02:00|Record Leonardo velocity validation evidence
+24bdc0eac874d699a74dbcb42cdee2f717e4a55e|24bdc0e|2026-07-18T17:09:28+02:00|Use supported velocity input path in Ice X decks
+c647143070b0dbdf4d45c59dac750e642c656fe8|c647143|2026-07-18T16:47:01+02:00|Parse wrapped PR md histories in CAIMD harness
+2ee4e75e88cb0a4cc2e68ab7a045a57d0da82c5e|2ee4e75|2026-07-18T16:32:12+02:00|Record vc-md velocity Leonardo checkpoint
+1f1f16d0bf1c7bc71aba2d015fe817e319e2b588|1f1f16d|2026-07-18T16:30:37+02:00|Support explicit velocities in PW vc-md
+20a9f2f55f9164cdcc5777f43f02891baaa8bfee|20a9f2f|2026-07-18T13:03:34+02:00|Record Ice X CAIMD validation evidence
+04aceb339286f9bddfe4755885f9ca85400fa84b|04aceb3|2026-07-18T12:23:38+02:00|Fix Ice X k-point convergence reference
+1813ffb066100ee38d2304bb4d44570b9d1b1da3|1813ffb|2026-07-18T12:16:20+02:00|Fix Ice X matrix case iteration
+4a62546c1f7f19ef3169771c21367cd6397966db|4a62546|2026-07-18T12:11:42+02:00|Allow Ice X pseudo symlink validation
+b865b5db26367cc8ffd9727f00acb674c07895f1|b865b5d|2026-07-18T12:09:21+02:00|Add Ice X CAIMD example framework
+0282a6e6f4e7d330f68ef4a2732777d8343fd716|0282a6e|2026-07-16T14:05:31+02:00|Revalidate CAIMD V1 after boundary hardening
+09bffd3f23fe4c7121006a57081d0246bc90dd0e|09bffd3|2026-07-16T13:44:39+02:00|Document repeatable CAIMD Leonardo workflow
+622648849767b03a68f626c61df43f8de78db928|6226488|2026-07-16T13:44:11+02:00|Add persistent CAIMD software validation harness
+77455a790e0e0b452987eaf89b18f5dfafc79228|77455a7|2026-07-16T13:43:46+02:00|Harden CAIMD V1 boundary handling
+d6dc6aab82e0c3ed1ba36ecf1612bae6163b4863|d6dc6aa|2026-07-16T11:15:26+02:00|Validate CAIMD V1 on Leonardo GPU
+b53f59316802cb8145a72bbe3a1904161bc55826|b53f593|2026-07-15T20:19:07+02:00|Record deferred CAIMD review issues
+7aa61919fe1b23ec4e80dbbccae550cde5c81509|7aa6191|2026-07-15T18:06:58+02:00|Validate CAIMD V1 on macOS
+df2047eb4387a028d49b4ae419a0836c080c3f83|df2047e|2026-07-15T16:57:40+02:00|Implement first CAIMD strain-and-hold mode
+f7256b18f21913f506144e256fc7e8986fbb46e4|f7256b1|2026-07-15T16:19:22+02:00|Document CAIMD implementation design
+a11913ac6cd37f39cf31056e8e4823ec7a5de49c|a11913a|2026-07-15T14:45:21+02:00|Original QE 7.5 source baseline

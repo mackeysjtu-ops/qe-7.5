@@ -1,0 +1,11 @@
+{
+  "a_vs_b_noop_ok": false,
+  "conclusion": "Control A already exhibits physical instability in ordinary PW vc-md + Nose; this does not isolate a CAIMD-specific bug.",
+  "earliest_diverging_observable": {
+    "control": "A",
+    "observable": "eal ionic temperature",
+    "step": 26
+  },
+  "generated_utc": "2026-07-23T13:57:15Z",
+  "status": "BASELINE_NOSE_FAIL"
+}

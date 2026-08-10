@@ -1,0 +1,27 @@
+wrote temperature_all_cases.png
+wrote temperature_rolling500_all_cases.png
+wrote temperature_block1000_all_cases.png
+wrote temperature_last5ps_all_cases.png
+wrote temperature_distance_from_300K.png
+wrote ionic_kinetic_energy_all_cases.png
+wrote pressure_all_cases.png
+wrote volume_all_cases.png
+wrote cell_condition_all_cases.png
+wrote case_C_all_six_strains.png
+wrote case_C_strain_error.png
+wrote case_C_velocity_transform_residual.png
+wrote energy_drift_all_cases.png
+{
+  "overall": "ACTIVE_CAIMD_ZERO_STRAIN_UNSTABLE",
+  "A": "STABLE_ABOVE_TARGET",
+  "B": "STABLE_ABOVE_TARGET",
+  "C": "STABLE_ABOVE_TARGET",
+  "A_mean": 2844.572909471627,
+  "B_mean": 2833.79570365564,
+  "C_mean": 384.12911908669037,
+  "C_final5ps": 522.9658734167842,
+  "noop_consistent": true,
+  "C_det_positive": true,
+  "C_max_strain_err": 2.220446049250313e-16,
+  "C_max_vjump": 0.0
+}

@@ -1,0 +1,12 @@
+! Non-production fragment only.  Not executed in Phase 1.
+! Pre-orient the structure externally so local z is parallel to [111].
+! With dt=2 fs and strain rate 0.001 ps^-1:
+!   dc = 0.001 ps^-1 * 0.002 ps = 2.0d-6 per MD step.
+! With caimd_stride=10, 7500 events correspond to 75000 MD steps and
+! 15% engineering compression: F_load(3,3)=1-0.15=0.85.
+&CELL
+  caimd = .true.
+  caimd_loading_mode = 'linear_defgrad'
+  caimd_stride = 10
+  caimd_step_defgrad(3,3) = -2.0d-6
+/
