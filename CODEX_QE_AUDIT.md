@@ -241,15 +241,17 @@ SSH private keys, or token files are selected for Git.
 
 ## 8. GitHub Sync
 
-| Item | State at report creation |
+| Item | Verified state after the content push |
 | --- | --- |
 | Repository | `mackeysjtu-ops/qe-7.5` |
 | URL | <https://github.com/mackeysjtu-ops/qe-7.5> |
-| Visibility | **PRIVATE**, directly verified on the repository page |
-| Intended remote | `origin` -> `git@github.com:mackeysjtu-ops/qe-7.5.git` |
+| Visibility | **PRIVATE**, directly verified on the repository page before and after push |
+| Remote | `origin` -> `git@github.com:mackeysjtu-ops/qe-7.5.git` |
 | SSH identity | Verified as `mackeysjtu-ops` |
-| Branches to push | `main` only; no other local branch exists |
-| Tags to push | None |
+| Pushed branch | `main`; it tracks `origin/main` |
+| Synchronized content commit | `d9dad0437b0a739fe06a1b721d3ecd262151cfcb` (`Preserve CAIMD linear deformation and validation archive`) |
+| Other branches | None; no other local branch exists |
+| Tags | None |
 | Force operations | None permitted or used |
 
 The existing `gh` credential for `mackeysjtu-ops` was invalid.  A GitHub CLI
@@ -259,10 +261,12 @@ was cancelled rather than bypassed.  Repository ownership and PRIVATE
 visibility were therefore verified in the existing signed-in GitHub session,
 and authenticated SSH is used for Git transport.
 
-Push state and the exact synchronized commit are updated after this report and
-the selected assets are committed.  The final task response records the final
-`main`/`origin/main` hash; a commit cannot embed its own final SHA-1 without
-changing that SHA-1.
+The ordinary, non-force push created `main` on GitHub and set the local branch
+to track `origin/main`.  The refreshed repository page showed `Private`, one
+branch, zero tags, and content commit `d9dad0437b0a739fe06a1b721d3ecd262151cfcb`.
+This report-state update is a subsequent metadata-only commit; its exact
+`main`/`origin/main` SHA-1 is recorded in the final task response because a Git
+commit cannot embed its own SHA-1 without changing that SHA-1.
 
 ## 9. Remaining Issues
 
